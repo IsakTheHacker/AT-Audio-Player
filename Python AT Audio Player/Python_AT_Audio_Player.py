@@ -74,5 +74,5 @@ while True:
 		print("Bye!\n")
 		sys.exit(0)
 	if char == "q":
-		print("Bye!\n")
+		print("Goodbye!\n")
 		sys.exit(0)
