@@ -55,3 +55,7 @@ while True:
 			pygame.mixer.music.play()
 		else:
 			print("Playlist doesn't exist.")
+
+	if char == "e" or "q":
+		print("Bye!\n")
+		sys.exit(0)
