@@ -1,17 +1,19 @@
 
 #Imports
-import pygame
-import sys
 import os
+import sys
 import time
 import msvcrt
 import json
+
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
+import pygame
 
 #Variables
 welcome_message = "Welcome to Python AT Audio Player!"
 
 #Welcome the user
-print(welcome_message)
+print("\n" + welcome_message)
 for var in welcome_message:
 	print("-", end="", flush=True)
 	time.sleep(0.05)
