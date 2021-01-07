@@ -51,7 +51,8 @@ while True:
 		if os.path.exists(playlist):
 			with open(playlist) as file:
 				data = json.load(file)
-			for entry in data["songs"]:
+			pygame.mixer.music.load(data["songs"][0])
+			for entry in data["songs"][1:len(data["songs"])]:
 				pygame.mixer.music.queue(entry)
 			pygame.mixer.music.play()
 		else:
