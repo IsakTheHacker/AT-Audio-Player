@@ -5,6 +5,7 @@ import sys
 import os
 import time
 import msvcrt
+import json
 
 #Variables
 welcome_message = "Welcome to Python AT Audio Player!"
@@ -41,3 +42,14 @@ while True:
 			print("New song loaded!")
 		else:
 			print("Song doesn't exist.")
+
+	if char == "i":
+		playlist = input("Type the playlist here: ")
+		if os.path.exists(playlist):
+			with open(playlist) as file:
+				data = json.load(file)
+			for entry in data["songs"]:
+				pygame.mixer.music.queue(entry)
+			pygame.mixer.music.play()
+		else:
+			print("Playlist doesn't exist.")
