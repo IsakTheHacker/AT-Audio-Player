@@ -84,7 +84,7 @@ while True:
 		print("v - Change volume!")
 		char2 = msvcrt.getwch()
 		if char2 == "v":
-			newVolume = int(input("Volume is currently set to {}/100. Type a value between 0 and 100: ".format(pygame.mixer.music.get_volume() * 100)))
+			newVolume = float(input("Volume is currently set to {}/100. Type a value between 0 and 100: ".format(pygame.mixer.music.get_volume() * 100)))
 			pygame.mixer.music.set_volume(newVolume / 100)
 			print("New volume set to {}!\n".format(newVolume))
 
