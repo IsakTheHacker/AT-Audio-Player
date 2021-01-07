@@ -20,8 +20,6 @@ for var in welcome_message:
 print()
 
 pygame.mixer.init()									#Initalize mixer
-pygame.mixer.music.load("song.mp3")					#Load song
-pygame.mixer.music.play()							#Play song!
 
 while True:
 	char = msvcrt.getwch()
