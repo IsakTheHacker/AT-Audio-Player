@@ -34,6 +34,7 @@ while True:
 
 	if char == "s":
 		pygame.mixer.music.stop()
+		pygame.mixer.music.unload()
 		print("Stopped!")
 
 	if char == "l":
