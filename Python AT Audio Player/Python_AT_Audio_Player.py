@@ -70,6 +70,15 @@ while True:
 		else:
 			print("Playlist doesn't exist.")
 
+	if char == "h":
+		print("\nHELP:")
+		print("p - Pause/Unpause")
+		print("s - Stop")
+		print("l - Load new song")
+		print("i - Load playlist (can be json or folder)")
+		print("e/q - Quit program")
+		print()
+
 	if char == "e":
 		print("Bye!\n")
 		sys.exit(0)
