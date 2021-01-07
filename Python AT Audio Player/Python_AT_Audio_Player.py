@@ -56,6 +56,9 @@ while True:
 		else:
 			print("Playlist doesn't exist.")
 
-	if char == "e" or "q":
+	if char == "e":
+		print("Bye!\n")
+		sys.exit(0)
+	if char == "q":
 		print("Bye!\n")
 		sys.exit(0)
