@@ -79,6 +79,13 @@ while True:
 		print("e/q - Quit program")
 		print()
 
+	if char == "c":
+		print("\nCREDITS:")
+		print("Author: Isak Brynielsson Neri")
+		print("Libs:")
+		print("    Pygame: {}".format(pygame.version.ver))
+		print()
+
 	if char == "o":
 		print("\nONETIME OPTIONS:")
 		print("v - Change volume!")
