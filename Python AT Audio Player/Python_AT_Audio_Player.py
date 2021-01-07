@@ -2,6 +2,7 @@
 #Imports
 import pygame
 import sys
+import os
 import time
 import msvcrt
 
@@ -34,6 +35,9 @@ while True:
 
 	if char == "l":
 		new_song = input("Type the new song here: ")
-		pygame.mixer.music.load(new_song)
-		pygame.mixer.music.play()
-		print("New song loaded!")
+		if os.path.exists(new_song):
+			pygame.mixer.music.load(new_song)
+			pygame.mixer.music.play()
+			print("New song loaded!")
+		else:
+			print("Song doesn't exist.")
