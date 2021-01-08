@@ -70,6 +70,10 @@ while True:
 		else:
 			print("Playlist doesn't exist.")
 
+	if char == "r":
+		pygame.mixer.music.rewind()
+		print("Rewind!")
+
 	if char == "h":
 		print("\nHELP:")
 		print("p - Pause/Unpause")
