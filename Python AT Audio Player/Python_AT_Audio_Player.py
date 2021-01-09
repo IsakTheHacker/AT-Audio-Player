@@ -77,6 +77,8 @@ while True:
 		if os.path.exists(new_song):
 			pygame.mixer.music.load(new_song)
 			pygame.mixer.music.play()
+			nowPlaying.name = os.path.basename(new_song)
+			nowPlaying.path = os.path.abspath(new_song)
 			print("New song loaded!")
 		else:
 			print("Song doesn't exist.")
