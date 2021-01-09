@@ -22,13 +22,14 @@ def eventGet(files, shuffle):
 		#	if event.type == SONG_END:
 		#		print("the song ended!")
 		if not pygame.mixer_music.get_busy():
-			if shuffle:
-				index = random.randint(1, len(files))
-			else:
-				index = -1
-			pygame.mixer_music.load(files[index])
-			pygame.mixer_music.play()
-			files.pop(index)
+			if files:
+				if shuffle:
+					index = random.randint(0, len(files)-1)
+				else:
+					index = -1
+				pygame.mixer_music.load(files[index])
+				pygame.mixer_music.play()
+				files.pop(index)
 
 #Welcome the user
 print("\n" + welcome_message)
