@@ -16,6 +16,14 @@ welcome_message = "Welcome to Python AT Audio Player!"
 shuffle = False
 shuffleIndefinitely = False
 
+#Classes
+class NowPlaying:
+	def __init__(self, name, path):
+		self.name = name
+		self.path = path
+
+nowPlaying = NowPlaying(None, None)
+
 #Functions
 def eventGet(files):
 	while True:
@@ -28,7 +36,12 @@ def eventGet(files):
 					index = random.randint(0, len(files)-1)
 				else:
 					index = -1
-				pygame.mixer_music.load(files[index])
+				pygame.mixer_music.load(files[index].path)
+
+				#Change nowPlaying object
+				nowPlaying.name = files[index].name
+				nowPlaying.path = files[index].path
+
 				pygame.mixer_music.play()
 				if (not shuffle) or (shuffle and not shuffleIndefinitely):
 					files.pop(index)
@@ -82,7 +95,7 @@ while True:
 				files = []
 				for entry in os.scandir(playlist):
 					if entry.is_file() and entry.name.endswith(".mp3"):
-						files.append(entry.path)
+						files.append(NowPlaying(entry.name, entry.path))
 				if len(files) > 0:
 					thread._start_new_thread(eventGet, (files,))
 				else:
