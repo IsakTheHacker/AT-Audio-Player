@@ -1,4 +1,5 @@
 {
     "shuffle": false,
-    "shuffleIndefinitely": true
+    "shuffleIndefinitely": true,
+    "volume": 0.5
 }

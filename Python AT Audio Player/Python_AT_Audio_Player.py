@@ -17,7 +17,8 @@ scriptDir = os.path.dirname(os.path.realpath(__file__))
 shouldRun = True
 standardOptions = {
 	"shuffle": False,
-	"shuffleIndefinitely": True
+	"shuffleIndefinitely": True,
+	"volume": 1
 }
 
 #Classes
@@ -68,6 +69,11 @@ for var in welcome_message:
 	time.sleep(0.02)
 print()
 
+#Initalization
+pygame.mixer.init()
+#SONG_END = pygame.USEREVENT + 1
+#pygame.mixer.music.set_endevent(SONG_END)
+
 #Load options
 if (os.path.exists(scriptDir + "/options.json")) and (os.path.isfile(scriptDir + "/options.json")):
 	with open(scriptDir + "/options.json","r") as file:
@@ -76,11 +82,7 @@ if (os.path.exists(scriptDir + "/options.json")) and (os.path.isfile(scriptDir +
 else:
 	options = standardOptions
 	print("Options file could not be found...")
-
-#Initalization
-pygame.mixer.init()
-#SONG_END = pygame.USEREVENT + 1
-#pygame.mixer.music.set_endevent(SONG_END)
+pygame.mixer.music.set_volume(options["volume"])
 
 while shouldRun:
 	char = msvcrt.getwch()
@@ -221,6 +223,7 @@ while shouldRun:
 		shouldRun = False
 
 #Save options
+options["volume"] = pygame.mixer.music.get_volume()
 with open(scriptDir + "/options.json","w") as file:
 	json.dump(options, file, indent=4)
 
