@@ -157,6 +157,7 @@ while shouldRun:
 		nowPlaying.positionOffset = position
 		if nowPlaying.paused:
 			pygame.mixer.music.pause()
+			nowPlaying.paused = True
 
 	if char == "n":
 		print("\nNOW PLAYING:")
