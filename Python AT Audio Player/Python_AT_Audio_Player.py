@@ -82,6 +82,7 @@ while True:
 		print("i - Load playlist (can be json or folder)")
 		print("r - Rewind")
 		print("c - View credits")
+		print("h - Access this menu")
 		print("e/q - Quit program")
 		print()
 
