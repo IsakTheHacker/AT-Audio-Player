@@ -32,9 +32,9 @@ for var in welcome_message:
 print()
 
 #Initalization
-pygame.init()
-SONG_END = pygame.USEREVENT + 1
-pygame.mixer.music.set_endevent(SONG_END)
+pygame.mixer.init()
+#SONG_END = pygame.USEREVENT + 1
+#pygame.mixer.music.set_endevent(SONG_END)
 
 while True:
 	char = msvcrt.getwch()
