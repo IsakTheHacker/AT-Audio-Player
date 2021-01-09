@@ -33,9 +33,9 @@ nowPlaying = NowPlaying(None, None, None)
 #Functions
 def play(files):
 	while shouldRun:
-		#for event in pygame.event.get():
-		#	if event.type == SONG_END:
-		#		print("the song ended!")
+		for event in pygame.event.get():
+			if event.type == SONG_END:
+				nowPlaying.paused = None
 		if (not pygame.mixer_music.get_busy()) and (nowPlaying.paused == None):
 			if files:
 				if options["shuffle"]:
@@ -70,9 +70,9 @@ for var in welcome_message:
 print()
 
 #Initalization
-pygame.mixer.init()
-#SONG_END = pygame.USEREVENT + 1
-#pygame.mixer.music.set_endevent(SONG_END)
+pygame.init()
+SONG_END = pygame.USEREVENT + 1
+pygame.mixer.music.set_endevent(SONG_END)
 
 #Load options
 if (os.path.exists(scriptDir + "/options.json")) and (os.path.isfile(scriptDir + "/options.json")):
