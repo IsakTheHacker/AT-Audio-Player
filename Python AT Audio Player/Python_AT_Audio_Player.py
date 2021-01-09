@@ -222,6 +222,6 @@ while shouldRun:
 
 #Save options
 with open(scriptDir + "/options.json","w") as file:
-	json.dump(options, file)
+	json.dump(options, file, indent=4)
 
 pygame.mixer.quit()
