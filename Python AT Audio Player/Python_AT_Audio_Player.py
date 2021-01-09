@@ -127,6 +127,7 @@ while shouldRun:
 						files.append(NowPlaying(entry.name, entry.path, False))
 				if len(files) > 0:
 					thread._start_new_thread(play, (files,))
+					print("Playlist loaded!")
 				else:
 					print("Directory does not contain any mp3-files")
 		else:
