@@ -14,6 +14,7 @@ import pygame
 welcome_message = "Welcome to Python AT Audio Player!"
 shuffle = True
 shuffleIndefinitely = True
+shouldRun = True
 
 #Classes
 class NowPlaying:
@@ -25,7 +26,7 @@ nowPlaying = NowPlaying(None, None)
 
 #Functions
 def eventGet(files):
-	while True:
+	while shouldRun:
 		#for event in pygame.event.get():
 		#	if event.type == SONG_END:
 		#		print("the song ended!")
@@ -57,7 +58,7 @@ pygame.mixer.init()
 #SONG_END = pygame.USEREVENT + 1
 #pygame.mixer.music.set_endevent(SONG_END)
 
-while True:
+while shouldRun:
 	char = msvcrt.getwch()
 	if char == "p" and pygame.mixer.music.get_busy():
 		pygame.mixer.music.pause()
@@ -186,9 +187,9 @@ while True:
 
 	if char == "e":
 		print("Bye!\n")
-		break
+		shouldRun = False
 	if char == "q":
 		print("Goodbye!\n")
-		break
+		shouldRun = False
 
 pygame.mixer.quit()
