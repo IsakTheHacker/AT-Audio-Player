@@ -14,9 +14,11 @@ import pygame
 #Variables
 welcome_message = "Welcome to Python AT Audio Player!"
 scriptDir = os.path.dirname(os.path.realpath(__file__))
-shuffle = False
-shuffleIndefinitely = True
 shouldRun = True
+standardOptions = {
+	"shuffle": False,
+	"shuffleIndefinitely": True
+}
 
 #Classes
 class NowPlaying:
@@ -35,7 +37,7 @@ def play(files):
 		#		print("the song ended!")
 		if (not pygame.mixer_music.get_busy()) and (nowPlaying.paused == None):
 			if files:
-				if shuffle:
+				if options["shuffle"]:
 					index = random.randint(0, len(files)-1)
 				else:
 					index = -1
@@ -47,7 +49,7 @@ def play(files):
 				nowPlaying.paused = False
 
 				pygame.mixer_music.play()
-				if (not shuffle) or (shuffle and not shuffleIndefinitely):
+				if (not options["shuffle"]) or (options["shuffle"] and not options["shuffleIndefinitely"]):
 					files.pop(index)
 			else:
 				print("Playlist ended! Start a new song or playlist?")
@@ -65,6 +67,15 @@ for var in welcome_message:
 	print("-", end="", flush=True)
 	time.sleep(0.02)
 print()
+
+#Load options
+if (os.path.exists(scriptDir + "/options.json")) and (os.path.isfile(scriptDir + "/options.json")):
+	with open(scriptDir + "/options.json","r") as file:
+		options = json.load(file)
+	print("Options loaded!")
+else:
+	options = standardOptions
+	print("Options file could not be found...")
 
 #Initalization
 pygame.mixer.init()
@@ -174,7 +185,7 @@ while shouldRun:
 			pygame.mixer.music.set_volume(newVolume / 100)
 			print("New volume set to {}!\n".format(pygame.mixer.music.get_volume() * 100))
 		if char2 == "s":
-			print("Shuffle setting is currently set to {}. ".format(shuffle), end="")
+			print("Shuffle setting is currently set to {}. ".format(options["shuffle"]), end="")
 			while True:
 				newShuffleStr = input("Type 'True' or 'False': ")
 				if newShuffleStr == "True":
@@ -185,10 +196,10 @@ while shouldRun:
 					print("Not convertible to bool. Try again!")
 					continue
 				break
-			shuffle = newShuffle
-			print("New shuffle settings: {}!\n".format(shuffle))
+			options["shuffle"] = newShuffle
+			print("New shuffle settings: {}!\n".format(options["shuffle"]))
 		if char2 == "i":
-			print("Shuffle indefinitely setting is currently set to {}. ".format(shuffleIndefinitely), end="")
+			print("Shuffle indefinitely setting is currently set to {}. ".format(options["shuffleIndefinitely"]), end="")
 			while True:
 				newShuffleIndefinitelyStr = input("Type 'True' or 'False': ")
 				if newShuffleIndefinitelyStr == "True":
@@ -199,8 +210,8 @@ while shouldRun:
 					print("Not convertible to bool. Try again!")
 					continue
 				break
-			shuffleIndefinitely = newShuffleIndefinitely
-			print("New shuffle indefinitely settings: {}!\n".format(shuffleIndefinitely))
+			options["shuffleIndefinitely"] = newShuffleIndefinitely
+			print("New shuffle indefinitely settings: {}!\n".format(options["shuffleIndefinitely"]))
 
 	if char == "e":
 		print("Bye!\n")
@@ -208,5 +219,9 @@ while shouldRun:
 	if char == "q":
 		print("Goodbye!\n")
 		shouldRun = False
+
+#Save options
+with open(scriptDir + "/options.json","w") as file:
+	json.dump(options, file)
 
 pygame.mixer.quit()
