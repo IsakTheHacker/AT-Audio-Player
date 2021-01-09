@@ -150,7 +150,7 @@ while shouldRun:
 	if char == "n":
 		print("\nNOW PLAYING:")
 		if not nowPlaying.path:
-			print("No song is currently playing!")
+			print("No song is currently loaded!")
 		else:
 			print("Name: {}".format(nowPlaying.name))
 			print("Path: {}".format(nowPlaying.path))
