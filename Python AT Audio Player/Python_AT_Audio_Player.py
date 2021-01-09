@@ -12,6 +12,7 @@ import pygame
 
 #Variables
 welcome_message = "Welcome to Python AT Audio Player!"
+shuffle = False
 
 #Functions
 def eventGet(files):
@@ -108,6 +109,7 @@ while True:
 	if char == "o":
 		print("\nONETIME OPTIONS:")
 		print("v - Change volume!")
+		print("s - Change shuffle setting.")
 		char2 = msvcrt.getwch()
 		if char2 == "v":
 			print("Volume is currently set to {}/100. ".format(pygame.mixer.music.get_volume() * 100), end="")
@@ -125,6 +127,20 @@ while True:
 				break
 			pygame.mixer.music.set_volume(newVolume / 100)
 			print("New volume set to {}!\n".format(pygame.mixer.music.get_volume() * 100))
+		if char2 == "s":
+			print("Shuffle setting is currently set to {}. ".format(shuffle), end="")
+			while True:
+				newShuffleStr = input("Type 'True' or 'False': ")
+				if newShuffleStr == "True":
+					newShuffle = True
+				elif newShuffleStr == "False":
+					newShuffle = False
+				else:
+					print("Not convertible to bool. Try again!")
+					continue
+				break
+			shuffle = newShuffle
+			print("New shuffle settings: {}!\n".format(shuffle))
 
 	if char == "e":
 		print("Bye!\n")
