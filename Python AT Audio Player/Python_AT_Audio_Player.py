@@ -51,8 +51,8 @@ while True:
 			if os.path.isfile(playlist):
 				with open(playlist) as file:
 					data = json.load(file)
-				pygame.mixer.music.load(data["songs"][0])
-				for entry in data["songs"][1:len(data["songs"])]:
+				pygame.mixer.music.load(data["songs"][-1])
+				for entry in data["songs"][-2::-1]:
 					pygame.mixer.music.queue(entry)
 				pygame.mixer.music.play()
 			elif os.path.isdir(playlist):
@@ -62,8 +62,8 @@ while True:
 						if entry.name.endswith(".mp3"):
 							files.append(entry.name)
 				if len(files) > 0:
-					pygame.mixer.music.load(playlist + "/" + files[0])
-					for file in files[1:len(files)]:
+					pygame.mixer.music.load(playlist + "/" + files[-1])
+					for file in files[-2::-1]:
 						pygame.mixer.music.queue(playlist + "/" + file)
 					pygame.mixer.music.play()
 				else:
