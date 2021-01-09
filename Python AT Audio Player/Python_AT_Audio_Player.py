@@ -33,7 +33,7 @@ class NowPlaying:
 		self.path = path
 		self.paused = paused
 		if self.path != None:
-			self.length = pygame.mixer.Sound(self.path).get_length()
+			self.length = int(pygame.mixer.Sound(self.path).get_length())
 		else:
 			self.length = None
 
