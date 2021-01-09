@@ -104,10 +104,8 @@ while shouldRun:
 	if char == "l":
 		new_song = input("Type the new song here: ")
 		if os.path.exists(new_song):
-			pygame.mixer.music.load(new_song)
-			pygame.mixer.music.play()
-			nowPlaying.name = os.path.basename(new_song)
-			nowPlaying.path = os.path.abspath(new_song)
+			song = [NowPlaying(os.path.basename(new_song), os.path.abspath(new_song), False)]
+			thread._start_new_thread(play, (song,))
 			print("New song loaded!")
 		else:
 			print("Song doesn't exist.")
