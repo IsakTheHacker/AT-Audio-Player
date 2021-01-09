@@ -107,6 +107,11 @@ while True:
 		pygame.mixer.music.rewind()
 		print("Rewind!")
 
+	if char == "n":
+		print("\nNOW PLAYING:")
+		print("Name: {}".format(nowPlaying.name))
+		print("Path: {}".format(nowPlaying.path))
+
 	if char == "h":
 		print("\nHELP:")
 		print("p - Pause/Unpause")
