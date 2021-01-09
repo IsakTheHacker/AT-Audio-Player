@@ -21,12 +21,21 @@ standardOptions = {
 	"volume": 1
 }
 
+#Initalization
+pygame.init()
+SONG_END = pygame.USEREVENT + 1
+pygame.mixer.music.set_endevent(SONG_END)
+
 #Classes
 class NowPlaying:
 	def __init__(self, name, path, paused):
 		self.name = name
 		self.path = path
 		self.paused = paused
+		if self.path != None:
+			self.length = pygame.mixer.Sound(self.path).get_length()
+		else:
+			self.length = None
 
 nowPlaying = NowPlaying(None, None, None)
 
@@ -52,6 +61,7 @@ def play(files):
 				nowPlaying.name = files[index].name
 				nowPlaying.path = files[index].path
 				nowPlaying.paused = False
+				nowPlaying.length = files[index].length
 
 				pygame.mixer_music.play()
 				if (not options["shuffle"]) or (options["shuffle"] and not options["shuffleIndefinitely"]):
@@ -72,11 +82,6 @@ for var in welcome_message:
 	print("-", end="", flush=True)
 	time.sleep(0.02)
 print()
-
-#Initalization
-pygame.init()
-SONG_END = pygame.USEREVENT + 1
-pygame.mixer.music.set_endevent(SONG_END)
 
 #Load options
 if (os.path.exists(scriptDir + "/options.json")) and (os.path.isfile(scriptDir + "/options.json")):
@@ -140,7 +145,7 @@ while shouldRun:
 	if char == "r":
 		pygame.mixer.music.rewind()
 		print("Rewind!")
-
+		
 	if char == "n":
 		print("\nNOW PLAYING:")
 		print("Name: {}".format(nowPlaying.name))
