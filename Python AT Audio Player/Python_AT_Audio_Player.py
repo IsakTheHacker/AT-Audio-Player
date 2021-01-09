@@ -155,6 +155,8 @@ while shouldRun:
 		position = int(input("Position (seconds): "))
 		pygame.mixer_music.play(start=position)
 		nowPlaying.positionOffset = position
+		if nowPlaying.paused:
+			pygame.mixer.music.pause()
 
 	if char == "n":
 		print("\nNOW PLAYING:")
