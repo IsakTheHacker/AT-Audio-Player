@@ -5,6 +5,7 @@ import sys
 import time
 import msvcrt
 import json
+import threading as thread
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import pygame
