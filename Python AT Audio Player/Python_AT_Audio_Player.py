@@ -117,7 +117,9 @@ while True:
 
 	if char == "e":
 		print("Bye!\n")
-		sys.exit(0)
+		break
 	if char == "q":
 		print("Goodbye!\n")
-		sys.exit(0)
+		break
+
+pygame.mixer.quit()
