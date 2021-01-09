@@ -19,11 +19,12 @@ shouldRun = True
 
 #Classes
 class NowPlaying:
-	def __init__(self, name, path):
+	def __init__(self, name, path, paused):
 		self.name = name
 		self.path = path
+		self.paused = paused
 
-nowPlaying = NowPlaying(None, None)
+nowPlaying = NowPlaying(None, None, None)
 
 #Functions
 def play(files):
@@ -31,7 +32,7 @@ def play(files):
 		#for event in pygame.event.get():
 		#	if event.type == SONG_END:
 		#		print("the song ended!")
-		if not pygame.mixer_music.get_busy():
+		if (not pygame.mixer_music.get_busy()) and (nowPlaying.paused == None):
 			if files:
 				if shuffle:
 					index = random.randint(0, len(files)-1)
@@ -42,6 +43,7 @@ def play(files):
 				#Change nowPlaying object
 				nowPlaying.name = files[index].name
 				nowPlaying.path = files[index].path
+				nowPlaying.paused = False
 
 				pygame.mixer_music.play()
 				if (not shuffle) or (shuffle and not shuffleIndefinitely):
@@ -52,6 +54,7 @@ def play(files):
 				#Change nowPlaying object
 				nowPlaying.name = None
 				nowPlaying.path = None
+				nowPlaying.paused = None
 
 				sys.exit(0)
 
@@ -71,9 +74,11 @@ while shouldRun:
 	char = msvcrt.getwch()
 	if char == "p" and pygame.mixer.music.get_busy():
 		pygame.mixer.music.pause()
+		nowPlaying.paused = True
 		print("Paused!")
 	elif char == "p" and not pygame.mixer.music.get_busy():
 		pygame.mixer.music.unpause()
+		nowPlaying.paused = False
 		print("Unpaused!")
 
 	if char == "s":
@@ -106,7 +111,7 @@ while shouldRun:
 				files = []
 				for entry in os.scandir(playlist):
 					if entry.is_file() and entry.name.endswith(".mp3"):
-						files.append(NowPlaying(entry.name, entry.path))
+						files.append(NowPlaying(entry.name, entry.path, False))
 				if len(files) > 0:
 					thread._start_new_thread(play, (files,))
 				else:
