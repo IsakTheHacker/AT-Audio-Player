@@ -17,7 +17,7 @@ shuffle = False
 shuffleIndefinitely = False
 
 #Functions
-def eventGet(files, shuffle):
+def eventGet(files):
 	while True:
 		#for event in pygame.event.get():
 		#	if event.type == SONG_END:
@@ -30,7 +30,8 @@ def eventGet(files, shuffle):
 					index = -1
 				pygame.mixer_music.load(files[index])
 				pygame.mixer_music.play()
-				files.pop(index)
+				if (not shuffle) or (shuffle and not shuffleIndefinitely):
+					files.pop(index)
 
 #Welcome the user
 print("\n" + welcome_message)
@@ -83,7 +84,7 @@ while True:
 					if entry.is_file() and entry.name.endswith(".mp3"):
 						files.append(entry.path)
 				if len(files) > 0:
-					thread._start_new_thread(eventGet, (files, shuffle))
+					thread._start_new_thread(eventGet, (files,))
 				else:
 					print("Directory does not contain any mp3-files")
 		else:
