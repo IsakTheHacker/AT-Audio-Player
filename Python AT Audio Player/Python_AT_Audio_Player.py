@@ -73,6 +73,7 @@ def play(files):
 				nowPlaying.name = None
 				nowPlaying.path = None
 				nowPlaying.paused = None
+				nowPlaying.length = None
 
 				sys.exit(0)
 
