@@ -146,6 +146,7 @@ while shouldRun:
 		print("Name: {}".format(nowPlaying.name))
 		print("Path: {}".format(nowPlaying.path))
 		print("Paused: {}".format(nowPlaying.paused))
+		print("Position (ms): {}".format(pygame.mixer.music.get_pos()))
 
 	if char == "h":
 		print("\nHELP:")
