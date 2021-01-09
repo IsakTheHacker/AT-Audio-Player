@@ -152,7 +152,7 @@ while shouldRun:
 		
 	if char == "g":
 		print("\nGOTO POSITION:")
-		position = int(input("Position: "))
+		position = int(input("Position (seconds): "))
 		pygame.mixer_music.play(start=position)
 		nowPlaying.positionOffset = position
 
