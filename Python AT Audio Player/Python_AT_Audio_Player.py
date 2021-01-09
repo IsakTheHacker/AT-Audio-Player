@@ -13,8 +13,8 @@ import pygame
 
 #Variables
 welcome_message = "Welcome to Python AT Audio Player!"
-shuffle = False
-shuffleIndefinitely = False
+shuffle = True
+shuffleIndefinitely = True
 
 #Classes
 class NowPlaying:
