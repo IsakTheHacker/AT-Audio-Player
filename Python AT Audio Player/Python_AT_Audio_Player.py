@@ -80,6 +80,7 @@ while True:
 		print("s - Stop")
 		print("l - Load new song")
 		print("i - Load playlist (can be json or folder)")
+		print("r - Rewind")
 		print("e/q - Quit program")
 		print()
 
