@@ -13,6 +13,7 @@ import pygame
 
 #Variables
 welcome_message = "Welcome to Python AT Audio Player!"
+scriptDir = os.path.dirname(os.path.realpath(__file__))
 shuffle = False
 shuffleIndefinitely = True
 shouldRun = True
