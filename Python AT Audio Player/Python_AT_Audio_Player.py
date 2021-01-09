@@ -28,7 +28,7 @@ def eventGet(files):
 print("\n" + welcome_message)
 for var in welcome_message:
 	print("-", end="", flush=True)
-	time.sleep(0.05)
+	time.sleep(0.02)
 print()
 
 #Initalization
