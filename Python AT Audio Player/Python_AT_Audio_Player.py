@@ -84,7 +84,8 @@ while shouldRun:
 	if char == "s":
 		pygame.mixer.music.stop()
 		pygame.mixer.music.unload()
-		print("Stopped!")
+		nowPlaying.paused = None
+		print("Stopped/Next!")
 
 	if char == "l":
 		new_song = input("Type the new song here: ")
