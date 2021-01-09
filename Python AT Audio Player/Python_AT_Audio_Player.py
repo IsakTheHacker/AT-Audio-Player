@@ -26,7 +26,7 @@ class NowPlaying:
 nowPlaying = NowPlaying(None, None)
 
 #Functions
-def eventGet(files):
+def play(files):
 	while shouldRun:
 		#for event in pygame.event.get():
 		#	if event.type == SONG_END:
@@ -108,7 +108,7 @@ while shouldRun:
 					if entry.is_file() and entry.name.endswith(".mp3"):
 						files.append(NowPlaying(entry.name, entry.path))
 				if len(files) > 0:
-					thread._start_new_thread(eventGet, (files,))
+					thread._start_new_thread(play, (files,))
 				else:
 					print("Directory does not contain any mp3-files")
 		else:
