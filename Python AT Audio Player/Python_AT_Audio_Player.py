@@ -147,6 +147,11 @@ while shouldRun:
 		pygame.mixer.music.rewind()
 		print("Rewind!")
 		
+	if char == "g":
+		print("\nGOTO POSITION:")
+		position = int(input("Position: "))
+		pygame.mixer_music.set_pos(position)
+
 	if char == "n":
 		print("\nNOW PLAYING:")
 		if not nowPlaying.path:
