@@ -32,6 +32,7 @@ class NowPlaying:
 		self.name = name
 		self.path = path
 		self.paused = paused
+		self.positionOffset = 0
 		if self.path != None:
 			self.length = int(pygame.mixer.Sound(self.path).get_length())
 		else:
@@ -62,6 +63,7 @@ def play(files):
 				nowPlaying.path = files[index].path
 				nowPlaying.paused = False
 				nowPlaying.length = files[index].length
+				nowPlaying.positionOffset = files[index].positionOffset
 
 				pygame.mixer_music.play()
 				if (not options["shuffle"]) or (options["shuffle"] and not options["shuffleIndefinitely"]):
@@ -74,6 +76,7 @@ def play(files):
 				nowPlaying.path = None
 				nowPlaying.paused = None
 				nowPlaying.length = None
+				nowPlaying.positionOffset = 0
 
 				sys.exit(0)
 
@@ -150,7 +153,8 @@ while shouldRun:
 	if char == "g":
 		print("\nGOTO POSITION:")
 		position = int(input("Position: "))
-		pygame.mixer_music.set_pos(position)
+		pygame.mixer_music.play(start=position)
+		nowPlaying.positionOffset = position
 
 	if char == "n":
 		print("\nNOW PLAYING:")
@@ -161,7 +165,7 @@ while shouldRun:
 			print("Path: {}".format(nowPlaying.path))
 			print("Paused: {}".format(nowPlaying.paused))
 			print("Length: {}:{}".format(nowPlaying.length // 60, nowPlaying.length % 60))
-			seconds = int(pygame.mixer.music.get_pos() / 1000)
+			seconds = int(pygame.mixer.music.get_pos() / 1000) + nowPlaying.positionOffset
 			print("Position: {}:{}".format(seconds // 60, seconds % 60))
 
 	if char == "h":
