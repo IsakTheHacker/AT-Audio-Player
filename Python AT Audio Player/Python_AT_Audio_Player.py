@@ -16,9 +16,9 @@ welcome_message = "Welcome to Python AT Audio Player!"
 #Functions
 def eventGet(files):
 	while True:
-		for event in pygame.event.get():
-			if event.type == SONG_END:
-				print("the song ended!")
+		#for event in pygame.event.get():
+		#	if event.type == SONG_END:
+		#		print("the song ended!")
 		if not pygame.mixer_music.get_busy():
 			pygame.mixer_music.load(files[-1])
 			pygame.mixer_music.play()
