@@ -3,6 +3,7 @@
 import os
 import sys
 import time
+import random
 import msvcrt
 import json
 import threading as thread
@@ -15,15 +16,19 @@ welcome_message = "Welcome to Python AT Audio Player!"
 shuffle = False
 
 #Functions
-def eventGet(files):
+def eventGet(files, shuffle):
 	while True:
 		#for event in pygame.event.get():
 		#	if event.type == SONG_END:
 		#		print("the song ended!")
 		if not pygame.mixer_music.get_busy():
-			pygame.mixer_music.load(files[-1])
+			if shuffle:
+				index = random.randint(1, len(files))
+			else:
+				index = -1
+			pygame.mixer_music.load(files[index])
 			pygame.mixer_music.play()
-			files.pop(-1)
+			files.pop(index)
 
 #Welcome the user
 print("\n" + welcome_message)
@@ -76,7 +81,7 @@ while True:
 					if entry.is_file() and entry.name.endswith(".mp3"):
 						files.append(entry.path)
 				if len(files) > 0:
-					thread._start_new_thread(eventGet, (files,))
+					thread._start_new_thread(eventGet, (files, shuffle))
 				else:
 					print("Directory does not contain any mp3-files")
 		else:
