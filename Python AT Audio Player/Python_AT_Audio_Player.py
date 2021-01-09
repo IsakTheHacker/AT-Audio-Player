@@ -106,7 +106,7 @@ while shouldRun:
 		if os.path.exists(new_song):
 			song = [NowPlaying(os.path.basename(new_song), os.path.abspath(new_song), False)]
 			thread._start_new_thread(play, (song,))
-			print("New song loaded!")
+			print("Song loaded!")
 		else:
 			print("Song doesn't exist.")
 
