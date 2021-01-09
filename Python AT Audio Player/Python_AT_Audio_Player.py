@@ -127,6 +127,7 @@ while shouldRun:
 		print("\nNOW PLAYING:")
 		print("Name: {}".format(nowPlaying.name))
 		print("Path: {}".format(nowPlaying.path))
+		print("Paused: {}".format(nowPlaying.paused))
 
 	if char == "h":
 		print("\nHELP:")
