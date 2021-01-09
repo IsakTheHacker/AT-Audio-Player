@@ -45,6 +45,11 @@ def eventGet(files):
 				pygame.mixer_music.play()
 				if (not shuffle) or (shuffle and not shuffleIndefinitely):
 					files.pop(index)
+			else:
+
+				#Change nowPlaying object
+				nowPlaying.name = None
+				nowPlaying.path = None
 
 #Welcome the user
 print("\n" + welcome_message)
