@@ -1,5 +1,6 @@
 
 #Imports
+import sys
 import os
 import time
 import random
@@ -46,10 +47,13 @@ def eventGet(files):
 				if (not shuffle) or (shuffle and not shuffleIndefinitely):
 					files.pop(index)
 			else:
+				print("Playlist ended! Start a new song or playlist?")
 
 				#Change nowPlaying object
 				nowPlaying.name = None
 				nowPlaying.path = None
+
+				sys.exit(0)
 
 #Welcome the user
 print("\n" + welcome_message)
