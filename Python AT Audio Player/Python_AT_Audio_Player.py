@@ -149,12 +149,15 @@ while shouldRun:
 		
 	if char == "n":
 		print("\nNOW PLAYING:")
-		print("Name: {}".format(nowPlaying.name))
-		print("Path: {}".format(nowPlaying.path))
-		print("Paused: {}".format(nowPlaying.paused))
-		print("Length: {}:{}".format(nowPlaying.length // 60, nowPlaying.length % 60))
-		seconds = int(pygame.mixer.music.get_pos() / 1000)
-		print("Position: {}:{}".format(seconds // 60, seconds % 60))
+		if not nowPlaying.path:
+			print("No song is currently playing!")
+		else:
+			print("Name: {}".format(nowPlaying.name))
+			print("Path: {}".format(nowPlaying.path))
+			print("Paused: {}".format(nowPlaying.paused))
+			print("Length: {}:{}".format(nowPlaying.length // 60, nowPlaying.length % 60))
+			seconds = int(pygame.mixer.music.get_pos() / 1000)
+			print("Position: {}:{}".format(seconds // 60, seconds % 60))
 
 	if char == "h":
 		print("\nHELP:")
