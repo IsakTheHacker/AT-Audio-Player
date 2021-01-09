@@ -31,7 +31,7 @@ print()
 pygame.init()
 SONG_END = pygame.USEREVENT + 1
 pygame.mixer.music.set_endevent(SONG_END)
-thread._start_new_thread(eventGet,())
+thread._start_new_thread(eventGet, ())
 
 while True:
 	char = msvcrt.getwch()
@@ -59,14 +59,14 @@ while True:
 	if char == "i":
 		playlist = input("Type the playlist here: ")
 		if os.path.exists(playlist):
-			if os.path.isfile(playlist):
-				with open(playlist) as file:
-					data = json.load(file)
-				pygame.mixer.music.load(data["songs"][-1])
-				for entry in data["songs"][-2::-1]:
-					pygame.mixer.music.queue(entry)
-				pygame.mixer.music.play()
-			elif os.path.isdir(playlist):
+			#if os.path.isfile(playlist):
+			#	with open(playlist) as file:
+			#		data = json.load(file)
+			#	pygame.mixer.music.load(data["songs"][-1])
+			#	for entry in data["songs"][-2::-1]:
+			#		pygame.mixer.music.queue(entry)
+			#	pygame.mixer.music.play()
+			if os.path.isdir(playlist):
 				files = []
 				for entry in os.scandir(playlist):
 					if (entry.is_file()):
