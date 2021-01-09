@@ -14,11 +14,15 @@ import pygame
 welcome_message = "Welcome to Python AT Audio Player!"
 
 #Functions
-def eventGet():
+def eventGet(files):
 	while True:
 		for event in pygame.event.get():
 			if event.type == SONG_END:
 				print("the song ended!")
+		if not pygame.mixer_music.get_busy():
+			pygame.mixer_music.load(files[-1])
+			pygame.mixer_music.play()
+			files.pop(-1)
 
 #Welcome the user
 print("\n" + welcome_message)
@@ -31,7 +35,6 @@ print()
 pygame.init()
 SONG_END = pygame.USEREVENT + 1
 pygame.mixer.music.set_endevent(SONG_END)
-thread._start_new_thread(eventGet, ())
 
 while True:
 	char = msvcrt.getwch()
@@ -69,14 +72,10 @@ while True:
 			if os.path.isdir(playlist):
 				files = []
 				for entry in os.scandir(playlist):
-					if (entry.is_file()):
-						if entry.name.endswith(".mp3"):
-							files.append(entry.name)
+					if entry.is_file() and entry.name.endswith(".mp3"):
+						files.append(entry.path)
 				if len(files) > 0:
-					pygame.mixer.music.load(playlist + "/" + files[-1])
-					for file in files[-2::-1]:
-						pygame.mixer.music.queue(playlist + "/" + file)
-					pygame.mixer.music.play()
+					thread._start_new_thread(eventGet, (files,))
 				else:
 					print("Directory does not contain any mp3-files")
 		else:
