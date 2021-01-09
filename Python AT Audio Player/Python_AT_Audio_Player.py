@@ -32,6 +32,10 @@ nowPlaying = NowPlaying(None, None, None)
 
 #Functions
 def play(files):
+	if len(files) == 1:
+		type = "song"
+	elif len(files) > 1:
+		type = "playlist"
 	while shouldRun:
 		for event in pygame.event.get():
 			if event.type == SONG_END:
@@ -53,7 +57,7 @@ def play(files):
 				if (not options["shuffle"]) or (options["shuffle"] and not options["shuffleIndefinitely"]):
 					files.pop(index)
 			else:
-				print("Playlist ended! Start a new song or playlist?")
+				print("{} ended! Start a new song or playlist?".format(type.capitalize()))
 
 				#Change nowPlaying object
 				nowPlaying.name = None
