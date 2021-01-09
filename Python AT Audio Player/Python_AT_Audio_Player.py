@@ -13,6 +13,13 @@ import pygame
 #Variables
 welcome_message = "Welcome to Python AT Audio Player!"
 
+#Functions
+def eventGet():
+	while True:
+		for event in pygame.event.get():
+			if event.type == SONG_END:
+				print("the song ended!")
+
 #Welcome the user
 print("\n" + welcome_message)
 for var in welcome_message:
@@ -20,7 +27,11 @@ for var in welcome_message:
 	time.sleep(0.05)
 print()
 
-pygame.mixer.init()									#Initalize mixer
+#Initalization
+pygame.init()
+SONG_END = pygame.USEREVENT + 1
+pygame.mixer.music.set_endevent(SONG_END)
+thread._start_new_thread(eventGet,())
 
 while True:
 	char = msvcrt.getwch()
