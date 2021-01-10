@@ -77,7 +77,7 @@ def play(files):
 				nowPlaying.paused = None
 				nowPlaying.length = None
 				nowPlaying.positionOffset = 0
-
+				
 				sys.exit(0)
 
 #Welcome the user
