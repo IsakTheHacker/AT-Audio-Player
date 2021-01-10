@@ -147,7 +147,7 @@ while shouldRun:
 			print("Playlist doesn't exist.")
 
 	if char == "r":
-		pygame.mixer.music.rewind()
+		pygame.mixer_music.play()
 		print("Rewind!")
 		
 	if char == "g":
