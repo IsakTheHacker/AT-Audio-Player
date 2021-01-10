@@ -24,7 +24,7 @@ standardOptions = {
 #Initalization
 pygame.init()
 SONG_END = pygame.USEREVENT + 1
-pygame.mixer.music.set_endevent(SONG_END)
+pygame.mixer_music.set_endevent(SONG_END)
 
 #Classes
 class NowPlaying:
@@ -95,22 +95,22 @@ if (os.path.exists(scriptDir + "/options.json")) and (os.path.isfile(scriptDir +
 else:
 	options = standardOptions
 	print("Options file could not be found...")
-pygame.mixer.music.set_volume(options["volume"])
+pygame.mixer_music.set_volume(options["volume"])
 
 while shouldRun:
 	char = msvcrt.getwch()
-	if char == "p" and pygame.mixer.music.get_busy():
-		pygame.mixer.music.pause()
+	if char == "p" and pygame.mixer_music.get_busy():
+		pygame.mixer_music.pause()
 		nowPlaying.paused = True
 		print("Paused!")
-	elif char == "p" and not pygame.mixer.music.get_busy():
-		pygame.mixer.music.unpause()
+	elif char == "p" and not pygame.mixer_music.get_busy():
+		pygame.mixer_music.unpause()
 		nowPlaying.paused = False
 		print("Unpaused!")
 
 	if char == "s":
-		pygame.mixer.music.stop()
-		pygame.mixer.music.unload()
+		pygame.mixer_music.stop()
+		pygame.mixer_music.unload()
 		nowPlaying.paused = None
 		print("Stopped/Next!")
 
@@ -129,10 +129,10 @@ while shouldRun:
 			#if os.path.isfile(playlist):
 			#	with open(playlist) as file:
 			#		data = json.load(file)
-			#	pygame.mixer.music.load(data["songs"][-1])
+			#	pygame.mixer_music.load(data["songs"][-1])
 			#	for entry in data["songs"][-2::-1]:
-			#		pygame.mixer.music.queue(entry)
-			#	pygame.mixer.music.play()
+			#		pygame.mixer_music.queue(entry)
+			#	pygame.mixer_music.play()
 			if os.path.isdir(playlist):
 				files = []
 				for entry in os.scandir(playlist):
@@ -156,7 +156,7 @@ while shouldRun:
 		pygame.mixer_music.play(start=position)
 		nowPlaying.positionOffset = position
 		if nowPlaying.paused:
-			pygame.mixer.music.pause()
+			pygame.mixer_music.pause()
 			nowPlaying.paused = True
 
 	if char == "n":
@@ -168,7 +168,7 @@ while shouldRun:
 			print("Path: {}".format(nowPlaying.path))
 			print("Paused: {}".format(nowPlaying.paused))
 			print("Length: {}:{}".format(nowPlaying.length // 60, nowPlaying.length % 60))
-			seconds = int(pygame.mixer.music.get_pos() / 1000) + nowPlaying.positionOffset
+			seconds = int(pygame.mixer_music.get_pos() / 1000) + nowPlaying.positionOffset
 			print("Position: {}:{}".format(seconds // 60, seconds % 60))
 
 	if char == "h":
@@ -198,7 +198,7 @@ while shouldRun:
 		print("i - Change shuffle indefinitely setting.")
 		char2 = msvcrt.getwch()
 		if char2 == "v":
-			print("Volume is currently set to {}/100. ".format(pygame.mixer.music.get_volume() * 100), end="")
+			print("Volume is currently set to {}/100. ".format(pygame.mixer_music.get_volume() * 100), end="")
 			while True:
 				newVolumeStr = input("Type a value between 0 and 100: ")
 				try:
@@ -211,8 +211,8 @@ while shouldRun:
 				elif newVolume < 0:
 					print("You entered a value which was too low. Volume will be set to minimum (0)")
 				break
-			pygame.mixer.music.set_volume(newVolume / 100)
-			print("New volume set to {}!\n".format(pygame.mixer.music.get_volume() * 100))
+			pygame.mixer_music.set_volume(newVolume / 100)
+			print("New volume set to {}!\n".format(pygame.mixer_music.get_volume() * 100))
 		if char2 == "s":
 			print("Shuffle setting is currently set to {}. ".format(options["shuffle"]), end="")
 			while True:
@@ -250,7 +250,7 @@ while shouldRun:
 		shouldRun = False
 
 #Save options
-options["volume"] = pygame.mixer.music.get_volume()
+options["volume"] = pygame.mixer_music.get_volume()
 with open(scriptDir + "/options.json","w") as file:
 	json.dump(options, file, indent=4)
 
