@@ -338,3 +338,4 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /Python AT Audio Player/song.mp3
+/Python AT Audio Player/play.log

@@ -306,6 +306,7 @@ with open(scriptDir + "/options.json","w") as file:
 
 #Append played songs to log
 with open(scriptDir + "/play.log","a") as file:
+	file.write(time.strftime("#time: %Y-%m-%d %H:%M:%S\n", time.localtime(time.time())))
 	for song in songLog:
 		file.write(song + "\n")
 
