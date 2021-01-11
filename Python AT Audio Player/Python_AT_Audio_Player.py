@@ -28,13 +28,18 @@ SONG_END = pygame.USEREVENT + 1
 pygame.mixer_music.set_endevent(SONG_END)
 
 #Classes
+class PlaylistData:
+	def __init__(self):
+		self.shuffleIndefinitely = False
+		self.files = []
+
 class NowPlaying:
 	def __init__(self, name, path, paused):
 		self.name = name
 		self.path = path
 		self.paused = paused
 		self.positionOffset = 0
-		self.files = []
+		self.playlist = None
 		if self.path != None:
 			self.length = int(pygame.mixer.Sound(self.path).get_length())
 		else:
@@ -71,7 +76,15 @@ def play(files):
 				if (not options["shuffle"]) or (options["shuffle"] and not options["shuffleIndefinitely"]):
 					files.pop(index)
 				if (type == "playlist"):
-					nowPlaying.files = files
+					nowPlaying.playlist = PlaylistData()
+					if (options["shuffle"]) and (options["shuffleIndefinitely"]):
+						nowPlaying.playlist.files = []
+						nowPlaying.playlist.shuffleIndefinitely = True
+					else:
+						nowPlaying.playlist.files = files
+						nowPlaying.playlist.shuffleIndefinitely = False
+				else:
+					nowPlaying.playlist = None
 			else:
 				print("{} ended! Start a new song or playlist?".format(type.capitalize()))
 
@@ -164,8 +177,14 @@ while shouldRun:
 
 	if char == "u":
 		print("\nREMAINING SONGS:")
-		for song in nowPlaying.files:
-			print(song.name)
+		if nowPlaying.playlist == None:
+			print("A song is currently playing!")
+		elif nowPlaying.playlist.shuffleIndefinitely:
+			print("The playlist will shuffle indefinitely!")
+		else:
+			for song in nowPlaying.playlist.files:
+				print(song.name)
+
 
 	if char == "r":
 		pygame.mixer_music.play()

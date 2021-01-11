@@ -1,5 +1,5 @@
 {
-    "shuffle": false,
+    "shuffle": true,
     "shuffleIndefinitely": true,
     "volume": 1.0,
     "onStartSong": {
