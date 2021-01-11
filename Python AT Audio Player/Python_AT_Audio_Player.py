@@ -182,8 +182,11 @@ while shouldRun:
 		elif nowPlaying.playlist.shuffleIndefinitely:
 			print("The playlist will shuffle indefinitely!")
 		else:
-			for song in nowPlaying.playlist.files:
-				print(song.name)
+			if len(nowPlaying.playlist.files) > 0:
+				for song in nowPlaying.playlist.files:
+					print(song.name)
+			else:
+				print("The current playing song is the last one.")
 
 
 	if char == "r":
