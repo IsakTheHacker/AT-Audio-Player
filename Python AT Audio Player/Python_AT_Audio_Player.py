@@ -94,6 +94,7 @@ def play(files):
 				nowPlaying.paused = None
 				nowPlaying.length = None
 				nowPlaying.positionOffset = 0
+				nowPlaying.playlist = None
 				
 				sys.exit(0)
 
@@ -177,17 +178,19 @@ while shouldRun:
 
 	if char == "u":
 		print("\nREMAINING SONGS:")
-		if nowPlaying.playlist == None:
-			print("A song is currently playing!")
-		elif nowPlaying.playlist.shuffleIndefinitely:
-			print("The playlist will shuffle indefinitely!")
+		if not nowPlaying.path:
+			print("No song is currently loaded!")
 		else:
-			if len(nowPlaying.playlist.files) > 0:
-				for song in nowPlaying.playlist.files:
-					print(song.name)
+			if nowPlaying.playlist == None:
+				print("A song is currently playing!")
+			elif nowPlaying.playlist.shuffleIndefinitely:
+				print("The playlist will shuffle indefinitely!")
 			else:
-				print("The current playing song is the last one.")
-
+				if len(nowPlaying.playlist.files) > 0:
+					for song in nowPlaying.playlist.files:
+						print(song.name)
+				else:
+					print("The current playing song is the last one.")
 
 	if char == "r":
 		pygame.mixer_music.play()
