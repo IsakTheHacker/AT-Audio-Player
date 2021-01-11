@@ -15,6 +15,7 @@ import pygame
 welcome_message = "Welcome to Python AT Audio Player!"
 scriptDir = os.path.dirname(os.path.realpath(__file__))
 shouldRun = True
+songLog = []
 standardOptions = {
 	"shuffle": False,
 	"shuffleIndefinitely": True,
@@ -71,6 +72,9 @@ def play(files):
 				nowPlaying.paused = False
 				nowPlaying.length = files[index].length
 				nowPlaying.positionOffset = files[index].positionOffset
+
+				#Add to log
+				songLog.append(files[index].path)
 
 				pygame.mixer_music.play()
 				if (not options["shuffle"]) or (options["shuffle"] and not options["shuffleIndefinitely"]):
@@ -299,5 +303,10 @@ while shouldRun:
 options["volume"] = pygame.mixer_music.get_volume()
 with open(scriptDir + "/options.json","w") as file:
 	json.dump(options, file, indent=4)
+
+#Append played songs to log
+with open(scriptDir + "/play.log","a") as file:
+	for song in songLog:
+		file.write(song + "\n")
 
 pygame.mixer.quit()
