@@ -33,6 +33,7 @@ class NowPlaying:
 		self.path = path
 		self.paused = paused
 		self.positionOffset = 0
+		self.files = []
 		if self.path != None:
 			self.length = int(pygame.mixer.Sound(self.path).get_length())
 		else:
@@ -68,6 +69,8 @@ def play(files):
 				pygame.mixer_music.play()
 				if (not options["shuffle"]) or (options["shuffle"] and not options["shuffleIndefinitely"]):
 					files.pop(index)
+				if (type == "playlist"):
+					nowPlaying.files = files
 			else:
 				print("{} ended! Start a new song or playlist?".format(type.capitalize()))
 
@@ -145,6 +148,11 @@ while shouldRun:
 					print("Directory does not contain any mp3-files")
 		else:
 			print("Playlist doesn't exist.")
+
+	if char == "u":
+		print("\nREMAINING SONGS:")
+		for song in nowPlaying.files:
+			print(song.name)
 
 	if char == "r":
 		pygame.mixer_music.play()
