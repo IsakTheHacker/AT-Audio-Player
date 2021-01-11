@@ -18,7 +18,8 @@ shouldRun = True
 standardOptions = {
 	"shuffle": False,
 	"shuffleIndefinitely": True,
-	"volume": 1
+	"volume": 1,
+	"onStartSong": None
 }
 
 #Initalization
@@ -99,6 +100,18 @@ else:
 	options = standardOptions
 	print("Options file could not be found...")
 pygame.mixer_music.set_volume(options["volume"])
+
+#Start standard song
+if options["onStartSong"] != None:
+	files = []
+	for entry in os.scandir(options["onStartSong"]["path"]):
+		if entry.is_file() and entry.name.endswith(".mp3"):
+			files.append(NowPlaying(entry.name, entry.path, False))
+	if len(files) > 0:
+		thread._start_new_thread(play, (files,))
+		print("Standard playlist loaded!")
+	else:
+		print("Error")
 
 while shouldRun:
 	char = msvcrt.getwch()
