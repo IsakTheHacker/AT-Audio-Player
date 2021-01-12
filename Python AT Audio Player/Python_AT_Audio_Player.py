@@ -254,7 +254,10 @@ while shouldRun:
 			while True:
 				newVolumeStr = input("Type a value between 0 and 100: ")
 				try:
-					newVolume = float(newVolumeStr)
+					if newVolumeStr == "e":
+						newVolume = pygame.mixer_music.get_volume() * 100;
+					else:
+						newVolume = float(newVolumeStr)
 				except ValueError:
 					print("Not convertible to float. Try again!")
 					continue
@@ -273,6 +276,8 @@ while shouldRun:
 					newShuffle = True
 				elif newShuffleStr == "False":
 					newShuffle = False
+				elif newShuffleStr == "e":
+					newShuffle = options["shuffle"]
 				else:
 					print("Not convertible to bool. Try again!")
 					continue
@@ -287,6 +292,8 @@ while shouldRun:
 					newShuffleIndefinitely = True
 				elif newShuffleIndefinitelyStr == "False":
 					newShuffleIndefinitely = False
+				elif newShuffleIndefinitelyStr == "e":
+					newShuffleIndefinitely = options["shuffleIndefinitely"]
 				else:
 					print("Not convertible to bool. Try again!")
 					continue
