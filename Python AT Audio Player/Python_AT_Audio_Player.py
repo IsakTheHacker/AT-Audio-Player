@@ -244,7 +244,7 @@ while shouldRun:
 		print()
 
 	if char == "o":
-		print("\nONETIME OPTIONS:")
+		print("\nOPTIONS:")
 		print("v - Change volume!")
 		print("s - Change shuffle setting.")
 		print("i - Change shuffle indefinitely setting.")
