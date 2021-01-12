@@ -15,6 +15,7 @@ import pygame
 welcome_message = "Welcome to Python AT Audio Player!"
 scriptDir = os.path.dirname(os.path.realpath(__file__))
 shouldRun = True
+loopSong = False
 songLog = []
 standardOptions = {
 	"shuffle": False,
@@ -57,7 +58,13 @@ def play(files):
 	while shouldRun:
 		for event in pygame.event.get():
 			if event.type == SONG_END:
-				nowPlaying.paused = None
+				if loopSong:
+					pygame.mixer_music.play()
+
+					#Add to log
+					songLog.append(nowPlaying.path)
+				else:
+					nowPlaying.paused = None
 		if (not pygame.mixer_music.get_busy()) and (nowPlaying.paused == None):
 			if files:
 				if options["shuffle"]:
@@ -199,6 +206,14 @@ while shouldRun:
 	if char == "r":
 		pygame.mixer_music.play()
 		print("Rewind!")
+
+	if char == "t":
+		if loopSong:
+			print("Stop looping current track.")
+			loopSong = False
+		else:
+			print("Looping current track!")
+			loopSong = True
 		
 	if char == "g":
 		print("\nGOTO POSITION:")
