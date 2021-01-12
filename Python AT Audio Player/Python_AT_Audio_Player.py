@@ -228,6 +228,8 @@ while shouldRun:
 		print("l - Load new song")
 		print("i - Load playlist (folder)")
 		print("r - Rewind")
+		print("g - Goto position in song")
+		print("n - View information about the current playing song")
 		print("o - Change options")
 		print("c - View credits")
 		print("h - Access this menu")
