@@ -226,7 +226,7 @@ while shouldRun:
 		print("p - Pause/Unpause")
 		print("s - Stop")
 		print("l - Load new song")
-		print("i - Load playlist (can be json or folder)")
+		print("i - Load playlist (folder)")
 		print("r - Rewind")
 		print("o - Change options")
 		print("c - View credits")
