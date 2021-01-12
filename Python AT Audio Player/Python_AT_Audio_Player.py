@@ -26,7 +26,7 @@ standardOptions = {
 
 #Initalization
 pygame.init()
-SONG_END = pygame.USEREVENT + 1
+SONG_END = pygame.USEREVENT + 1					#Song end event
 pygame.mixer_music.set_endevent(SONG_END)
 
 #Classes
@@ -34,7 +34,6 @@ class PlaylistData:
 	def __init__(self):
 		self.shuffleIndefinitely = False
 		self.files = []
-
 class NowPlaying:
 	def __init__(self, name, path, paused):
 		self.name = name
@@ -140,6 +139,7 @@ if options["onStartSong"] != None:
 
 while shouldRun:
 	char = msvcrt.getwch()
+
 	if char == "p" and pygame.mixer_music.get_busy():
 		pygame.mixer_music.pause()
 		nowPlaying.paused = True
@@ -334,4 +334,5 @@ with open(scriptDir + "/play.log","a") as file:
 	for song in songLog:
 		file.write(song + "\n")
 
+#Uninit mixer
 pygame.mixer.quit()
