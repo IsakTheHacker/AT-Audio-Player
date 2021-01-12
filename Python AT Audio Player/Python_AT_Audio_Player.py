@@ -237,7 +237,7 @@ while shouldRun:
 			print("Paused: {}".format(nowPlaying.paused))
 			print("Length: {}:{}".format(nowPlaying.length // 60, nowPlaying.length % 60))
 			seconds = int(pygame.mixer_music.get_pos() / 1000) + nowPlaying.positionOffset
-			print("Position: {}:{}".format(seconds // 60, seconds % 60))
+			print("Position: {}:{}{}".format(seconds // 60, (lambda int: "0" if int < 10 else "")(seconds % 60), seconds % 60))
 
 	if char == "h":
 		print("\nHELP:")
