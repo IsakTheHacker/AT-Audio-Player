@@ -226,6 +226,7 @@ while shouldRun:
 		if nowPlaying.paused:
 			pygame.mixer_music.pause()
 			nowPlaying.paused = True
+		print("Go to {} seconds!".format(position))
 
 	if char == "n":
 		print("\nNOW PLAYING:")
