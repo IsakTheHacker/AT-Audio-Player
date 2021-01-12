@@ -66,10 +66,13 @@ def play(files):
 					nowPlaying.paused = None
 		if (not pygame.mixer_music.get_busy()) and (nowPlaying.paused == None):
 			if files:
-				if options["shuffle"]:
-					index = random.randint(0, len(files)-1)
-				else:
-					index = -1
+				index = -1
+				if (type == "playlist"):
+					while True:
+						if options["shuffle"]:
+							index = random.randint(0, len(files)-1)
+						if nowPlaying.path != files[index].path: break
+						if not options["shuffle"]: break
 				pygame.mixer_music.load(files[index].path)
 
 				#Change nowPlaying object
