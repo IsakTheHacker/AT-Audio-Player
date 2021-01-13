@@ -46,7 +46,7 @@ class NowPlaying:
 		else:
 			self.length = None
 
-nowPlaying = NowPlaying(None, None, None)
+nowPlaying = NowPlaying(None, None, None)		#Standard object for the current playing song
 
 #Functions
 def play(files):
@@ -110,7 +110,7 @@ def play(files):
 				nowPlaying.positionOffset = 0
 				nowPlaying.playlist = None
 				
-				sys.exit(0)
+				sys.exit(0)		#Exit thread
 
 #Welcome the user
 print("\n" + welcome_message)
