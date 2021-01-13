@@ -140,6 +140,19 @@ if options["onStartSong"] != None:
 	else:
 		print("Error")
 
+#Define saveFiles function
+def saveFiles():
+	#Save options
+	options["volume"] = pygame.mixer_music.get_volume()
+	with open(scriptDir + "/options.json","w") as file:
+		json.dump(options, file, indent=4)
+
+	#Append played songs to log
+	with open(scriptDir + "/play.log","a") as file:
+		file.write(time.strftime("#time: %Y-%m-%d %H:%M:%S\n", time.localtime(time.time())))
+		for song in songLog:
+			file.write(song + "\n")
+
 while shouldRun:
 	char = msvcrt.getwch()
 
@@ -328,16 +341,7 @@ while shouldRun:
 		print("Goodbye!\n")
 		shouldRun = False
 
-#Save options
-options["volume"] = pygame.mixer_music.get_volume()
-with open(scriptDir + "/options.json","w") as file:
-	json.dump(options, file, indent=4)
-
-#Append played songs to log
-with open(scriptDir + "/play.log","a") as file:
-	file.write(time.strftime("#time: %Y-%m-%d %H:%M:%S\n", time.localtime(time.time())))
-	for song in songLog:
-		file.write(song + "\n")
+saveFiles()
 
 #Uninit mixer
 pygame.mixer.quit()
