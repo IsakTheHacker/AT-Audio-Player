@@ -57,6 +57,7 @@ def play(files):
 	while shouldRun:
 		for event in pygame.event.get():
 			if event.type == SONG_END:
+				saveFiles() #Save files
 				if loopSong:
 					pygame.mixer_music.play()
 
