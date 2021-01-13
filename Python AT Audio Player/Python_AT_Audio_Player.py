@@ -245,6 +245,11 @@ while shouldRun:
 			nowPlaying.paused = True
 		print("Go to {} seconds!".format(position))
 
+	if char == "j":
+		print("\nJOURNAL:")
+		for song in songLog:
+			print(song)
+
 	if char == "n":
 		print("\nNOW PLAYING:")
 		if not nowPlaying.path:
