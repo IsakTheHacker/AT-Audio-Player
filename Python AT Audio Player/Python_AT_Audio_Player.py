@@ -334,6 +334,7 @@ while shouldRun:
 				break
 			options["shuffleIndefinitely"] = newShuffleIndefinitely
 			print("New shuffle indefinitely settings: {}!\n".format(options["shuffleIndefinitely"]))
+		saveFiles()
 
 	if char == "e":
 		print("Bye!\n")
