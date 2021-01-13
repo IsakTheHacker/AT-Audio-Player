@@ -222,6 +222,9 @@ while shouldRun:
 
 	if char == "r":
 		pygame.mixer_music.play()
+		if nowPlaying.paused:
+			pygame.mixer_music.pause()
+			nowPlaying.paused = True
 		print("Rewind!")
 
 	if char == "t":
