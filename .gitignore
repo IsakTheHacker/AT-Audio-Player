@@ -337,5 +337,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-/Python AT Audio Player/song.mp3
+
+# My ignored files
 /Python AT Audio Player/play.log
