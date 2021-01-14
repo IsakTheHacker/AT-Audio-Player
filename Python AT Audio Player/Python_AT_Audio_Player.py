@@ -237,13 +237,27 @@ while shouldRun:
 		
 	if char == "g":
 		print("\nGOTO POSITION:")
-		position = int(input("Position (seconds): "))
-		pygame.mixer_music.play(start=position)
-		nowPlaying.positionOffset = position
-		if nowPlaying.paused:
-			pygame.mixer_music.pause()
-			nowPlaying.paused = True
-		print("Go to {} seconds!".format(position))
+		seconds = int(pygame.mixer_music.get_pos() / 1000) + nowPlaying.positionOffset
+		print("Position is currently: {}:{}{}. ".format(seconds // 60, (lambda int: "0" if int < 10 else "")(seconds % 60), seconds % 60), end="")
+		while True:
+			newPositionStr = input("New position (seconds): ")
+			try:
+				if newPositionStr == "e":
+					newPosition = -1
+				else:
+					newPosition = int(newPositionStr)
+			except ValueError:
+				print("Not convertible to int. Try again!")
+				continue
+			break
+		if newPosition != -1:
+			position = newPosition
+			pygame.mixer_music.play(start=position)
+			nowPlaying.positionOffset = position
+			if nowPlaying.paused:
+				pygame.mixer_music.pause()
+				nowPlaying.paused = True
+			print("Go to {} seconds!".format(position))
 
 	if char == "j":
 		print("\nJOURNAL:")
