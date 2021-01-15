@@ -7,7 +7,7 @@
 # AT Audio Player
 Advanced Textbased Audio Player. This is a project which I started because I wanted a lightweight textbased application for music playback. The main reason why I prefer this instead of the more sophisticated GUI alternatives is that it is faster to use once you learned it.
 
-AT Audio Player currently supports basic pause/unpause/stop functionality, playlists and some more basic features. If you want to contribute to make the project better, read the Contribution rules.
+AT Audio Player currently supports basic pause/unpause/stop functionality, playlists and some more basic features. If you want to contribute to make the project better, read the Contribution section.
 
 ### Contribution
 If you want to contribute, feel free to do it in these ways:
