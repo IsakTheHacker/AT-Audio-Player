@@ -14,4 +14,8 @@ If you want to contribute, feel free to do it in these ways:
 - **Submit an issue:** If you find a bug or want to request a new feature, post a new issue in GitHub issues. We will try to get back to you as soon as possible. Also, there is no strict rules on how the issue should be written, just write in a way you think will make us understand.
 - **Make a pull request:** We use [GitHub Flow](https://guides.github.com/introduction/flow/index.html) which means that contributions/commits happen through pull requests. We don't have strict rules about the code contribution as long as you follow our standards.
 
+  1. Fork this repository to your own account from `master`.
+  2. Make some changes.
+  3. Create a pull request.
+
 *More information coming soon!*
