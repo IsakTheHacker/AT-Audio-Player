@@ -41,6 +41,7 @@ class NowPlaying:
 		self.paused = paused
 		self.positionOffset = 0
 		self.playlist = None
+		self.logged = False
 		if self.path != None:
 			self.length = int(pygame.mixer.Sound(self.path).get_length())
 		else:
@@ -82,6 +83,7 @@ def play(files):
 				nowPlaying.paused = False
 				nowPlaying.length = files[index].length
 				nowPlaying.positionOffset = files[index].positionOffset
+				nowPlaying.logged = False
 
 				#Add to log
 				songLog.append(files[index].path)
@@ -109,6 +111,7 @@ def play(files):
 				nowPlaying.length = None
 				nowPlaying.positionOffset = 0
 				nowPlaying.playlist = None
+				nowPlaying.logged = False
 				
 				sys.exit(0)		#Exit thread
 
@@ -128,6 +131,10 @@ else:
 	options = standardOptions
 	print("Options file could not be found...")
 pygame.mixer_music.set_volume(options["volume"])
+
+#Prepare some things
+with open(scriptDir + "/play.log","a") as file:
+	file.write(time.strftime("#time: %Y-%m-%d %H:%M:%S\n", time.localtime(time.time())))
 
 #Start standard song
 if options["onStartSong"] != None:
@@ -150,9 +157,9 @@ def saveFiles():
 
 	#Append played songs to log
 	with open(scriptDir + "/play.log","a") as file:
-		file.write(time.strftime("#time: %Y-%m-%d %H:%M:%S\n", time.localtime(time.time())))
-		for song in songLog:
-			file.write(song + "\n")
+		if not nowPlaying.logged:
+			file.write(nowPlaying.path + "\n")
+			nowPlaying.logged = True
 
 while shouldRun:
 	char = msvcrt.getwch()
