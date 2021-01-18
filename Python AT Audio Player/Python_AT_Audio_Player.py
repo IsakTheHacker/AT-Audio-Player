@@ -163,22 +163,38 @@ def saveFiles():
 
 while shouldRun:
 
-	if keyboard.is_pressed("p") and pygame.mixer_music.get_busy():
+	p_event = keyboard.is_pressed("p")
+	s_event = keyboard.is_pressed("s")
+	l_event = keyboard.is_pressed("l")
+	i_event = keyboard.is_pressed("i")
+	u_event = keyboard.is_pressed("u")
+	r_event = keyboard.is_pressed("r")
+	t_event = keyboard.is_pressed("t")
+	g_event = keyboard.is_pressed("g")
+	j_event = keyboard.is_pressed("j")
+	n_event = keyboard.is_pressed("n")
+	h_event = keyboard.is_pressed("h")
+	c_event = keyboard.is_pressed("c")
+	o_event = keyboard.is_pressed("o")
+	e_event = keyboard.is_pressed("e")
+	q_event = keyboard.is_pressed("q")
+
+	if p_event and pygame.mixer_music.get_busy():
 		pygame.mixer_music.pause()
 		nowPlaying.paused = True
 		print("Paused!")
-	elif keyboard.is_pressed("p") and not pygame.mixer_music.get_busy():
+	elif p_event and not pygame.mixer_music.get_busy():
 		pygame.mixer_music.unpause()
 		nowPlaying.paused = False
 		print("Unpaused!")
 
-	if keyboard.is_pressed("s"):
+	if s_event:
 		pygame.mixer_music.stop()
 		pygame.mixer_music.unload()
 		nowPlaying.paused = None
 		print("Stopped/Next!")
 
-	if keyboard.is_pressed("l"):
+	if l_event:
 		new_song = input("Type the new song here: ")
 		if os.path.exists(new_song):
 			song = [NowPlaying(os.path.basename(new_song), os.path.abspath(new_song), False)]
@@ -187,7 +203,7 @@ while shouldRun:
 		else:
 			print("Song doesn't exist.")
 
-	if keyboard.is_pressed("i"):
+	if i_event:
 		playlist = input("Type the playlist here: ")
 		if os.path.exists(playlist):
 			#if os.path.isfile(playlist):
@@ -210,7 +226,7 @@ while shouldRun:
 		else:
 			print("Playlist doesn't exist.")
 
-	if keyboard.is_pressed("u"):
+	if u_event:
 		print("\nREMAINING SONGS:")
 		if not nowPlaying.path:
 			print("No song is currently loaded!")
@@ -226,14 +242,14 @@ while shouldRun:
 				else:
 					print("The current playing song is the last one.")
 
-	if keyboard.is_pressed("r"):
+	if r_event:
 		pygame.mixer_music.play()
 		if nowPlaying.paused:
 			pygame.mixer_music.pause()
 			nowPlaying.paused = True
 		print("Rewind!")
 
-	if keyboard.is_pressed("t"):
+	if t_event:
 		if loopSong:
 			print("Stop looping current track.")
 			loopSong = False
@@ -241,7 +257,7 @@ while shouldRun:
 			print("Looping current track!")
 			loopSong = True
 		
-	if keyboard.is_pressed("g"):
+	if g_event:
 		print("\nGOTO POSITION:")
 		seconds = int(pygame.mixer_music.get_pos() / 1000) + nowPlaying.positionOffset
 		print("Position is currently: {}:{}{}. ".format(seconds // 60, (lambda int: "0" if int < 10 else "")(seconds % 60), seconds % 60), end="")
@@ -265,12 +281,12 @@ while shouldRun:
 				nowPlaying.paused = True
 			print("Go to {} seconds!".format(position))
 
-	if keyboard.is_pressed("j"):
+	if j_event:
 		print("\nJOURNAL:")
 		for song in songLog:
 			print(song)
 
-	if keyboard.is_pressed("n"):
+	if n_event:
 		print("\nNOW PLAYING:")
 		if not nowPlaying.path:
 			print("No song is currently loaded!")
@@ -283,7 +299,7 @@ while shouldRun:
 			seconds = int(pygame.mixer_music.get_pos() / 1000) + nowPlaying.positionOffset
 			print("Position: {}:{}{}".format(seconds // 60, (lambda int: "0" if int < 10 else "")(seconds % 60), seconds % 60))
 
-	if keyboard.is_pressed("h"):
+	if h_event:
 		print("\nHELP:")
 		print("p - Pause/Unpause")
 		print("s - Stop")
@@ -298,14 +314,14 @@ while shouldRun:
 		print("e/q - Quit program")
 		print()
 
-	if keyboard.is_pressed("c"):
+	if c_event:
 		print("\nCREDITS:")
 		print("Author: Isak Brynielsson Neri")
 		print("Libs:")
 		print("    Pygame: {}".format(pygame.version.ver))
 		print()
 
-	if keyboard.is_pressed("o"):
+	if o_event:
 		print("\nOPTIONS:")
 		print("v - Change volume!")
 		print("s - Change shuffle setting.")
@@ -364,10 +380,10 @@ while shouldRun:
 			print("New shuffle indefinitely settings: {}!\n".format(options["shuffleIndefinitely"]))
 		saveFiles()
 
-	if keyboard.is_pressed("e"):
+	if e_event:
 		print("Bye!\n")
 		shouldRun = False
-	if keyboard.is_pressed("q"):
+	if q_event:
 		print("Goodbye!\n")
 		shouldRun = False
 
