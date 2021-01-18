@@ -4,8 +4,8 @@ import sys
 import os
 import time
 import random
-import msvcrt
 import json
+import keyboard
 import threading as thread
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
@@ -162,24 +162,23 @@ def saveFiles():
 			nowPlaying.logged = True
 
 while shouldRun:
-	char = msvcrt.getwch()
 
-	if char == "p" and pygame.mixer_music.get_busy():
+	if keyboard.is_pressed("p") and pygame.mixer_music.get_busy():
 		pygame.mixer_music.pause()
 		nowPlaying.paused = True
 		print("Paused!")
-	elif char == "p" and not pygame.mixer_music.get_busy():
+	elif keyboard.is_pressed("p") and not pygame.mixer_music.get_busy():
 		pygame.mixer_music.unpause()
 		nowPlaying.paused = False
 		print("Unpaused!")
 
-	if char == "s":
+	if keyboard.is_pressed("s"):
 		pygame.mixer_music.stop()
 		pygame.mixer_music.unload()
 		nowPlaying.paused = None
 		print("Stopped/Next!")
 
-	if char == "l":
+	if keyboard.is_pressed("l"):
 		new_song = input("Type the new song here: ")
 		if os.path.exists(new_song):
 			song = [NowPlaying(os.path.basename(new_song), os.path.abspath(new_song), False)]
@@ -188,7 +187,7 @@ while shouldRun:
 		else:
 			print("Song doesn't exist.")
 
-	if char == "i":
+	if keyboard.is_pressed("i"):
 		playlist = input("Type the playlist here: ")
 		if os.path.exists(playlist):
 			#if os.path.isfile(playlist):
@@ -211,7 +210,7 @@ while shouldRun:
 		else:
 			print("Playlist doesn't exist.")
 
-	if char == "u":
+	if keyboard.is_pressed("u"):
 		print("\nREMAINING SONGS:")
 		if not nowPlaying.path:
 			print("No song is currently loaded!")
@@ -227,14 +226,14 @@ while shouldRun:
 				else:
 					print("The current playing song is the last one.")
 
-	if char == "r":
+	if keyboard.is_pressed("r"):
 		pygame.mixer_music.play()
 		if nowPlaying.paused:
 			pygame.mixer_music.pause()
 			nowPlaying.paused = True
 		print("Rewind!")
 
-	if char == "t":
+	if keyboard.is_pressed("t"):
 		if loopSong:
 			print("Stop looping current track.")
 			loopSong = False
@@ -242,7 +241,7 @@ while shouldRun:
 			print("Looping current track!")
 			loopSong = True
 		
-	if char == "g":
+	if keyboard.is_pressed("g"):
 		print("\nGOTO POSITION:")
 		seconds = int(pygame.mixer_music.get_pos() / 1000) + nowPlaying.positionOffset
 		print("Position is currently: {}:{}{}. ".format(seconds // 60, (lambda int: "0" if int < 10 else "")(seconds % 60), seconds % 60), end="")
@@ -266,12 +265,12 @@ while shouldRun:
 				nowPlaying.paused = True
 			print("Go to {} seconds!".format(position))
 
-	if char == "j":
+	if keyboard.is_pressed("j"):
 		print("\nJOURNAL:")
 		for song in songLog:
 			print(song)
 
-	if char == "n":
+	if keyboard.is_pressed("n"):
 		print("\nNOW PLAYING:")
 		if not nowPlaying.path:
 			print("No song is currently loaded!")
@@ -284,7 +283,7 @@ while shouldRun:
 			seconds = int(pygame.mixer_music.get_pos() / 1000) + nowPlaying.positionOffset
 			print("Position: {}:{}{}".format(seconds // 60, (lambda int: "0" if int < 10 else "")(seconds % 60), seconds % 60))
 
-	if char == "h":
+	if keyboard.is_pressed("h"):
 		print("\nHELP:")
 		print("p - Pause/Unpause")
 		print("s - Stop")
@@ -299,14 +298,14 @@ while shouldRun:
 		print("e/q - Quit program")
 		print()
 
-	if char == "c":
+	if keyboard.is_pressed("c"):
 		print("\nCREDITS:")
 		print("Author: Isak Brynielsson Neri")
 		print("Libs:")
 		print("    Pygame: {}".format(pygame.version.ver))
 		print()
 
-	if char == "o":
+	if keyboard.is_pressed("o"):
 		print("\nOPTIONS:")
 		print("v - Change volume!")
 		print("s - Change shuffle setting.")
@@ -365,10 +364,10 @@ while shouldRun:
 			print("New shuffle indefinitely settings: {}!\n".format(options["shuffleIndefinitely"]))
 		saveFiles()
 
-	if char == "e":
+	if keyboard.is_pressed("e"):
 		print("Bye!\n")
 		shouldRun = False
-	if char == "q":
+	if keyboard.is_pressed("q"):
 		print("Goodbye!\n")
 		shouldRun = False
 
