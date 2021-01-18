@@ -50,6 +50,8 @@ class NowPlaying:
 nowPlaying = NowPlaying(None, None, None)		#Standard object for the current playing song
 
 #Functions
+def wait():
+	time.sleep(0.2)
 def play(files):
 	if len(files) == 1:
 		type = "song"
@@ -183,16 +185,19 @@ while shouldRun:
 		pygame.mixer_music.pause()
 		nowPlaying.paused = True
 		print("Paused!")
+		wait()
 	elif p_event and not pygame.mixer_music.get_busy():
 		pygame.mixer_music.unpause()
 		nowPlaying.paused = False
 		print("Unpaused!")
+		wait()
 
 	if s_event:
 		pygame.mixer_music.stop()
 		pygame.mixer_music.unload()
 		nowPlaying.paused = None
 		print("Stopped/Next!")
+		wait()
 
 	if l_event:
 		new_song = input("Type the new song here: ")
@@ -202,6 +207,7 @@ while shouldRun:
 			print("Song loaded!")
 		else:
 			print("Song doesn't exist.")
+		wait()
 
 	if i_event:
 		playlist = input("Type the playlist here: ")
@@ -225,6 +231,7 @@ while shouldRun:
 					print("Directory does not contain any mp3-files")
 		else:
 			print("Playlist doesn't exist.")
+		wait()
 
 	if u_event:
 		print("\nREMAINING SONGS:")
@@ -241,6 +248,7 @@ while shouldRun:
 						print(song.name)
 				else:
 					print("The current playing song is the last one.")
+		wait()
 
 	if r_event:
 		pygame.mixer_music.play()
@@ -248,6 +256,7 @@ while shouldRun:
 			pygame.mixer_music.pause()
 			nowPlaying.paused = True
 		print("Rewind!")
+		wait()
 
 	if t_event:
 		if loopSong:
@@ -256,6 +265,7 @@ while shouldRun:
 		else:
 			print("Looping current track!")
 			loopSong = True
+		wait()
 		
 	if g_event:
 		print("\nGOTO POSITION:")
@@ -280,11 +290,13 @@ while shouldRun:
 				pygame.mixer_music.pause()
 				nowPlaying.paused = True
 			print("Go to {} seconds!".format(position))
+		wait()
 
 	if j_event:
 		print("\nJOURNAL:")
 		for song in songLog:
 			print(song)
+		wait()
 
 	if n_event:
 		print("\nNOW PLAYING:")
@@ -298,6 +310,7 @@ while shouldRun:
 			print("Length: {}:{}{}".format(nowPlaying.length // 60, (lambda int: "0" if int < 10 else "")(nowPlaying.length % 60), nowPlaying.length % 60))
 			seconds = int(pygame.mixer_music.get_pos() / 1000) + nowPlaying.positionOffset
 			print("Position: {}:{}{}".format(seconds // 60, (lambda int: "0" if int < 10 else "")(seconds % 60), seconds % 60))
+		wait()
 
 	if h_event:
 		print("\nHELP:")
@@ -313,6 +326,7 @@ while shouldRun:
 		print("h - Access this menu")
 		print("e/q - Quit program")
 		print()
+		wait()
 
 	if c_event:
 		print("\nCREDITS:")
@@ -320,6 +334,7 @@ while shouldRun:
 		print("Libs:")
 		print("    Pygame: {}".format(pygame.version.ver))
 		print()
+		wait()
 
 	if o_event:
 		print("\nOPTIONS:")
@@ -379,6 +394,7 @@ while shouldRun:
 			options["shuffleIndefinitely"] = newShuffleIndefinitely
 			print("New shuffle indefinitely settings: {}!\n".format(options["shuffleIndefinitely"]))
 		saveFiles()
+		wait()
 
 	if e_event:
 		print("Bye!\n")
