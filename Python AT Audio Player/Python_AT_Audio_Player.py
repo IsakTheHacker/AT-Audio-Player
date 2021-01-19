@@ -16,6 +16,7 @@ welcome_message = "Welcome to Python AT Audio Player!"
 scriptDir = os.path.dirname(os.path.realpath(__file__))
 shouldRun = True
 loopSong = False
+loadingAnimation = False
 songLog = []
 standardOptions = {
 	"shuffle": False,
@@ -50,6 +51,17 @@ class NowPlaying:
 nowPlaying = NowPlaying(None, None, None)		#Standard object for the current playing song
 
 #Functions
+def loading_animation(str):
+	array = ["/", "—", "\\", "|"]
+	n = 0
+	while loadingAnimation:
+		print("\r" + array[n] + " " + str, end="")
+		time.sleep(0.15)
+		if n == 3:
+			n = 0
+		else:
+			n += 1
+	sys.exit(0)
 def wait():
 	time.sleep(0.2)
 def play(files):
@@ -141,9 +153,13 @@ with open(scriptDir + "/play.log","a") as file:
 #Start standard song
 if options["onStartSong"] != None:
 	files = []
+	loadingAnimation = True
+	thread._start_new_thread(loading_animation, ("Loading playlist!",))
 	for entry in os.scandir(options["onStartSong"]["path"]):
 		if entry.is_file() and entry.name.endswith(".mp3"):
 			files.append(NowPlaying(entry.name, entry.path, False))
+	loadingAnimation = False
+	print("\r", end="")
 	if len(files) > 0:
 		thread._start_new_thread(play, (files,))
 		print("Standard playlist loaded!")
@@ -202,9 +218,13 @@ while shouldRun:
 	if l_event:
 		new_song = input("Type the new song here: ")
 		if os.path.exists(new_song):
+			loadingAnimation = True
+			thread._start_new_thread(loading_animation, ("Loading song!",))
 			song = [NowPlaying(os.path.basename(new_song), os.path.abspath(new_song), False)]
+			loadingAnimation = False
+			print("\r", end="")
 			thread._start_new_thread(play, (song,))
-			print("Song loaded!")
+			print("Song was loaded!")
 		else:
 			print("Song doesn't exist.")
 		wait()
@@ -221,12 +241,16 @@ while shouldRun:
 			#	pygame.mixer_music.play()
 			if os.path.isdir(playlist):
 				files = []
+				loadingAnimation = True
+				thread._start_new_thread(loading_animation, ("Loading playlist!",))
 				for entry in os.scandir(playlist):
 					if entry.is_file() and entry.name.endswith(".mp3"):
 						files.append(NowPlaying(entry.name, entry.path, False))
+				loadingAnimation = False
+				print("\r", end="")
 				if len(files) > 0:
 					thread._start_new_thread(play, (files,))
-					print("Playlist loaded!")
+					print("Playlist was loaded!")
 				else:
 					print("Directory does not contain any mp3-files")
 		else:
