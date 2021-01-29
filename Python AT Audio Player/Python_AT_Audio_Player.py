@@ -191,7 +191,7 @@ def saveFiles():
 thread._start_new_thread(getChar, ())
 while shouldRun:
 
-	p_event = pressedCharacter.char == "p"
+	p_event = (pressedCharacter.char == "p") or (keyboard.is_pressed(76))		#Trigger on "p" inside console or "5" on numpad globally
 	s_event = pressedCharacter.char == "s"
 	l_event = pressedCharacter.char == "l"
 	i_event = pressedCharacter.char == "i"
