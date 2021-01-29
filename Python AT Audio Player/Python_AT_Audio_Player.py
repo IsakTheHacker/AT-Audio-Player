@@ -6,6 +6,7 @@ import time
 import random
 import json
 import keyboard
+import msvcrt
 import threading as thread
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
@@ -31,6 +32,10 @@ SONG_END = pygame.USEREVENT + 1					#Song end event
 pygame.mixer_music.set_endevent(SONG_END)
 
 #Classes
+class PressedCharacter:
+	def __init__(self):
+		self.char = None
+pressedCharacter = PressedCharacter()
 class PlaylistData:
 	def __init__(self):
 		self.shuffleIndefinitely = False
@@ -51,6 +56,9 @@ class NowPlaying:
 nowPlaying = NowPlaying(None, None, None)		#Standard object for the current playing song
 
 #Functions
+def getChar():
+	while shouldRun:
+		pressedCharacter.char = msvcrt.getwch()
 def loading_animation(str):
 	array = ["/", "—", "\\", "|"]
 	n = 0
@@ -63,6 +71,7 @@ def loading_animation(str):
 			n += 1
 	sys.exit(0)
 def wait():
+	pressedCharacter.char = ""
 	time.sleep(0.2)
 def play(files):
 	if len(files) == 1:
@@ -179,23 +188,24 @@ def saveFiles():
 			file.write(nowPlaying.path + "\n")
 			nowPlaying.logged = True
 
+thread._start_new_thread(getChar, ())
 while shouldRun:
 
-	p_event = keyboard.is_pressed("p")
-	s_event = keyboard.is_pressed("s")
-	l_event = keyboard.is_pressed("l")
-	i_event = keyboard.is_pressed("i")
-	u_event = keyboard.is_pressed("u")
-	r_event = keyboard.is_pressed("r")
-	t_event = keyboard.is_pressed("t")
-	g_event = keyboard.is_pressed("g")
-	j_event = keyboard.is_pressed("j")
-	n_event = keyboard.is_pressed("n")
-	h_event = keyboard.is_pressed("h")
-	c_event = keyboard.is_pressed("c")
-	o_event = keyboard.is_pressed("o")
-	e_event = keyboard.is_pressed("e")
-	q_event = keyboard.is_pressed("q")
+	p_event = pressedCharacter.char == "p"
+	s_event = pressedCharacter.char == "s"
+	l_event = pressedCharacter.char == "l"
+	i_event = pressedCharacter.char == "i"
+	u_event = pressedCharacter.char == "u"
+	r_event = pressedCharacter.char == "r"
+	t_event = pressedCharacter.char == "t"
+	g_event = pressedCharacter.char == "g"
+	j_event = pressedCharacter.char == "j"
+	n_event = pressedCharacter.char == "n"
+	h_event = pressedCharacter.char == "h"
+	c_event = pressedCharacter.char == "c"
+	o_event = pressedCharacter.char == "o"
+	e_event = pressedCharacter.char == "e"
+	q_event = pressedCharacter.char == "q"
 
 	if p_event and pygame.mixer_music.get_busy():
 		pygame.mixer_music.pause()
