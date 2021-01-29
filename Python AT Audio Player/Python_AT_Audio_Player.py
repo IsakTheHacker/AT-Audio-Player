@@ -191,12 +191,12 @@ def saveFiles():
 thread._start_new_thread(getChar, ())
 while shouldRun:
 
-	p_event = (pressedCharacter.char == "p") or (keyboard.is_pressed(76))		#Trigger on "p" inside console or "5" on numpad (globally)
-	s_event = (pressedCharacter.char == "s") or (keyboard.is_pressed(77))		#Trigger on "s" inside console or "6" on numpad (globally)
+	p_event = (pressedCharacter.char == "p") or ((keyboard.is_pressed(76)) and (keyboard.is_pressed("5")))		#Trigger on "p" inside console or "5" on numpad (globally)
+	s_event = (pressedCharacter.char == "s") or ((keyboard.is_pressed(77)) and (keyboard.is_pressed("6")))		#Trigger on "s" inside console or "6" on numpad (globally)
 	l_event = pressedCharacter.char == "l"
 	i_event = pressedCharacter.char == "i"
 	u_event = pressedCharacter.char == "u"
-	r_event = (pressedCharacter.char == "r") or (keyboard.is_pressed(75))		#Trigger on "r" inside console or "4" on numpad (globally)
+	r_event = (pressedCharacter.char == "r") or ((keyboard.is_pressed(75)) and (keyboard.is_pressed("4")))		#Trigger on "r" inside console or "4" on numpad (globally)
 	t_event = pressedCharacter.char == "t"
 	g_event = pressedCharacter.char == "g"
 	j_event = pressedCharacter.char == "j"
@@ -204,7 +204,7 @@ while shouldRun:
 	h_event = pressedCharacter.char == "h"
 	c_event = pressedCharacter.char == "c"
 	o_event = pressedCharacter.char == "o"
-	e_event = (pressedCharacter.char == "e") or (keyboard.is_pressed(79))		#Trigger on "e" inside console or "1" on numpad (globally)
+	e_event = (pressedCharacter.char == "e") or ((keyboard.is_pressed(79)) and (keyboard.is_pressed("1")))		#Trigger on "e" inside console or "1" on numpad (globally)
 	q_event = pressedCharacter.char == "q"
 
 	if p_event and pygame.mixer_music.get_busy():
