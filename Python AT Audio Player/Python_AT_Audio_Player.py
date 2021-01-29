@@ -204,7 +204,7 @@ while shouldRun:
 	h_event = pressedCharacter.char == "h"
 	c_event = pressedCharacter.char == "c"
 	o_event = pressedCharacter.char == "o"
-	e_event = pressedCharacter.char == "e"
+	e_event = (pressedCharacter.char == "e") or (keyboard.is_pressed(79))		#Trigger on "e" inside console or "1" on numpad (globally)
 	q_event = pressedCharacter.char == "q"
 
 	if p_event and pygame.mixer_music.get_busy():
