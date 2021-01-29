@@ -196,7 +196,7 @@ while shouldRun:
 	l_event = pressedCharacter.char == "l"
 	i_event = pressedCharacter.char == "i"
 	u_event = pressedCharacter.char == "u"
-	r_event = pressedCharacter.char == "r"
+	r_event = (pressedCharacter.char == "r") or (keyboard.is_pressed(75))		#Trigger on "r" inside console or "4" on numpad (globally)
 	t_event = pressedCharacter.char == "t"
 	g_event = pressedCharacter.char == "g"
 	j_event = pressedCharacter.char == "j"
