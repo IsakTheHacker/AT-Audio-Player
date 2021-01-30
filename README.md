@@ -5,6 +5,11 @@
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/IsakTheHacker/AT-Audio-Player?include_prereleases)
 
 # AT Audio Player
+
+Click [here](https://github.com/IsakTheHacker/AT-Audio-Player/releases/latest) to download the latest release!
+
+***
+
 Advanced Textbased Audio Player. This is a project which I started because I wanted a lightweight textbased application for music playback. The main reason why I prefer this instead of the more sophisticated GUI alternatives is that it is faster to use once you learned it.
 
 AT Audio Player currently supports basic pause/unpause/stop functionality, playlists and some more basic features. If you want to contribute to make the project better, read the Contribution section.
