@@ -19,3 +19,7 @@ If you want to contribute, feel free to do it in these ways:
   3. Create a pull request.
 
 *More information coming soon!*
+
+### Network
+Here is the network graph so you can keep up to date on the latest changes to the different branches:
+[Network Graph](https://github.com/IsakTheHacker/AT-Audio-Player/network)
