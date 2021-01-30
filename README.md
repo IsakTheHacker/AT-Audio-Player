@@ -2,7 +2,6 @@
 ![Lines of code](https://img.shields.io/tokei/lines/github/IsakTheHacker/AT-Audio-Player)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/IsakTheHacker/AT-Audio-Player)
 [![GitHub issues](https://img.shields.io/github/issues/IsakTheHacker/AT-Audio-Player)](https://github.com/IsakTheHacker/AT-Audio-Player/issues)
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/IsakTheHacker/AT-Audio-Player?include_prereleases)
 
 # AT Audio Player
 
