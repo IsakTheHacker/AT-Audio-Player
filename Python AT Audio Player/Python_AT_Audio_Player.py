@@ -32,6 +32,10 @@ SONG_END = pygame.USEREVENT + 1					#Song end event
 pygame.mixer_music.set_endevent(SONG_END)
 
 #Classes
+class Globals:
+	def __init__(self):
+		self.shouldRunB = True
+globals = Globals()
 class PressedCharacter:
 	def __init__(self):
 		self.char = None
@@ -80,16 +84,19 @@ def play(files):
 	elif len(files) > 1:
 		type = "playlist"
 	while shouldRun:
-		for event in pygame.event.get():
-			if event.type == SONG_END:
-				saveFiles() #Save files
-				if loopSong:
-					pygame.mixer_music.play()
+		if globals.shouldRunB:
+			for event in pygame.event.get():
+				if event.type == SONG_END:
+					saveFiles() #Save files
+					if loopSong:
+						pygame.mixer_music.play()
 
-					#Add to log
-					songLog.append(nowPlaying.path)
-				else:
-					nowPlaying.paused = None
+						#Add to log
+						songLog.append(nowPlaying.path)
+					else:
+						nowPlaying.paused = None
+		else:
+			globals.shouldRunB = True
 		if (not pygame.mixer_music.get_busy()) and (nowPlaying.paused == None):
 			if files:
 				index = -1
@@ -223,9 +230,19 @@ while shouldRun:
 		wait()
 
 	if s_event:
+		loopSongTmp = loopSong
+		loopSong = False
 		pygame.mixer_music.stop()
 		pygame.mixer_music.unload()
 		nowPlaying.paused = None
+
+		globals.shouldRunB = False
+		while not globals.shouldRunB:
+			pass
+		if loopSongTmp:
+			loopSong = True
+		globals.shouldRunB = True
+
 		print("Stopped/Next!")
 		wait()
 
