@@ -41,6 +41,7 @@ pygame.mixer_music.set_endevent(SONG_END)
 class Globals:
 	def __init__(self):
 		self.shouldRunB = True
+		self.lastCommandWasVolume = False
 globals = Globals()
 class PressedCharacter:
 	def __init__(self):
@@ -81,9 +82,13 @@ def loading_animation(str):
 		else:
 			n += 1
 	sys.exit(0)
-def wait():
+def wait(seconds = 0.2):
 	pressedCharacter.char = ""
-	time.sleep(0.2)
+	time.sleep(seconds)
+def lineBreak():
+	if (globals.lastCommandWasVolume):
+		globals.lastCommandWasVolume = False
+		print()
 def play(files):
 	if len(files) == 1:
 		type = "song"
@@ -208,6 +213,23 @@ def setGlobalChar(event):
 keyboard.on_press(setGlobalChar)
 while shouldRun:
 
+	if (keyboard.is_pressed(73)) and (pressedCharacter.globalChar.is_keypad):
+		pygame.mixer_music.set_volume(pygame.mixer_music.get_volume()+0.01)
+		if (globals.lastCommandWasVolume):
+			print("\rVolume set to {} ".format(int(pygame.mixer_music.get_volume()*100)), end="")
+		else:
+			print("Volume set to {} ".format(int(pygame.mixer_music.get_volume()*100)), end="", flush=True)
+			globals.lastCommandWasVolume = True
+		wait(0.1)
+	elif (keyboard.is_pressed(81)) and (pressedCharacter.globalChar.is_keypad):
+		pygame.mixer_music.set_volume(pygame.mixer_music.get_volume()-0.01)
+		if (globals.lastCommandWasVolume):
+			print("\rVolume set to {} ".format(int(pygame.mixer_music.get_volume()*100)), end="")
+		else:
+			print("Volume set to {} ".format(int(pygame.mixer_music.get_volume()*100)), end="", flush=True)
+			globals.lastCommandWasVolume = True
+		wait(0.1)
+
 	p_event = (pressedCharacter.char == "p") or ((keyboard.is_pressed(76)) and (pressedCharacter.globalChar.is_keypad))		#Trigger on "p" inside console or "5" on numpad (globally)
 	s_event = (pressedCharacter.char == "s") or ((keyboard.is_pressed(77)) and (pressedCharacter.globalChar.is_keypad))		#Trigger on "s" inside console or "6" on numpad (globally)
 	l_event = pressedCharacter.char == "l"
@@ -225,17 +247,20 @@ while shouldRun:
 	q_event = pressedCharacter.char == "q"
 
 	if p_event and pygame.mixer_music.get_busy():
+		lineBreak()
 		pygame.mixer_music.pause()
 		nowPlaying.paused = True
 		print("Paused!")
 		wait()
 	elif p_event and not pygame.mixer_music.get_busy():
+		lineBreak()
 		pygame.mixer_music.unpause()
 		nowPlaying.paused = False
 		print("Unpaused!")
 		wait()
 
 	if s_event:
+		lineBreak()
 		loopSongTmp = loopSong
 		loopSong = False
 		pygame.mixer_music.stop()
@@ -253,6 +278,7 @@ while shouldRun:
 		wait()
 
 	if l_event:
+		lineBreak()
 		new_song = input("Type the new song here: ")
 		if os.path.exists(new_song):
 			loadingAnimation = True
@@ -267,6 +293,7 @@ while shouldRun:
 		wait()
 
 	if i_event:
+		lineBreak()
 		playlist = input("Type the playlist here: ")
 		if os.path.exists(playlist):
 			#if os.path.isfile(playlist):
@@ -295,6 +322,7 @@ while shouldRun:
 		wait()
 
 	if u_event:
+		lineBreak()
 		print("\nREMAINING SONGS:")
 		if not nowPlaying.path:
 			print("No song is currently loaded!")
@@ -312,6 +340,7 @@ while shouldRun:
 		wait()
 
 	if r_event:
+		lineBreak()
 		pygame.mixer_music.play()
 		if nowPlaying.paused:
 			pygame.mixer_music.pause()
@@ -320,6 +349,7 @@ while shouldRun:
 		wait()
 
 	if t_event:
+		lineBreak()
 		if loopSong:
 			print("Stop looping current track.")
 			loopSong = False
@@ -329,6 +359,7 @@ while shouldRun:
 		wait()
 		
 	if g_event:
+		lineBreak()
 		print("\nGOTO POSITION:")
 		seconds = int(pygame.mixer_music.get_pos() / 1000) + nowPlaying.positionOffset
 		print("Position is currently: {}:{}{}. ".format(seconds // 60, (lambda int: "0" if int < 10 else "")(seconds % 60), seconds % 60), end="")
@@ -354,12 +385,14 @@ while shouldRun:
 		wait()
 
 	if j_event:
+		lineBreak()
 		print("\nJOURNAL:")
 		for song in songLog:
 			print(song)
 		wait()
 
 	if n_event:
+		lineBreak()
 		print("\nNOW PLAYING:")
 		if not nowPlaying.path:
 			print("No song is currently loaded!")
@@ -374,6 +407,7 @@ while shouldRun:
 		wait()
 
 	if h_event:
+		lineBreak()
 		print("\nHELP:")
 		print("p - Pause/Unpause")
 		print("s - Stop")
@@ -390,6 +424,7 @@ while shouldRun:
 		wait()
 
 	if c_event:
+		lineBreak()
 		print("\nCREDITS:")
 		print("Author: Isak Brynielsson Neri")
 		print("Libs:")
@@ -398,6 +433,7 @@ while shouldRun:
 		wait()
 
 	if o_event:
+		lineBreak()
 		print("\nOPTIONS:")
 		print("v - Change volume!")
 		print("s - Change shuffle setting.")
@@ -458,9 +494,11 @@ while shouldRun:
 		wait()
 
 	if e_event:
+		lineBreak()
 		print("Bye!\n")
 		shouldRun = False
 	if q_event:
+		lineBreak()
 		print("Goodbye!\n")
 		shouldRun = False
 
