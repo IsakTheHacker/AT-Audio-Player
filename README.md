@@ -16,6 +16,13 @@ AT Audio Player currently supports basic pause/unpause/stop functionality, playl
 
 ***
 
+### Latest release
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/IsakTheHacker/AT-Audio-Player?include_prereleases)](https://github.com/IsakTheHacker/AT-Audio-Player/releases)
+[![GitHub Release Date (including prereleases)](https://img.shields.io/github/release-date-pre/IsakTheHacker/AT-Audio-Player)](https://github.com/IsakTheHacker/AT-Audio-Player/releases)
+[![GitHub all releases](https://img.shields.io/github/downloads/IsakTheHacker/AT-Audio-Player/total)](https://github.com/IsakTheHacker/AT-Audio-Player/releases) <sub>(Total downloads for all releases)</sub>
+
+***
+
 ### Contribution
 If you want to contribute, feel free to do it in these ways:
 - **Submit an issue:** If you find a bug or want to request a new feature, post a new issue in GitHub issues. We will try to get back to you as soon as possible. Also, there is no strict rules on how the issue should be written, just write in a way you think will make us understand.
