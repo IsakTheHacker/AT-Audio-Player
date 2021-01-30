@@ -1,6 +1,12 @@
 
-#Imports
+#Check if script is called as a module in another script or not
 import sys
+if __name__ != "__main__":
+	print("\nThis program should be called as a standalone script!")
+	sys.exit(1)
+
+
+#Imports
 import os
 import time
 import random
