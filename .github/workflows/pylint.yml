@@ -22,4 +22,5 @@ jobs:
     #    pylint `ls -R|grep .py$|xargs`
         
     - name: Upload to CodeCov
+      working-directory: "./Python AT Audio Player/"
       run: bash <(curl -s https://codecov.io/bash)
