@@ -9,6 +9,8 @@ Advanced Textbased Audio Player. This is a project which I started because I wan
 
 AT Audio Player currently supports basic pause/unpause/stop functionality, playlists and some more basic features. If you want to contribute to make the project better, read the Contribution section.
 
+***
+
 ### Contribution
 If you want to contribute, feel free to do it in these ways:
 - **Submit an issue:** If you find a bug or want to request a new feature, post a new issue in GitHub issues. We will try to get back to you as soon as possible. Also, there is no strict rules on how the issue should be written, just write in a way you think will make us understand.
@@ -19,6 +21,8 @@ If you want to contribute, feel free to do it in these ways:
   3. Create a pull request.
 
 *More information coming soon!*
+
+***
 
 ### Network
 Here is the network graph so you can keep up to date on the latest changes to the different branches:
