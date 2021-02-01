@@ -68,6 +68,8 @@ class NowPlaying:
 nowPlaying = NowPlaying(None, None, None)		#Standard object for the current playing song
 
 #Functions
+def setGlobalChar(event):
+	pressedCharacter.globalChar = event
 def getChar():
 	while shouldRun:
 		pressedCharacter.char = msvcrt.getwch()
@@ -208,8 +210,6 @@ def saveFiles():
 			nowPlaying.logged = True
 
 thread._start_new_thread(getChar, ())
-def setGlobalChar(event):
-	pressedCharacter.globalChar = event
 keyboard.on_press(setGlobalChar)
 while shouldRun:
 
