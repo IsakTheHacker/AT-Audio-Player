@@ -68,6 +68,8 @@ class NowPlaying:
 nowPlaying = NowPlaying(None, None, None)		#Standard object for the current playing song
 
 #Functions
+def countfiles(path):
+	return len([entry for entry in os.scandir(path) if entry.is_file() and entry.name.endswith(".mp3")])
 def setGlobalChar(event):
 	pressedCharacter.globalChar = event
 def getChar():
