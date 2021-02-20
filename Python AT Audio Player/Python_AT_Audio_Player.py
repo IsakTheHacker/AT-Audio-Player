@@ -15,151 +15,17 @@ import keyboard
 import msvcrt
 import threading as thread
 
+from patapfuncs import *
+from patapvars import *
+from patapclasses import *
+
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import pygame
-
-#Variables
-welcome_message = "Welcome to Python AT Audio Player!"
-scriptDir = os.path.dirname(os.path.realpath(__file__))
-shouldRun = True
-loopSong = False
-loadingAnimation = False
-songLog = []
-standardOptions = {
-	"shuffle": False,
-	"shuffleIndefinitely": True,
-	"volume": 1,
-	"onStartSong": None
-}
 
 #Initalization
 pygame.init()
 SONG_END = pygame.USEREVENT + 1					#Song end event
 pygame.mixer_music.set_endevent(SONG_END)
-
-#Classes
-class Globals:
-	def __init__(self):
-		self.shouldRunB = True
-		self.lastCommandWasVolume = False
-globals = Globals()
-class PressedCharacter:
-	def __init__(self):
-		self.char = None
-		self.globalChar = keyboard.KeyboardEvent(None, None)
-pressedCharacter = PressedCharacter()
-class PlaylistData:
-	def __init__(self):
-		self.shuffleIndefinitely = False
-		self.files = []
-class NowPlaying:
-	def __init__(self, name, path, paused):
-		self.name = name
-		self.path = path
-		self.paused = paused
-		self.positionOffset = 0
-		self.playlist = None
-		self.logged = False
-		if self.path != None:
-			self.length = int(pygame.mixer.Sound(self.path).get_length())
-		else:
-			self.length = None
-
-nowPlaying = NowPlaying(None, None, None)		#Standard object for the current playing song
-
-#Functions
-def countfiles(path):
-	return len([entry for entry in os.scandir(path) if entry.is_file() and entry.name.endswith(".mp3")])
-def setGlobalChar(event):
-	pressedCharacter.globalChar = event
-def getChar():
-	while shouldRun:
-		pressedCharacter.char = msvcrt.getwch()
-def loading_animation(str):
-	array = ["/", "—", "\\", "|"]
-	n = 0
-	while loadingAnimation:
-		print("\r" + array[n] + " " + str, end="")
-		time.sleep(0.15)
-		if n == 3:
-			n = 0
-		else:
-			n += 1
-	sys.exit(0)
-def wait(seconds = 0.2):
-	pressedCharacter.char = ""
-	time.sleep(seconds)
-def lineBreak():
-	if (globals.lastCommandWasVolume):
-		globals.lastCommandWasVolume = False
-		print()
-def play(files):
-	if len(files) == 1:
-		type = "song"
-	elif len(files) > 1:
-		type = "playlist"
-	while shouldRun:
-		if globals.shouldRunB:
-			for event in pygame.event.get():
-				if event.type == SONG_END:
-					saveFiles() #Save files
-					if loopSong:
-						pygame.mixer_music.play()
-
-						#Add to log
-						songLog.append(nowPlaying.path)
-					else:
-						nowPlaying.paused = None
-		else:
-			globals.shouldRunB = True
-		if (not pygame.mixer_music.get_busy()) and (nowPlaying.paused == None):
-			if files:
-				index = -1
-				if (type == "playlist"):
-					while True:
-						if options["shuffle"]:
-							index = random.randint(0, len(files)-1)
-						if nowPlaying.path != files[index].path: break
-						if not options["shuffle"]: break
-				pygame.mixer_music.load(files[index].path)
-
-				#Change nowPlaying object
-				nowPlaying.name = files[index].name
-				nowPlaying.path = files[index].path
-				nowPlaying.paused = False
-				nowPlaying.length = files[index].length
-				nowPlaying.positionOffset = files[index].positionOffset
-				nowPlaying.logged = False
-
-				#Add to log
-				songLog.append(files[index].path)
-
-				pygame.mixer_music.play()
-				if (not options["shuffle"]) or (options["shuffle"] and not options["shuffleIndefinitely"]):
-					files.pop(index)
-				if (type == "playlist"):
-					nowPlaying.playlist = PlaylistData()
-					if (options["shuffle"]) and (options["shuffleIndefinitely"]):
-						nowPlaying.playlist.files = []
-						nowPlaying.playlist.shuffleIndefinitely = True
-					else:
-						nowPlaying.playlist.files = files
-						nowPlaying.playlist.shuffleIndefinitely = False
-				else:
-					nowPlaying.playlist = None
-			else:
-				print("{} ended! Start a new song or playlist?".format(type.capitalize()))
-
-				#Change nowPlaying object
-				nowPlaying.name = None
-				nowPlaying.path = None
-				nowPlaying.paused = None
-				nowPlaying.length = None
-				nowPlaying.positionOffset = 0
-				nowPlaying.playlist = None
-				nowPlaying.logged = False
-				
-				sys.exit(0)		#Exit thread
 
 #Welcome the user
 print("\n" + welcome_message)
@@ -167,16 +33,6 @@ for var in welcome_message:
 	print("-", end="", flush=True)
 	time.sleep(0.02)
 print()
-
-#Load options
-if (os.path.exists(scriptDir + "/options.json")) and (os.path.isfile(scriptDir + "/options.json")):
-	with open(scriptDir + "/options.json","r") as file:
-		options = json.load(file)
-	print("Options loaded!")
-else:
-	options = standardOptions
-	print("Options file could not be found...")
-pygame.mixer_music.set_volume(options["volume"])
 
 #Prepare some things
 with open(scriptDir + "/play.log","a") as file:
@@ -197,19 +53,6 @@ if options["onStartSong"] != None:
 		print("Standard playlist loaded!")
 	else:
 		print("Error")
-
-#Define saveFiles function
-def saveFiles():
-	#Save options
-	options["volume"] = pygame.mixer_music.get_volume()
-	with open(scriptDir + "/options.json","w") as file:
-		json.dump(options, file, indent=4)
-
-	#Append played songs to log
-	with open(scriptDir + "/play.log","a") as file:
-		if not nowPlaying.logged:
-			file.write(nowPlaying.path + "\n")
-			nowPlaying.logged = True
 
 thread._start_new_thread(getChar, ())
 keyboard.on_press(setGlobalChar)

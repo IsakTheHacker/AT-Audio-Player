@@ -21,6 +21,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="patapclasses.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="patapfuncs.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="patapvars.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Python_AT_Audio_Player.py" />
   </ItemGroup>
   <ItemGroup>
