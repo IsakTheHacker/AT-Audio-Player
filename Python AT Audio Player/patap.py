@@ -16,7 +16,7 @@ import msvcrt
 import threading as thread
 
 from patapfuncs import *
-from patapvars import *
+import patapvars
 from patapclasses import *
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
@@ -28,25 +28,25 @@ SONG_END = pygame.USEREVENT + 1					#Song end event
 pygame.mixer_music.set_endevent(SONG_END)
 
 #Welcome the user
-print("\n" + welcome_message)
-for var in welcome_message:
+print("\n" + patapvars.welcome_message)
+for var in patapvars.welcome_message:
 	print("-", end="", flush=True)
 	time.sleep(0.02)
 print()
 
 #Prepare some things
-with open(scriptDir + "/play.log","a") as file:
+with open(patapvars.scriptDir + "/play.log","a") as file:
 	file.write(time.strftime("#time: %Y-%m-%d %H:%M:%S\n", time.localtime(time.time())))
 
 #Start standard song
-if options["onStartSong"] != None:
+if patapvars.options["onStartSong"] != None:
 	files = []
-	loadingAnimation = True
+	patapvars.loadingAnimation = True
 	thread._start_new_thread(loading_animation, ("Loading playlist!",))
-	for entry in os.scandir(options["onStartSong"]["path"]):
+	for entry in os.scandir(patapvars.options["onStartSong"]["path"]):
 		if entry.is_file() and entry.name.endswith(".mp3"):
 			files.append(NowPlaying(entry.name, entry.path, False))
-	loadingAnimation = False
+	patapvars.loadingAnimation = False
 	print("\r", end="")
 	if len(files) > 0:
 		thread._start_new_thread(play, (files,))
@@ -56,7 +56,7 @@ if options["onStartSong"] != None:
 
 thread._start_new_thread(getChar, ())
 keyboard.on_press(setGlobalChar)
-while shouldRun:
+while patapvars.shouldRun:
 
 	if (keyboard.is_pressed(73)) and (pressedCharacter.globalChar.is_keypad):
 		pygame.mixer_music.set_volume(pygame.mixer_music.get_volume()+0.01)
@@ -106,8 +106,8 @@ while shouldRun:
 
 	if s_event:
 		lineBreak()
-		loopSongTmp = loopSong
-		loopSong = False
+		loopSongTmp = patapvars.loopSong
+		patapvars.loopSong = False
 		pygame.mixer_music.stop()
 		pygame.mixer_music.unload()
 		nowPlaying.paused = None
@@ -116,7 +116,7 @@ while shouldRun:
 		while not globals.shouldRunB:
 			pass
 		if loopSongTmp:
-			loopSong = True
+			patapvars.loopSong = True
 		globals.shouldRunB = True
 
 		print("Stopped/Next!")
@@ -126,10 +126,10 @@ while shouldRun:
 		lineBreak()
 		new_song = input("Type the new song here: ")
 		if os.path.exists(new_song):
-			loadingAnimation = True
+			patapvars.loadingAnimation = True
 			thread._start_new_thread(loading_animation, ("Loading song!",))
 			song = [NowPlaying(os.path.basename(new_song), os.path.abspath(new_song), False)]
-			loadingAnimation = False
+			patapvars.loadingAnimation = False
 			print("\r", end="")
 			thread._start_new_thread(play, (song,))
 			print("Song was loaded!")
@@ -150,12 +150,12 @@ while shouldRun:
 			#	pygame.mixer_music.play()
 			if os.path.isdir(playlist):
 				files = []
-				loadingAnimation = True
+				patapvars.loadingAnimation = True
 				thread._start_new_thread(loading_animation, ("Loading playlist!",))
 				for entry in os.scandir(playlist):
 					if entry.is_file() and entry.name.endswith(".mp3"):
 						files.append(NowPlaying(entry.name, entry.path, False))
-				loadingAnimation = False
+				patapvars.loadingAnimation = False
 				print("\r", end="")
 				if len(files) > 0:
 					thread._start_new_thread(play, (files,))
@@ -195,12 +195,12 @@ while shouldRun:
 
 	if t_event:
 		lineBreak()
-		if loopSong:
+		if patapvars.loopSong:
 			print("Stop looping current track.")
-			loopSong = False
+			patapvars.loopSong = False
 		else:
 			print("Looping current track!")
-			loopSong = True
+			patapvars.loopSong = True
 		wait()
 		
 	if g_event:
@@ -232,7 +232,7 @@ while shouldRun:
 	if j_event:
 		lineBreak()
 		print("\nJOURNAL:")
-		for song in songLog:
+		for song in patapvars.songLog:
 			print(song)
 		wait()
 
@@ -245,7 +245,7 @@ while shouldRun:
 			print("Name: {}".format(nowPlaying.name))
 			print("Path: {}".format(nowPlaying.path))
 			print("Paused: {}".format(nowPlaying.paused))
-			print("Looping: {}".format(loopSong))
+			print("Looping: {}".format(patapvars.loopSong))
 			print("Length: {}:{}{}".format(nowPlaying.length // 60, (lambda int: "0" if int < 10 else "")(nowPlaying.length % 60), nowPlaying.length % 60))
 			seconds = int(pygame.mixer_music.get_pos() / 1000) + nowPlaying.positionOffset
 			print("Position: {}:{}{}".format(seconds // 60, (lambda int: "0" if int < 10 else "")(seconds % 60), seconds % 60))
@@ -304,7 +304,7 @@ while shouldRun:
 			pygame.mixer_music.set_volume(newVolume / 100)
 			print("New volume set to {}!\n".format(pygame.mixer_music.get_volume() * 100))
 		if char2 == "s":
-			print("Shuffle setting is currently set to {}. ".format(options["shuffle"]), end="")
+			print("Shuffle setting is currently set to {}. ".format(patapvars.options["shuffle"]), end="")
 			while True:
 				newShuffleStr = input("Type 'True' or 'False': ")
 				if newShuffleStr == "True":
@@ -312,15 +312,15 @@ while shouldRun:
 				elif newShuffleStr == "False":
 					newShuffle = False
 				elif newShuffleStr == "e":
-					newShuffle = options["shuffle"]
+					newShuffle = patapvars.options["shuffle"]
 				else:
 					print("Not convertible to bool. Try again!")
 					continue
 				break
-			options["shuffle"] = newShuffle
-			print("New shuffle settings: {}!\n".format(options["shuffle"]))
+			patapvars.options["shuffle"] = newShuffle
+			print("New shuffle settings: {}!\n".format(patapvars.options["shuffle"]))
 		if char2 == "i":
-			print("Shuffle indefinitely setting is currently set to {}. ".format(options["shuffleIndefinitely"]), end="")
+			print("Shuffle indefinitely setting is currently set to {}. ".format(patapvars.options["shuffleIndefinitely"]), end="")
 			while True:
 				newShuffleIndefinitelyStr = input("Type 'True' or 'False': ")
 				if newShuffleIndefinitelyStr == "True":
@@ -328,24 +328,24 @@ while shouldRun:
 				elif newShuffleIndefinitelyStr == "False":
 					newShuffleIndefinitely = False
 				elif newShuffleIndefinitelyStr == "e":
-					newShuffleIndefinitely = options["shuffleIndefinitely"]
+					newShuffleIndefinitely = patapvars.options["shuffleIndefinitely"]
 				else:
 					print("Not convertible to bool. Try again!")
 					continue
 				break
-			options["shuffleIndefinitely"] = newShuffleIndefinitely
-			print("New shuffle indefinitely settings: {}!\n".format(options["shuffleIndefinitely"]))
+			patapvars.options["shuffleIndefinitely"] = newShuffleIndefinitely
+			print("New shuffle indefinitely settings: {}!\n".format(patapvars.options["shuffleIndefinitely"]))
 		saveFiles()
 		wait()
 
 	if e_event:
 		lineBreak()
 		print("Bye!\n")
-		shouldRun = False
+		patapvars.shouldRun = False
 	if q_event:
 		lineBreak()
 		print("Goodbye!\n")
-		shouldRun = False
+		patapvars.shouldRun = False
 
 saveFiles()
 
