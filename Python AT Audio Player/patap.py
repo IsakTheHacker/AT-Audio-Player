@@ -21,11 +21,7 @@ from patapclasses import *
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import pygame
-
-#Initalization
-pygame.init()
-SONG_END = pygame.USEREVENT + 1					#Song end event
-pygame.mixer_music.set_endevent(SONG_END)
+pygame.mixer_music.set_endevent(pygame.USEREVENT + 1)		#Song end event
 
 #Welcome the user
 print("\n" + patapvars.welcome_message)
