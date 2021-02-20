@@ -1,3 +1,9 @@
+#Check if script is called as main module
+import sys
+if __name__ == "__main__":
+	print("\nThis module is not meant to be executed standalone!")
+	sys.exit(0)
+
 import keyboard
 import os
 
