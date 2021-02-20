@@ -2,8 +2,8 @@
 #Check if script is called as a module in another script or not
 import sys
 if __name__ != "__main__":
-	print("\nThis program should be called as a standalone script!")
-	sys.exit(1)
+	print("\nPython AT Audio Player should be called as a standalone script!")
+	sys.exit(0)
 
 
 #Imports
