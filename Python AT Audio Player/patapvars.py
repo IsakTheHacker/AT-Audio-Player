@@ -1,6 +1,8 @@
 import os
-import pygame
 import json
+
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
+import pygame
 pygame.init()
 
 welcome_message = "Welcome to Python AT Audio Player!"
