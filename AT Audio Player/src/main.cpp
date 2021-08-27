@@ -178,11 +178,16 @@ public:
 	void set(Playlist playlist) {
 		loadedItem = QueueItem(playlist);
 	}
+	void setQueue(Queue& queue) { this->queue = &queue; }
 	void pause() { engine->setAllSoundsPaused(true); }
 	void unpause() { engine->setAllSoundsPaused(false); }
-	void setQueue(Queue& queue) { this->queue = &queue; }
 	void switchPauseMode() {
-
+		if (!sound) return;
+		if (sound->getIsPaused() == true) {		//Sound is paused, unpause
+			unpause();
+		} else {
+			pause();
+		}
 	}
 	bool isPlaying() {
 		if (!sound) return false;
@@ -248,7 +253,7 @@ int main(int argc, const char* argv[]) {
 		}
 		break;
 		case 'p': {
-
+			playbackController.switchPauseMode();
 		}
 		break;
 		}
