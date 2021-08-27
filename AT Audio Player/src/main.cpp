@@ -52,6 +52,9 @@ public:
 	Song() { }
 	Song(std::string path) {
 		song = engine->addSoundSourceFromFile(path.c_str(), ESM_AUTO_DETECT, true);		//Third parameter set to true == preload
+		if (!song) {
+			song = engine->getSoundSource(path.c_str());
+		}
 	}
 	std::string getPath() { return path; }
 	std::string getName() { return song->getName(); }
@@ -160,9 +163,9 @@ private:
 	QueueItem loadedItem;
 	void playLoadedItem() {
 		if (loadedItem.getContents() == 0) {			//Song
-			sound = engine->play2D(loadedItem.getSong().getSource());
+			sound = engine->play2D(loadedItem.getSong().getSource(), false, false, true);
 		} else if (loadedItem.getContents() == 1) {		//Playlist
-			sound = engine->play2D(loadedItem.getPlaylist().popFront().getSource());
+			sound = engine->play2D(loadedItem.getPlaylist().popFront().getSource(), false, false, true);
 		}
 	}
 public:
@@ -191,7 +194,7 @@ public:
 	}
 	static void pullFromQueue(PlaybackController* playbackController, Queue* queue) {
 		while (shouldRun) {
-			if (playbackController->isPlaying()) continue;					//Check if currently playing
+			if (playbackController->isPlaying()) continue;						//Check if currently playing
 			if (playbackController->loadedItem.getContents() == 1) {			//Check if playlist is empty
 				if (!playbackController->loadedItem.getPlaylist().getEmpty()) {
 					playbackController->playLoadedItem();
