@@ -340,6 +340,8 @@ int main(int argc, const char* argv[]) {
 			} else {
 				playbackController.rewind();
 			}
+
+			
 		}
 		break;
 		}
