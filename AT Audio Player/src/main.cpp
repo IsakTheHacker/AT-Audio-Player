@@ -47,6 +47,14 @@ void initEngine() {
 	}
 }
 
+std::string concatString(std::string subStr, int times) {
+	std::string str;
+	for (size_t i = 0; i < times; i++) {
+		str += subStr;
+	}
+	return str;
+}
+
 void clearScreen() {
 	HANDLE                     hStdOut;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -85,7 +93,8 @@ void clearScreen() {
 
 class Song {
 private:
-	std::string path;
+	std::string path = "Not set";
+	std::string name = "None";
 	ISoundSource* song;
 public:
 	Song() { }
@@ -94,9 +103,12 @@ public:
 		if (!song) {
 			song = engine->getSoundSource(path.c_str());
 		}
+		fs::path songPath(path);
+		name = songPath.filename().string();
+		this->path = path;
 	}
 	std::string getPath() { return path; }
-	std::string getName() { return song->getName(); }
+	std::string getName() { return name; }
 	ISoundSource* getSource() { return song; }
 };
 
@@ -254,6 +266,16 @@ public:
 			std::cout << "The song has been set on repeat!" << std::endl;
 		}
 	}
+	Song getSong() {
+		if (!sound) {
+			return Song();
+		}
+		if (loadedItem.getContents() == 0) {			//Song
+			return loadedItem.getSong();
+		} else if (loadedItem.getContents() == 1) {		//Playlist
+			return loadedItem.getPlaylist().getFront();
+		}
+	}
 	static void pullFromQueue(PlaybackController* playbackController, Queue* queue) {
 		while (shouldRun) {
 			if (playbackController->isPlaying()) continue;						//Check if currently playing
@@ -271,13 +293,72 @@ public:
 	}
 };
 
+class UserInterface {
+private:
+	bool paused = false;
+	bool pauseCycle = false;
+	PlaybackController* playbackController;
+	std::queue<std::string> messageQueue;
+	
+	void drawScreen() {
+		std::string spacesLine1 = concatString(" ", 59 - playbackController->getSong().getName().length());
+		std::string spacesLine2 = concatString(" ", 65);
+		
+		std::cout << "+------------------------------ ATAP ------------------------------+ Queue\n";
+		std::cout << "| Song: " << playbackController->getSong().getName() << spacesLine1 << "| "    << "\n";
+		std::cout << "| " << spacesLine2 << "| "    << "\n";
+		std::cout << "| " << spacesLine2 << "| "    << "\n";
+		std::cout << "| " << spacesLine2 << "| "    << "\n";
+	}
+public:
+	void printMessage(std::string message, unsigned int secondsOnScreen = 3) {
+		if (messageQueue.size() > 4) {
+			messageQueue.pop();
+		}
+		messageQueue.push(message);
+	}
+	void pauseUIUpdater() {
+		using namespace std::chrono_literals;
+		paused = true;
+		while (pauseCycle != true) {
+			std::this_thread::sleep_for(16.67ms);
+		}
+	}
+	void unpauseUIUpdater() {
+		paused = false;
+	}
+	void setPlaybackController(PlaybackController& playbackController) {
+		this->playbackController = &playbackController;
+	}
+	static void updateUI(UserInterface* userInterface) {
+		using namespace std::chrono_literals;
+		while (shouldRun) {
+			clearScreen();
+			userInterface->drawScreen();
+			std::this_thread::sleep_for(16.67ms);
+			userInterface->pauseCycle = false;
+			if (userInterface->paused) {
+				clearScreen();
+			}
+			while (userInterface->paused) {
+				userInterface->pauseCycle = true;
+				std::this_thread::sleep_for(16.67ms);
+			}
+		}
+	}
+};
+
 int main(int argc, const char* argv[]) {
 	initEngine();
 	PlaybackController playbackController;
+	UserInterface ui;
 	Queue queue;
-	playbackController.setQueue(queue);
 
-	std::thread threadObject(PlaybackController::pullFromQueue, &playbackController, &queue);
+	playbackController.setQueue(queue);
+	ui.setPlaybackController(playbackController);
+
+	std::thread pullFromQueue(PlaybackController::pullFromQueue, &playbackController, &queue);
+	std::thread updateUI(UserInterface::updateUI, &ui);
 	
 	while (shouldRun) {
 		char c = _getch();					//Get pressed key
@@ -289,6 +370,7 @@ int main(int argc, const char* argv[]) {
 		}
 		break;
 		case 'l': {
+			ui.pauseUIUpdater();
 			std::cout << "Enter path: ";
 			std::string path;
 			std::getline(std::cin, path);
@@ -297,7 +379,6 @@ int main(int argc, const char* argv[]) {
 
 			if (inputType == -1) {
 				std::cout << "Error 02: That is not a valid path" << std::endl;
-				break;
 			} else if (inputType == 0) {
 				Song song(path);
 				queue.pushItem(song);
@@ -307,6 +388,7 @@ int main(int argc, const char* argv[]) {
 				playlist.loadSongs(path);
 				std::cout << "Playlist added to queue!" << std::endl;
 			}
+			ui.unpauseUIUpdater();
 		}
 		break;
 		case 'p': {
@@ -345,7 +427,8 @@ int main(int argc, const char* argv[]) {
 		}
 	}
 
-	threadObject.join();
+	pullFromQueue.join();
+	updateUI.join();
 
 	engine->drop();							//Destroy engine
 	return 0;
