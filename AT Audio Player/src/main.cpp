@@ -54,6 +54,13 @@ std::string concatString(std::string subStr, int times) {
 	}
 	return str;
 }
+std::string concatString(char subStr, int times) {
+	std::string str;
+	for (size_t i = 0; i < times; i++) {
+		str += subStr;
+	}
+	return str;
+}
 
 void clearScreen() {
 	HANDLE                     hStdOut;
@@ -303,12 +310,14 @@ private:
 	void drawScreen() {
 		std::string spacesLine1 = concatString(" ", 59 - playbackController->getSong().getName().length());
 		std::string spacesLine2 = concatString(" ", 65);
+
+		std::string volumeString = "********oo";
 		
-		std::cout << "+------------------------------ ATAP ------------------------------+ Queue\n";
-		std::cout << "| Song: " << playbackController->getSong().getName() << spacesLine1 << "| "    << "\n";
-		std::cout << "| " << spacesLine2 << "| "    << "\n";
-		std::cout << "| " << spacesLine2 << "| "    << "\n";
-		std::cout << "| " << spacesLine2 << "| "    << "\n";
+		std::cout << "Volume +------------------------------ ATAP ------------------------------+ Queue\n";
+		std::cout << "       | Song: " << playbackController->getSong().getName() << spacesLine1 << "| "    << "\n";
+		std::cout << "  " << concatString(volumeString[9], 3) << "  | " << spacesLine2 << "| "    << "\n";
+		std::cout << "  " << concatString(volumeString[8], 3) << "  | " << spacesLine2 << "| "    << "\n";
+		std::cout << "  " << concatString(volumeString[7], 3) << "  | " << spacesLine2 << "| "    << "\n";
 	}
 public:
 	void printMessage(std::string message, unsigned int secondsOnScreen = 3) {
