@@ -62,6 +62,7 @@ std::string concatString(char subStr, int times) {
 	return str;
 }
 
+//Console functions
 void clearScreen() {
 	HANDLE                     hStdOut;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -85,7 +86,7 @@ void clearScreen() {
 		&count
 	)) return;
 
-  /* Fill the entire buffer with the current colors and attributes */
+	/* Fill the entire buffer with the current colors and attributes */
 	if (!FillConsoleOutputAttribute(
 		hStdOut,
 		csbi.wAttributes,
@@ -94,8 +95,27 @@ void clearScreen() {
 		&count
 	)) return;
 
-  /* Move the cursor home */
+	/* Move the cursor home */
 	SetConsoleCursorPosition(hStdOut, homeCoords);
+}
+void setConsoleCursorPos(int x = 0, int y = 0) {
+	HANDLE handle;
+	COORD coordinates;
+	handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	coordinates.X = x;
+	coordinates.Y = y;
+	SetConsoleCursorPosition(handle, coordinates);
+}
+void showConsoleCursor(const bool show) {
+#if defined(_WIN32) || defined(_WIN64)										//Windows
+	static const HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO cci;
+	GetConsoleCursorInfo(handle, &cci);
+	cci.bVisible = show;													//Show/hide cursor
+	SetConsoleCursorInfo(handle, &cci);
+#elif defined(__linux__)													//Linux
+	std::cout << (show ? "\033[?25h" : "\033[?25l");						//Show/hide cursor
+#endif
 }
 
 class Song {
@@ -342,7 +362,7 @@ public:
 	static void updateUI(UserInterface* userInterface) {
 		using namespace std::chrono_literals;
 		while (shouldRun) {
-			clearScreen();
+			setConsoleCursorPos();
 			userInterface->drawScreen();
 			std::this_thread::sleep_for(16.67ms);
 			userInterface->pauseCycle = false;
