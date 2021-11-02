@@ -129,7 +129,7 @@ class Song {
 private:
 	std::string path = "Not set";
 	std::string name = "None";
-	ISoundSource* song;
+	ISoundSource* song = nullptr;
 public:
 	Song() { }
 	Song(std::string path) {
@@ -258,8 +258,8 @@ private:
 
 class PlaybackController {
 private:
-	ISound* sound;
-	Queue* queue;
+	ISound* sound = nullptr;
+	Queue* queue = nullptr;
 	QueueItem loadedItem;
 	void playLoadedItem() {
 		if (loadedItem.getContents() == 0) {			//Song
@@ -317,12 +317,12 @@ public:
 			std::cout << "The song has been set on repeat!" << std::endl;
 		}
 	}
-	void setVolume(double volume) {
+	void setVolume(float volume) {
 		if (!sound) return;
 		if (volume > 10 || volume < 0) return;
 		sound->setVolume(volume / 10);
 	}
-	double getVolume() {
+	float getVolume() {
 		if (!sound) return 5;
 		return sound->getVolume() * 10;
 	}
@@ -357,7 +357,7 @@ class UserInterface {
 private:
 	bool paused = false;
 	bool pauseCycle = false;
-	PlaybackController* playbackController;
+	PlaybackController* playbackController = nullptr;
 	std::queue<std::string> messageQueue;
 	
 	void drawScreen() {
@@ -367,12 +367,12 @@ private:
 		std::string volumeString = concatString("*", playbackController->getVolume()) + concatString("o", 10 - playbackController->getVolume());
 
 		std::vector queueItems = playbackController->getQueue().getItemNames();
-		int maxQueueDisplaySize = 10;
+		int64_t maxQueueDisplaySize = 10;
 
 		if (queueItems.size() > maxQueueDisplaySize) {
 			queueItems[maxQueueDisplaySize - 1] = "...";
 		} else if (queueItems.size() < maxQueueDisplaySize) {
-			for (int i = queueItems.size(); i < maxQueueDisplaySize; i++) {
+			for (size_t i = queueItems.size(); i < maxQueueDisplaySize; i++) {
 				queueItems.push_back("");
 			}
 		}
