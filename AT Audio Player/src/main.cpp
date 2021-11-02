@@ -106,7 +106,7 @@ void setConsoleCursorPos(int x = 0, int y = 0) {
 	coordinates.Y = y;
 	SetConsoleCursorPosition(handle, coordinates);
 }
-void showConsoleCursor(const bool show) {
+void showConsoleCursor(const bool& show) {
 #if defined(_WIN32) || defined(_WIN64)										//Windows
 	static const HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO cci;
@@ -392,6 +392,7 @@ int main(int argc, const char* argv[]) {
 
 	playbackController.setQueue(queue);
 	ui.setPlaybackController(playbackController);
+	showConsoleCursor(false);
 
 	std::thread pullFromQueue(PlaybackController::pullFromQueue, &playbackController, &queue);
 	std::thread updateUI(UserInterface::updateUI, &ui);
