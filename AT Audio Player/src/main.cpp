@@ -338,6 +338,13 @@ private:
 		std::cout << "  " << concatString(volumeString[9], 3) << "  | " << spacesLine2 << "| "    << "\n";
 		std::cout << "  " << concatString(volumeString[8], 3) << "  | " << spacesLine2 << "| "    << "\n";
 		std::cout << "  " << concatString(volumeString[7], 3) << "  | " << spacesLine2 << "| "    << "\n";
+		std::cout << "  " << concatString(volumeString[6], 3) << "  | " << spacesLine2 << "| "    << "\n";
+		std::cout << "  " << concatString(volumeString[5], 3) << "  | " << spacesLine2 << "| "    << "\n";
+		std::cout << "  " << concatString(volumeString[4], 3) << "  | " << spacesLine2 << "| "    << "\n";
+		std::cout << "  " << concatString(volumeString[3], 3) << "  | " << spacesLine2 << "| "    << "\n";
+		std::cout << "  " << concatString(volumeString[2], 3) << "  | " << spacesLine2 << "| "    << "\n";
+		std::cout << "  " << concatString(volumeString[1], 3) << "  | " << spacesLine2 << "| "    << "\n";
+		std::cout << "  " << concatString(volumeString[0], 3) << "  | " << spacesLine2 << "| "    << "\n";
 	}
 public:
 	void printMessage(std::string message, unsigned int secondsOnScreen = 3) {
