@@ -252,6 +252,7 @@ private:
 		} else if (loadedItem.getContents() == 1) {		//Playlist
 			sound = engine->play2D(loadedItem.getPlaylist().popFront().getSource(), false, false, true);
 		}
+		sound->setVolume(0.7);
 	}
 	void pause() { engine->setAllSoundsPaused(true); }
 	void unpause() { engine->setAllSoundsPaused(false); }
@@ -302,11 +303,12 @@ public:
 	}
 	void setVolume(double volume) {
 		if (!sound) return;
-		sound->setVolume(volume);
+		if (volume > 10 || volume < 0) return;
+		sound->setVolume(volume / 10);
 	}
 	double getVolume() {
-		if (!sound) return 0.5;
-		return sound->getVolume();
+		if (!sound) return 5;
+		return sound->getVolume() * 10;
 	}
 	Song getSong() {
 		if (!sound) {
@@ -346,7 +348,7 @@ private:
 		std::string spacesLine1 = concatString(" ", 59 - playbackController->getSong().getName().length());
 		std::string spacesLine2 = concatString(" ", 65);
 
-		std::string volumeString = concatString("*", playbackController->getVolume() * 10) + concatString("o", 10 - (playbackController->getVolume() * 10));
+		std::string volumeString = concatString("*", playbackController->getVolume()) + concatString("o", 10 - playbackController->getVolume());
 		
 		std::cout << "Volume +------------------------------ ATAP ------------------------------+ Queue\n";
 		std::cout << "       | Song: " << playbackController->getSong().getName() << spacesLine1 << "| "    << "\n";
@@ -477,11 +479,11 @@ int main(int argc, const char* argv[]) {
 		}
 		break;
 		case KEY_UP: {		//Volume up
-			playbackController.setVolume(playbackController.getVolume() + 0.1);
+			playbackController.setVolume(playbackController.getVolume() + 1);
 		}
 		break;
 		case KEY_DOWN: {	//Volume down
-			playbackController.setVolume(playbackController.getVolume() - 0.1);
+			playbackController.setVolume(playbackController.getVolume() - 1);
 		}
 		break;
 		}
