@@ -1,4 +1,4 @@
-#pragma comment(lib, "irrKlang.lib") //Link with irrKlang.dll
+#pragma comment(lib, "irrKlang.lib")		//Link with irrKlang.dll
 
 //C++ std libs
 #include <iostream>
@@ -18,6 +18,13 @@ namespace fs = std::filesystem;
 #include <json.hpp>
 #include <irrKlang.h>
 using namespace irrklang;
+
+//Keys that don't type a character
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
+#define ENTER 13
 
 //Global vars
 ISoundEngine* engine;
@@ -293,6 +300,14 @@ public:
 			std::cout << "The song has been set on repeat!" << std::endl;
 		}
 	}
+	void setVolume(double volume) {
+		if (!sound) return;
+		sound->setVolume(volume);
+	}
+	double getVolume() {
+		if (!sound) return 0.5;
+		return sound->getVolume();
+	}
 	Song getSong() {
 		if (!sound) {
 			return Song();
@@ -331,7 +346,7 @@ private:
 		std::string spacesLine1 = concatString(" ", 59 - playbackController->getSong().getName().length());
 		std::string spacesLine2 = concatString(" ", 65);
 
-		std::string volumeString = "********oo";
+		std::string volumeString = concatString("*", playbackController->getVolume() * 10) + concatString("o", 10 - (playbackController->getVolume() * 10));
 		
 		std::cout << "Volume +------------------------------ ATAP ------------------------------+ Queue\n";
 		std::cout << "       | Song: " << playbackController->getSong().getName() << spacesLine1 << "| "    << "\n";
@@ -459,6 +474,14 @@ int main(int argc, const char* argv[]) {
 			} else {
 				playbackController.rewind();
 			}
+		}
+		break;
+		case KEY_UP: {		//Volume up
+			playbackController.setVolume(playbackController.getVolume() + 0.1);
+		}
+		break;
+		case KEY_DOWN: {	//Volume down
+			playbackController.setVolume(playbackController.getVolume() - 0.1);
 		}
 		break;
 		}
