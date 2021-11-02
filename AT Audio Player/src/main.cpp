@@ -149,6 +149,7 @@ public:
 class Playlist {
 private:
 	std::queue<Song> songs;
+	std::string name = "Playlist";
 public:
 	void loadSongs(std::vector<Song> songs) {
 		for (Song song : songs) {
@@ -180,22 +181,26 @@ public:
 		if (!songs.size()) return true;
 		return false;
 	}
+	std::string getName() { return name; }
 };
 
 class QueueItem {
 private:
 	Song song;
 	Playlist playlist;
+	std::string name = "No name defined";
 	int contents = -1;			//Describes what this queue item consists of: -1 means empty, 0 is a song and 1 means a playlist
 public:
 	QueueItem() { }
 	QueueItem(Song song) {
 		this->song = song;
 		contents = 0;
+		name = song.getName();
 	}
 	QueueItem(Playlist playlist) {
 		this->playlist = playlist;
 		contents = 1;
+		name = playlist.getName();
 	}
 	int getContents() {
 		return contents;
@@ -206,6 +211,7 @@ public:
 	Playlist getPlaylist() {
 		return playlist;
 	}
+	std::string getName() { return name; }
 };
 
 class Queue {
@@ -232,6 +238,15 @@ public:
 	bool getEmpty() {
 		if (!queue.size()) return true;
 		return false;
+	}
+	std::vector<std::string> getItemNames() {
+		std::vector<std::string> itemNames;
+		std::queue tmp_q = queue; //copy the original queue to the temporary queue
+		while (!tmp_q.empty()) {
+			itemNames.push_back(tmp_q.front().getName());
+			tmp_q.pop();
+		}
+		return itemNames;
 	}
 };
 
@@ -267,6 +282,7 @@ public:
 		loadedItem = QueueItem(playlist);
 	}
 	void setQueue(Queue& queue) { this->queue = &queue; }
+	Queue getQueue() { return *queue; }
 	void switchPauseMode() {
 		if (!sound) return;
 		if (sound->getIsPaused() == true) {		//Sound is paused, unpause
@@ -349,19 +365,30 @@ private:
 		std::string spacesLine2 = concatString(" ", 65);
 
 		std::string volumeString = concatString("*", playbackController->getVolume()) + concatString("o", 10 - playbackController->getVolume());
+
+		std::vector queueItems = playbackController->getQueue().getItemNames();
+		int maxQueueDisplaySize = 10;
+
+		if (queueItems.size() > maxQueueDisplaySize) {
+			queueItems[maxQueueDisplaySize - 1] = "...";
+		} else if (queueItems.size() < maxQueueDisplaySize) {
+			for (int i = queueItems.size(); i < maxQueueDisplaySize; i++) {
+				queueItems.push_back("");
+			}
+		}
 		
 		std::cout << "Volume +------------------------------ ATAP ------------------------------+ Queue\n";
-		std::cout << "       | Song: " << playbackController->getSong().getName() << spacesLine1 << "| "    << "\n";
-		std::cout << "  " << concatString(volumeString[9], 3) << "  | " << spacesLine2 << "| "    << "\n";
-		std::cout << "  " << concatString(volumeString[8], 3) << "  | " << spacesLine2 << "| "    << "\n";
-		std::cout << "  " << concatString(volumeString[7], 3) << "  | " << spacesLine2 << "| "    << "\n";
-		std::cout << "  " << concatString(volumeString[6], 3) << "  | " << spacesLine2 << "| "    << "\n";
-		std::cout << "  " << concatString(volumeString[5], 3) << "  | " << spacesLine2 << "| "    << "\n";
-		std::cout << "  " << concatString(volumeString[4], 3) << "  | " << spacesLine2 << "| "    << "\n";
-		std::cout << "  " << concatString(volumeString[3], 3) << "  | " << spacesLine2 << "| "    << "\n";
-		std::cout << "  " << concatString(volumeString[2], 3) << "  | " << spacesLine2 << "| "    << "\n";
-		std::cout << "  " << concatString(volumeString[1], 3) << "  | " << spacesLine2 << "| "    << "\n";
-		std::cout << "  " << concatString(volumeString[0], 3) << "  | " << spacesLine2 << "| "    << "\n";
+		std::cout << "       | Song: " << playbackController->getSong().getName() << spacesLine1 << "| " << "\n";
+		std::cout << "  " << concatString(volumeString[9], 3) << "  | " << spacesLine2 << "| " << queueItems[0] << "\n";
+		std::cout << "  " << concatString(volumeString[8], 3) << "  | " << spacesLine2 << "| " << queueItems[1] << "\n";
+		std::cout << "  " << concatString(volumeString[7], 3) << "  | " << spacesLine2 << "| " << queueItems[2] << "\n";
+		std::cout << "  " << concatString(volumeString[6], 3) << "  | " << spacesLine2 << "| " << queueItems[3] << "\n";
+		std::cout << "  " << concatString(volumeString[5], 3) << "  | " << spacesLine2 << "| " << queueItems[4] << "\n";
+		std::cout << "  " << concatString(volumeString[4], 3) << "  | " << spacesLine2 << "| " << queueItems[5] << "\n";
+		std::cout << "  " << concatString(volumeString[3], 3) << "  | " << spacesLine2 << "| " << queueItems[6] << "\n";
+		std::cout << "  " << concatString(volumeString[2], 3) << "  | " << spacesLine2 << "| " << queueItems[7] << "\n";
+		std::cout << "  " << concatString(volumeString[1], 3) << "  | " << spacesLine2 << "| " << queueItems[8] << "\n";
+		std::cout << "  " << concatString(volumeString[0], 3) << "  | " << spacesLine2 << "| " << queueItems[9] << "\n";
 	}
 public:
 	void printMessage(std::string message, unsigned int secondsOnScreen = 3) {
