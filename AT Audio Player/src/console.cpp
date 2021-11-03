@@ -60,6 +60,19 @@ void Console::showScrollbar(const bool& show) {
 	ShowScrollBar(GetConsoleWindow(), SB_VERT, show);
 }
 
+short Console::getXSize() {
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+	return csbi.dwSize.X;
+}
+short Console::getYSize() {
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+	return csbi.dwSize.Y;
+}
+
 //Linux
 #elif defined(__linux__)
 #include <iostream>
