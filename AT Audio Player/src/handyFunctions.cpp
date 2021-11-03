@@ -18,13 +18,12 @@ int getInputType(const std::string& pathStr) {
 	}
 }
 
-irrklang::ISoundEngine* initEngine(irrklang::ISoundEngine* engine) {
+void initEngine() {
 	engine = irrklang::createIrrKlangDevice();		//Start the engine
 	if (!engine) {
 		std::cout << "Error 01: Could not start engine" << std::endl;
 		exit(1);							//Stop program execution
 	}
-	return engine;
 }
 
 std::string concatString(std::string subStr, int times) {

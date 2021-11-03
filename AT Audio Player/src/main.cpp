@@ -25,6 +25,7 @@ using namespace irrklang;
 #include "userInterface.h"
 #include "playbackController.h"
 #include "handyFunctions.h"
+#include "song.h"
 
 bool shouldRun = true;
 irrklang::ISoundEngine* engine = nullptr;
@@ -37,7 +38,7 @@ irrklang::ISoundEngine* engine = nullptr;
 #define ENTER 13
 
 int main(int argc, const char* argv[]) {
-	initEngine(engine);
+	initEngine();
 	PlaybackController playbackController;
 	UserInterface ui;
 	Queue queue;
