@@ -149,7 +149,30 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\console.cpp" />
+    <ClCompile Include="src\handyFunctions.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\message.cpp" />
+    <ClCompile Include="src\options.cpp" />
+    <ClCompile Include="src\playbackController.cpp" />
+    <ClCompile Include="src\playlist.cpp" />
+    <ClCompile Include="src\queue.cpp" />
+    <ClCompile Include="src\queueItem.cpp" />
+    <ClCompile Include="src\song.cpp" />
+    <ClCompile Include="src\userInterface.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\header\console.h" />
+    <ClInclude Include="src\header\globalVars.h" />
+    <ClInclude Include="src\header\handyFunctions.h" />
+    <ClInclude Include="src\header\message.h" />
+    <ClInclude Include="src\header\options.h" />
+    <ClInclude Include="src\header\playbackController.h" />
+    <ClInclude Include="src\header\playlist.h" />
+    <ClInclude Include="src\header\queue.h" />
+    <ClInclude Include="src\header\queueItem.h" />
+    <ClInclude Include="src\header\song.h" />
+    <ClInclude Include="src\header\userInterface.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
