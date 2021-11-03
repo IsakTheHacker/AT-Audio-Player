@@ -365,6 +365,10 @@ private:
 		std::string spacesLine2 = concatString(" ", 65);
 
 		std::string volumeString = concatString("*", playbackController->getVolume()) + concatString("o", 10 - playbackController->getVolume());
+		std::string volumeNumber = std::to_string((int)playbackController->getVolume());
+		if (volumeNumber.length() < 2) {
+			volumeNumber = " " + volumeNumber;
+		}
 
 		std::vector queueItems = playbackController->getQueue().getItemNames();
 		int64_t maxQueueDisplaySize = 10;
@@ -389,6 +393,8 @@ private:
 		std::cout << "  " << concatString(volumeString[2], 3) << "  | " << spacesLine2 << "| " << queueItems[7] << "\n";
 		std::cout << "  " << concatString(volumeString[1], 3) << "  | " << spacesLine2 << "| " << queueItems[8] << "\n";
 		std::cout << "  " << concatString(volumeString[0], 3) << "  | " << spacesLine2 << "| " << queueItems[9] << "\n";
+		std::cout << "       | " << spacesLine2 << "| " << "\n";
+		std::cout << "   " << volumeNumber << "  +------------------------------------------------------------------+" << "\n";
 	}
 public:
 	void printMessage(std::string message, unsigned int secondsOnScreen = 3) {
