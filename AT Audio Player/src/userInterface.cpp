@@ -38,16 +38,21 @@ void UserInterface::drawScreen() {
 	std::cout << "       | " << spacesLine2 << "| " << "\n";
 	std::cout << "   " << volumeNumber << "  +------------------------------------------------------------------+" << "\n\n";
 
-	std::vector messagesCpy = messages;
 
 	//Print messages
+	auto now = std::chrono::high_resolution_clock::now();
+	for (size_t i = 0; i < messages.size(); i++) {
+		if (now > messages[i].getEnd()) {
+			messages.erase(messages.begin() + i);
+		}
+	}
+	std::vector messagesCpy = messages;
 	if (messagesCpy.size() > maxMessageQueueDisplaySize) {
 		messagesCpy.erase(messagesCpy.begin());
 		messages.erase(messages.begin());
-	}
-	else if (messagesCpy.size() < maxMessageQueueDisplaySize) {
+	} else if (messagesCpy.size() < maxMessageQueueDisplaySize) {
 		for (size_t i = messagesCpy.size(); i < maxQueueDisplaySize; i++) {
-			messagesCpy.push_back(Message("", 0));
+			messagesCpy.push_back(Message(concatString(" ", Console::getXSize() - 7), 0));
 		}
 	}
 
