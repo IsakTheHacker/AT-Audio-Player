@@ -56,6 +56,10 @@ void Console::showCursor(const bool& show) {
 	SetConsoleCursorInfo(handle, &cci);
 }
 
+void Console::showScrollbar(const bool& show) {
+	ShowScrollBar(GetConsoleWindow(), SB_VERT, show);
+}
+
 //Linux
 #elif defined(__linux__)
 #include <iostream>

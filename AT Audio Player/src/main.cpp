@@ -46,6 +46,7 @@ int main(int argc, const char* argv[]) {
 	playbackController.setQueue(queue);
 	ui.setPlaybackController(playbackController);
 	Console::showCursor(false);
+	Console::showScrollbar(false);
 
 	std::thread pullFromQueue(PlaybackController::pullFromQueue, &playbackController, &queue);
 	std::thread updateUI(UserInterface::updateUI, &ui);
