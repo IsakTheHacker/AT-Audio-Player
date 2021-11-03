@@ -13,12 +13,14 @@ void UserInterface::drawScreen() {
 	std::vector queueItems = playbackController->getQueue().getItemNames();
 
 	if (queueItems.size() > maxQueueDisplaySize) {
-		queueItems[maxQueueDisplaySize - 1] = "...";
-	}
-	else if (queueItems.size() < maxQueueDisplaySize) {
+		queueItems[maxQueueDisplaySize - 1] = "..." + concatString(" ", Console::getXSize() - 79);
+	} else if (queueItems.size() < maxQueueDisplaySize) {
 		for (size_t i = queueItems.size(); i < maxQueueDisplaySize; i++) {
-			queueItems.push_back("");
+			queueItems.push_back(concatString(" ", Console::getXSize() - 76));
 		}
+	}
+	for (size_t i = 0; i < queueItems.size(); i++) {
+		queueItems[i] = queueItems[i] + concatString(" ", Console::getXSize() - 76 - queueItems[i].length());
 	}
 
 	std::cout << "Volume +------------------------------ ATAP ------------------------------+ Queue\n";
