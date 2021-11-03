@@ -241,7 +241,7 @@ public:
 	}
 	std::vector<std::string> getItemNames() {
 		std::vector<std::string> itemNames;
-		std::queue tmp_q = queue; //copy the original queue to the temporary queue
+		std::queue tmp_q = queue;		//copy the original queue to the temporary queue
 		while (!tmp_q.empty()) {
 			itemNames.push_back(tmp_q.front().getName());
 			tmp_q.pop();
@@ -353,12 +353,31 @@ public:
 	}
 };
 
+class Message {
+private:
+	std::string message;
+	unsigned int secondsOnScreen;
+public:
+	Message(const std::string& message, const unsigned int& secondsOnScreen = 3) {
+		this->message = message;
+		this->secondsOnScreen = secondsOnScreen;
+	}
+	void setMessage(const std::string& message) {
+		this->message = message;
+	}
+	std::string getMessage() {
+		return message;
+	}
+};
+
 class UserInterface {
 private:
 	bool paused = false;
 	bool pauseCycle = false;
 	PlaybackController* playbackController = nullptr;
-	std::queue<std::string> messageQueue;
+	std::vector<Message> messages;
+	int64_t maxQueueDisplaySize = 10;
+	int64_t maxMessageQueueDisplaySize = 10;
 	
 	void drawScreen() {
 		std::string spacesLine1 = concatString(" ", 59 - playbackController->getSong().getName().length());
@@ -371,7 +390,6 @@ private:
 		}
 
 		std::vector queueItems = playbackController->getQueue().getItemNames();
-		int64_t maxQueueDisplaySize = 10;
 
 		if (queueItems.size() > maxQueueDisplaySize) {
 			queueItems[maxQueueDisplaySize - 1] = "...";
@@ -394,14 +412,34 @@ private:
 		std::cout << "  " << concatString(volumeString[1], 3) << "  | " << spacesLine2 << "| " << queueItems[8] << "\n";
 		std::cout << "  " << concatString(volumeString[0], 3) << "  | " << spacesLine2 << "| " << queueItems[9] << "\n";
 		std::cout << "       | " << spacesLine2 << "| " << "\n";
-		std::cout << "   " << volumeNumber << "  +------------------------------------------------------------------+" << "\n";
+		std::cout << "   " << volumeNumber << "  +------------------------------------------------------------------+" << "\n\n";
+
+		std::vector messagesCpy = messages;
+
+		//Print messages
+		if (messagesCpy.size() > maxMessageQueueDisplaySize) {
+			messagesCpy.erase(messagesCpy.begin());
+			messages.erase(messages.begin());
+		} else if (messagesCpy.size() < maxMessageQueueDisplaySize) {
+			for (size_t i = messagesCpy.size(); i < maxQueueDisplaySize; i++) {
+				messagesCpy.push_back(Message("", 0));
+			}
+		}
+
+		std::cout << "       " << messagesCpy[0].getMessage() << "\n";
+		std::cout << "       " << messagesCpy[1].getMessage() << "\n";
+		std::cout << "       " << messagesCpy[2].getMessage() << "\n";
+		std::cout << "       " << messagesCpy[3].getMessage() << "\n";
+		std::cout << "       " << messagesCpy[4].getMessage() << "\n";
+		std::cout << "       " << messagesCpy[5].getMessage() << "\n";
+		std::cout << "       " << messagesCpy[6].getMessage() << "\n";
+		std::cout << "       " << messagesCpy[7].getMessage() << "\n";
+		std::cout << "       " << messagesCpy[8].getMessage() << "\n";
+		std::cout << "       " << messagesCpy[9].getMessage() << "\n";
 	}
 public:
 	void printMessage(std::string message, unsigned int secondsOnScreen = 3) {
-		if (messageQueue.size() > 4) {
-			messageQueue.pop();
-		}
-		messageQueue.push(message);
+		messages.push_back(Message(message, secondsOnScreen));
 	}
 	void pauseUIUpdater() {
 		using namespace std::chrono_literals;
@@ -469,7 +507,7 @@ int main(int argc, const char* argv[]) {
 			} else if (inputType == 0) {
 				Song song(path);
 				queue.pushItem(song);
-				std::cout << "Song added to queue!" << std::endl;
+				ui.printMessage("Song added to queue!");
 			} else if ((inputType == 1) || (inputType == 2)) {
 				Playlist playlist;
 				playlist.loadSongs(path);
