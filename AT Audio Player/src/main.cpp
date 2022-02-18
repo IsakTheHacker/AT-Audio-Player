@@ -7,12 +7,12 @@
 #include <queue>
 #include <string>
 #include <thread>
-#include <conio.h>
 #include <filesystem>
 namespace fs = std::filesystem;
 
 //OS-specific
-#include <Windows.h>
+//#include <conio.h>
+//#include <Windows.h>
 
 //Thirdparty
 #include <json.hpp>

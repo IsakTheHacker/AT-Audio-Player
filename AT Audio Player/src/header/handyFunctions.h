@@ -5,7 +5,7 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-#include <irrklang.h>
+#include <irrKlang.h>
 
 //Returns 0 if song, 1 if folder playlist, 2 if JSON playlist and -1 if invalid path
 int getInputType(const std::string& pathStr);
