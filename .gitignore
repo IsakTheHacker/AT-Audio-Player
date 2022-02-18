@@ -341,3 +341,5 @@ healthchecksdb
 # My ignored files
 /Python AT Audio Player/play.log
 /todo.txt
+*.o
+/AT Audio Player/.depend
