@@ -1,4 +1,5 @@
-#pragma comment(lib, "irrKlang.lib")		//Link with irrKlang.dll
+//#pragma comment(lib, "irrKlang.lib")		//Link with irrKlang.dll
+#pragma comment(lib, "libIrrKlang.so")
 
 //C++ std libs
 #include <iostream>
@@ -14,13 +15,14 @@ namespace fs = std::filesystem;
 //#include <conio.h>
 //#include <Windows.h>
 
+#include <conterlib.hpp>
+
 //Thirdparty
 #include <json.hpp>
 #include <irrKlang.h>
 using namespace irrklang;
 
 //My includes
-#include "console.h"
 #include "queue.h"
 #include "userInterface.h"
 #include "playbackController.h"
@@ -50,7 +52,7 @@ int main(int argc, const char* argv[]) {
 	std::thread updateUI(UserInterface::updateUI, &ui);
 	
 	while (shouldRun) {
-		char c = _getch();					//Get pressed key
+		char c = Console::getch();					//Get pressed key
 		
 		switch (c) {
 		case 'q': {
@@ -92,8 +94,8 @@ int main(int argc, const char* argv[]) {
 			auto first_click = std::chrono::high_resolution_clock::now();
 
 			while (true) {
-				if (_kbhit()) {
-					char c = _getch();
+				if (Console::kbhit()) {
+					char c = Console::getch();
 					if (c == 'r')
 					break;
 				}
