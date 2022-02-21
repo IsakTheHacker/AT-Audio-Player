@@ -1,6 +1,6 @@
 #include "menu.h"
 
-Menu1d::Menu1d(const std::vector<std::string>& choices) {
+SelectionMenu1d::SelectionMenu1d(const std::vector<std::string>& choices) {
 	using namespace curses;
 	getmaxyx(stdscr, yMax, xMax);		//Get screen size
 
@@ -15,13 +15,14 @@ Menu1d::Menu1d(const std::vector<std::string>& choices) {
 	this->choices = choices;
 }
 
-int Menu1d::waitForSelection(const int& startAt, const bool& allowEscExit) {
+int SelectionMenu1d::waitForSelection(const int& startAt, const bool& allowEscExit) {
 	using namespace curses;
 	wrefresh(window);
 	keypad(window, true);
 
 	int choice;
 	int highlight = startAt;
+	int returnFlag = -1;
 
 	while (true) {
 		for (size_t i = 0; i < choices.size(); i++) {
@@ -47,16 +48,22 @@ int Menu1d::waitForSelection(const int& startAt, const bool& allowEscExit) {
 			break;
 		}
 
-		if (choice == 10) {						//Select option on Enter
-			return highlight;
+		if (choice == 10) {								//Select option on Enter
+			returnFlag = 0;
+			break;
+		} else if (choice == 27 && allowEscExit) {		//Close without selection on Escape
+			returnFlag = -1;
+			break;
 		}
-		if (choice == 27 && allowEscExit) {		//Close without selection on Escape
-			return -1;
-		}
+	}
+	if (returnFlag == 0) {
+		return highlight;
+	} else {
+		return -1;
 	}
 }
 
-unsigned short Menu1d::getHighestLength(const std::vector<std::string>& vec) {
+unsigned short SelectionMenu1d::getHighestLength(const std::vector<std::string>& vec) {
 	unsigned short longestChoice = stdconf::MENUWIN_MIN_WIDTH;
 	for (std::string choice : vec) {
 		if (choice.length() > longestChoice) {
@@ -73,4 +80,56 @@ unsigned short Menu1d::getHighestLength(const std::vector<std::string>& vec) {
 		longestChoice = eval;
 	}
 	return longestChoice;
+}
+
+InputMenu::InputMenu(const int& height, const int& width) {
+	using namespace curses;
+	getmaxyx(stdscr, yMax, xMax);		//Get screen size
+
+	//Calculate window size based on number of choices and text length
+	this->height = height;
+	this->width = width;
+
+	starty = (yMax - height) / 2; 		//Calculating for a center placement
+	startx = (xMax - width) / 2;  		//of the window
+	window = newwin(height, width, starty, startx);
+	wborder(window, '|', '|', '-', '-', '+', '+', '+', '+');
+	this->stdText = stdText;
+}
+
+std::string InputMenu::waitForInput(const int& startAtY, const int& startAtX, const std::string& stdText, const bool& allowEscExit) {
+	using namespace curses;
+	curs_set(1);						//Show cursor
+	echo();
+	mvwprintw(window, startAtY, startAtX, stdText.c_str());
+	wmove(window, startAtY, startAtX);
+	wrefresh(window);
+
+	int c;
+	std::string input;
+	int returnFlag = -1;
+
+	while (true) {
+		c = wgetch(window);
+
+		if (c == 10) {								//Return with input on Enter
+			returnFlag = 0;
+			break;
+		} else if (c == 27 && allowEscExit) {		//Close without input on Escape
+			returnFlag = -1;
+			break;
+		} else if (c == KEY_BACKSPACE) {
+			returnFlag = -1;
+			break;
+		} else {
+			input += c;
+		}
+	}
+	curs_set(0);						//Hide cursor again
+	noecho();
+	if (returnFlag == 0) {
+		return input;
+	} else {
+		return "";
+	}
 }
