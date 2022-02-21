@@ -100,7 +100,9 @@ InputMenu::InputMenu(const int& height, const int& width) {
 std::string InputMenu::waitForInput(const int& startAtY, const int& startAtX, const std::string& stdText, const bool& allowEscExit) {
 	using namespace curses;
 	curs_set(1);						//Show cursor
-	echo();
+	noecho();
+	keypad(window, true);
+	nodelay(window, false);				//Wait for characters to be pressed (blocking)
 	mvwprintw(window, startAtY, startAtX, stdText.c_str());
 	wmove(window, startAtY, startAtX);
 	wrefresh(window);
@@ -108,25 +110,59 @@ std::string InputMenu::waitForInput(const int& startAtY, const int& startAtX, co
 	int c;
 	std::string input;
 	int returnFlag = -1;
+	int cursorY, cursorX;
 
 	while (true) {
 		c = wgetch(window);
 
-		if (c == 10) {								//Return with input on Enter
+		if (c == 10 || c == '\n') {										//Return with input on Enter
 			returnFlag = 0;
 			break;
-		} else if (c == 27 && allowEscExit) {		//Close without input on Escape
+		} else if (c == 27 && allowEscExit) {							//Close without input on Escape
 			returnFlag = -1;
 			break;
-		} else if (c == KEY_BACKSPACE) {
-			returnFlag = -1;
-			break;
+		} else if (c == KEY_BACKSPACE || c == KEY_DC || c == 127) {		//Adds support for deleting typed chars
+			getyx(window, cursorY, cursorX);
+    		int cursorPos = cursorX-startAtX;
+			if (!input.empty() && cursorPos > 0) {
+				input.erase(cursorPos-1, 1);
+				cursorX -= 1;
+				wmove(window, cursorY, cursorX);
+			}
+		} else if (c == KEY_LEFT) {
+			getyx(window, cursorY, cursorX);
+			if (cursorX > startAtX) {
+				cursorX -= 1;
+				wmove(window, cursorY, cursorX);
+			}
+		} else if (c == KEY_RIGHT) {
+			getyx(window, cursorY, cursorX);
+			if (cursorX < input.size()+startAtX) {
+				cursorX += 1;
+				wmove(window, cursorY, cursorX);
+			}
 		} else {
-			input += c;
+			getyx(window, cursorY, cursorX);
+			int cursorPos = cursorX-startAtX;
+			std::string preStr = input.substr(0, cursorPos);
+			std::string postStr = input.substr(cursorPos, input.length() - preStr.length());
+			input = preStr + (char)c + postStr;
+			cursorX += 1;
+			wmove(window, cursorY, cursorX);
 		}
+
+		//Redraw typed chars
+		if (input.length() > 0) {
+			getyx(window, cursorY, cursorX);
+			mvwprintw(window, startAtY, startAtX, (input + concatString(" ", width - startAtX*2 - input.size())).c_str());
+			wmove(window, cursorY, cursorX);
+		} else {
+			mvwprintw(window, startAtY, startAtX, stdText.c_str());
+			wmove(window, startAtY, startAtX);
+		}
+		wrefresh(window);
 	}
 	curs_set(0);						//Hide cursor again
-	noecho();
 	if (returnFlag == 0) {
 		return input;
 	} else {

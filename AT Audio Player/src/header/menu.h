@@ -7,6 +7,7 @@ namespace curses {
 }
 
 #include "stdconfig.h"
+#include "handyFunctions.h"
 
 class SelectionMenu1d {
 private:
