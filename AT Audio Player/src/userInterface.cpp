@@ -21,20 +21,20 @@ void UserInterface::drawScreen() {
 		}
 	}
 
-	std::cout << "Volume +------------------------------ ATAP ------------------------------+ Queue\n";
-	std::cout << "       | Song: " << playbackController->getSong().getName() << spacesLine1 << "| " << "\n";
-	std::cout << "  " << concatString(volumeString[9], 3) << "  | " << spacesLine2 << "| " << queueItems[0] << "\n";
-	std::cout << "  " << concatString(volumeString[8], 3) << "  | " << spacesLine2 << "| " << queueItems[1] << "\n";
-	std::cout << "  " << concatString(volumeString[7], 3) << "  | " << spacesLine2 << "| " << queueItems[2] << "\n";
-	std::cout << "  " << concatString(volumeString[6], 3) << "  | " << spacesLine2 << "| " << queueItems[3] << "\n";
-	std::cout << "  " << concatString(volumeString[5], 3) << "  | " << spacesLine2 << "| " << queueItems[4] << "\n";
-	std::cout << "  " << concatString(volumeString[4], 3) << "  | " << spacesLine2 << "| " << queueItems[5] << "\n";
-	std::cout << "  " << concatString(volumeString[3], 3) << "  | " << spacesLine2 << "| " << queueItems[6] << "\n";
-	std::cout << "  " << concatString(volumeString[2], 3) << "  | " << spacesLine2 << "| " << queueItems[7] << "\n";
-	std::cout << "  " << concatString(volumeString[1], 3) << "  | " << spacesLine2 << "| " << queueItems[8] << "\n";
-	std::cout << "  " << concatString(volumeString[0], 3) << "  | " << spacesLine2 << "| " << queueItems[9] << "\n";
-	std::cout << "       | " << spacesLine2 << "| " << "\n";
-	std::cout << "   " << volumeNumber << "  +------------------------------------------------------------------+" << "\n\n";
+	curses::printw("Volume +------------------------------ ATAP ------------------------------+ Queue\n");
+	curses::printw("       | Song: %s%s| \n", playbackController->getSong().getName().c_str(), spacesLine1.c_str());
+	curses::printw("  %s  | %s| %s\n", concatString(volumeString[9], 3).c_str(), spacesLine2.c_str(), queueItems[0].c_str());
+	curses::printw("  %s  | %s| %s\n", concatString(volumeString[8], 3).c_str(), spacesLine2.c_str(), queueItems[1].c_str());
+	curses::printw("  %s  | %s| %s\n", concatString(volumeString[7], 3).c_str(), spacesLine2.c_str(), queueItems[2].c_str());
+	curses::printw("  %s  | %s| %s\n", concatString(volumeString[6], 3).c_str(), spacesLine2.c_str(), queueItems[3].c_str());
+	curses::printw("  %s  | %s| %s\n", concatString(volumeString[5], 3).c_str(), spacesLine2.c_str(), queueItems[4].c_str());
+	curses::printw("  %s  | %s| %s\n", concatString(volumeString[4], 3).c_str(), spacesLine2.c_str(), queueItems[5].c_str());
+	curses::printw("  %s  | %s| %s\n", concatString(volumeString[3], 3).c_str(), spacesLine2.c_str(), queueItems[6].c_str());
+	curses::printw("  %s  | %s| %s\n", concatString(volumeString[2], 3).c_str(), spacesLine2.c_str(), queueItems[7].c_str());
+	curses::printw("  %s  | %s| %s\n", concatString(volumeString[1], 3).c_str(), spacesLine2.c_str(), queueItems[8].c_str());
+	curses::printw("  %s  | %s| %s\n", concatString(volumeString[0], 3).c_str(), spacesLine2.c_str(), queueItems[9].c_str());
+	curses::printw("       | %s| \n", spacesLine2.c_str());
+	curses::printw("   %s  +------------------------------------------------------------------+\n\n", volumeNumber.c_str());
 
 	std::vector messagesCpy = messages;
 
@@ -49,16 +49,16 @@ void UserInterface::drawScreen() {
 		}
 	}
 
-	std::cout << "       " << messagesCpy[0].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[1].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[2].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[3].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[4].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[5].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[6].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[7].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[8].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[9].getMessage() << "\n";
+	// curses::printw("       " << messagesCpy[0].getMessage() << "\n";
+	// curses::printw("       " << messagesCpy[1].getMessage() << "\n";
+	// curses::printw("       " << messagesCpy[2].getMessage() << "\n";
+	// curses::printw("       " << messagesCpy[3].getMessage() << "\n";
+	// curses::printw("       " << messagesCpy[4].getMessage() << "\n";
+	// curses::printw("       " << messagesCpy[5].getMessage() << "\n";
+	// curses::printw("       " << messagesCpy[6].getMessage() << "\n";
+	// curses::printw("       " << messagesCpy[7].getMessage() << "\n";
+	// curses::printw("       " << messagesCpy[8].getMessage() << "\n";
+	// curses::printw("       " << messagesCpy[9].getMessage() << "\n";
 }
 
 void UserInterface::printMessage(std::string message, unsigned int secondsOnScreen) {
@@ -80,12 +80,12 @@ void UserInterface::setPlaybackController(PlaybackController& playbackController
 void UserInterface::updateUI(UserInterface* userInterface) {
 	using namespace std::chrono_literals;
 	while (shouldRun) {
-		Console::setCursorPos();
+		curses::move(0, 0);
 		userInterface->drawScreen();
 		std::this_thread::sleep_for(16.67ms);
 		userInterface->pauseCycle = false;
 		if (userInterface->paused) {
-			Console::clear();
+			curses::clear();
 		}
 		while (userInterface->paused) {
 			userInterface->pauseCycle = true;

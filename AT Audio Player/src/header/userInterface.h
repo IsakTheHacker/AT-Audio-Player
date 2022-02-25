@@ -2,11 +2,14 @@
 
 #include <vector>
 #include <string>
-#include <iostream>
 #include <thread>
 
+//Thirdparty
+namespace curses {						//Include curses library in a namespace so it doesn't collide with other stuff
+	#include <ncurses.h>
+}
+
 #include "playbackController.h"
-#include "conterlib.hpp"
 #include "message.h"
 #include "handyFunctions.h"
 #include "globalVars.h"
