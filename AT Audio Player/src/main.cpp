@@ -24,6 +24,7 @@ namespace curses {						//Include curses library in a namespace so it doesn't co
 #include "playbackController.h"
 #include "handyFunctions.h"
 #include "menu.h"
+#include "scene.h"
 
 //Global vars
 bool shouldRun = true;					//If false: stop execution
@@ -49,6 +50,9 @@ int main(int argc, const char* argv[]) {
 	curses::nodelay(curses::stdscr, TRUE);		//Don't wait for a key to be pressed when using getch
 	curses::curs_set(0);						//Hide cursor
 	//signal(SIGWINCH, resizeHandler);
+
+	//Create start scene
+	//Not done yet...
 	
 	//Init irrKlang
 	initEngine(engine);
@@ -95,8 +99,9 @@ int main(int argc, const char* argv[]) {
 		}
 		break;
 		case 'l': {			//Load song, playlist or folder
-			InputMenu menu(5, 100);
-			menu.waitForInput(2, 3, "(Type path to song, playlist or folder here)");
+			InputScene* scene = new InputScene();
+			//SceneMgr.switch(scene);
+			scene->run();
 		}
 		break;
 		}
