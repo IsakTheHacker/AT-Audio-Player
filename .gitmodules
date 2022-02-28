@@ -1,0 +1,3 @@
+[submodule "FTXUI"]
+	path = FTXUI
+	url = https://github.com/IsakTheHacker/FTXUI
