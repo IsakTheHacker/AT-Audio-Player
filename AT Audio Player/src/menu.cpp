@@ -6,7 +6,7 @@ SelectionMenu1d::SelectionMenu1d(const std::vector<std::string>& choices) {
 
 	//Calculate window size based on number of choices and text length
 	height = choices.size() + 2;
-	width = this->getHighestLength(choices);
+	width = this->getHighestLength(choices) + 2;
 
 	starty = (yMax - height) / 2; 		//Calculating for a center placement
 	startx = (xMax - width) / 2;  		//of the window

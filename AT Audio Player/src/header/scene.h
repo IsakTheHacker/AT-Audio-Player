@@ -18,6 +18,14 @@ public:
 	void switchScene(Scene*);
 };
 
+class WelcomeScene : public Scene {
+private:
+	SelectionMenu1d* menu = nullptr;
+public:
+	WelcomeScene();
+	void run();
+};
+
 class InputScene : public Scene {
 private:
 	InputMenu* menu = nullptr;

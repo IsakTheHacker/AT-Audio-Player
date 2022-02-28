@@ -52,6 +52,8 @@ int main(int argc, const char* argv[]) {
 	//signal(SIGWINCH, resizeHandler);
 
 	//Create start scene
+	WelcomeScene* welcomeScene = new WelcomeScene();
+	welcomeScene->run();
 	//Not done yet...
 	
 	//Init irrKlang
