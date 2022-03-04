@@ -1,3 +1,6 @@
 [submodule "FTXUI"]
 	path = FTXUI
 	url = https://github.com/IsakTheHacker/FTXUI
+[submodule "soloud"]
+	path = soloud
+	url = https://github.com/IsakTheHacker/soloud
