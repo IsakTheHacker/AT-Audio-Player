@@ -1,6 +1,6 @@
-[submodule "FTXUI"]
-	path = FTXUI
-	url = https://github.com/IsakTheHacker/FTXUI
-[submodule "soloud"]
-	path = soloud
+[submodule "AT Audio Player/external/SoLoud"]
+	path = AT Audio Player/external/SoLoud
 	url = https://github.com/IsakTheHacker/soloud
+[submodule "AT Audio Player/external/ConTerLib"]
+	path = AT Audio Player/external/ConTerLib
+	url = https://github.com/IsakTheHacker/ConTerLib
