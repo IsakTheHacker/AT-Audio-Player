@@ -69,7 +69,7 @@ int main(int argc, const char* argv[]) {
 			std::cout << std::endl;
 
 			if (inputType == -1) {
-				std::cout << "Error 02: That is not a valid path" << std::endl;
+				ui.printMessage("Error 02: That is not a valid path");
 			} else if (inputType == 0) {
 				Song song(path);
 				queue.pushItem(song);
@@ -77,7 +77,12 @@ int main(int argc, const char* argv[]) {
 			} else if ((inputType == 1) || (inputType == 2)) {
 				Playlist playlist;
 				playlist.loadSongs(path);
-				std::cout << "Playlist added to queue!" << std::endl;
+				queue.pushItem(playlist);
+				ui.printMessage("Playlist added to queue!");
+
+				while (true) {
+					std::cout << playlist.popFront().getName() << std::endl;
+				}
 			}
 			ui.unpauseUIUpdater();
 		}

@@ -12,11 +12,13 @@ void Playlist::loadSongs(std::vector<std::string> songPaths) {
 }
 void Playlist::loadSongs(std::string path) {
 	int inputType = getInputType(path);
-	if (inputType == 1) {
-		//Folder playlist
+	if (inputType == 1) {																//Folder playlist
+		for (const fs::directory_entry& entry : fs::directory_iterator(path)) {
+			this->songs.push(Song(entry.path().string()));
+		}
 	}
-	else if (inputType == 2) {
-		//JSON playlist
+	else if (inputType == 2) {															//JSON playlist
+		
 	}
 }
 Song Playlist::getFront() {
