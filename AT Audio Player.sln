@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AT Audio Player", "AT Audio
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Python AT Audio Player", "Python AT Audio Player\Python AT Audio Player.pyproj", "{1BBCC02B-1AA6-4581-9CE6-529CDA4B8DB1}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Python AT Audio Player Installer", "Python AT Audio Player Installer\Python AT Audio Player Installer.vdproj", "{DA60897F-71E5-436D-A839-B61B25562F77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,12 @@ Global
 		{1BBCC02B-1AA6-4581-9CE6-529CDA4B8DB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BBCC02B-1AA6-4581-9CE6-529CDA4B8DB1}.Release|x64.ActiveCfg = Release|Any CPU
 		{1BBCC02B-1AA6-4581-9CE6-529CDA4B8DB1}.Release|x86.ActiveCfg = Release|Any CPU
+		{DA60897F-71E5-436D-A839-B61B25562F77}.Debug|Any CPU.ActiveCfg = Debug
+		{DA60897F-71E5-436D-A839-B61B25562F77}.Debug|x64.ActiveCfg = Debug
+		{DA60897F-71E5-436D-A839-B61B25562F77}.Debug|x86.ActiveCfg = Debug
+		{DA60897F-71E5-436D-A839-B61B25562F77}.Release|Any CPU.ActiveCfg = Release
+		{DA60897F-71E5-436D-A839-B61B25562F77}.Release|x64.ActiveCfg = Release
+		{DA60897F-71E5-436D-A839-B61B25562F77}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
