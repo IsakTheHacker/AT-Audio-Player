@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>1bbcc02b-1aa6-4581-9ce6-529cda4b8db1</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Python_AT_Audio_Player.py</StartupFile>
+    <StartupFile>patap.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,16 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Python_AT_Audio_Player.py" />
+    <Compile Include="patapclasses.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="patapfuncs.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="patapvars.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="patap.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="options.json" />

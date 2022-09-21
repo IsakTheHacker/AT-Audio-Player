@@ -1,7 +1,7 @@
 {
     "shuffle": true,
     "shuffleIndefinitely": true,
-    "volume": 1.0,
+    "volume": 0.0703125,
     "onStartSong": {
         "path": "\\\\nas\\media\\Music\\Isak\\Zelda\\Favorites from Skyward Sword"
     }

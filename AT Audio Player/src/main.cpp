@@ -25,6 +25,7 @@ namespace curses {						//Include curses library in a namespace so it doesn't co
 #include "handyFunctions.h"
 #include "menu.h"
 #include "scene.h"
+#include "song.h"
 
 //Global vars
 bool shouldRun = true;					//If false: stop execution
@@ -38,33 +39,15 @@ ik::ISoundEngine* engine = nullptr;		//irrKlang engine instance
 // }
 
 int main(int argc, const char* argv[]) {
-
-	//Disable Escape key delay
-	setenv("ESCDELAY", "0", 1);
-
-	//Init curses
-	curses::initscr();
-	curses::cbreak();							//Output one character at a time, no buffering
-	curses::noecho();							//Disable output of typed characters
-	curses::keypad(curses::stdscr, TRUE);		//Enable special keys such as backspace, delete and the four arrow keys
-	curses::nodelay(curses::stdscr, TRUE);		//Don't wait for a key to be pressed when using getch
-	curses::curs_set(0);						//Hide cursor
-	//signal(SIGWINCH, resizeHandler);
-
-	//Create start scene
-	WelcomeScene* welcomeScene = new WelcomeScene();
-	welcomeScene->run();
-	//Not done yet...
-	
-	//Init irrKlang
-	initEngine(engine);
-
-	//Other stuff
+	initEngine();
 	PlaybackController playbackController;
 	UserInterface ui;
 	Queue queue;
 	playbackController.setQueue(queue);
 	ui.setPlaybackController(playbackController);
+	Console::showCursor(false);
+	Console::showScrollbar(false);
+
 	std::thread pullFromQueue(PlaybackController::pullFromQueue, &playbackController, &queue);
 	std::thread updateUI(UserInterface::updateUI, &ui);
 
@@ -78,9 +61,35 @@ int main(int argc, const char* argv[]) {
 			shouldRun = false;
 		}
 		break;
+		case 'l': {
+			ui.pauseUIUpdater();
+			std::cout << "Enter path: ";
+			std::string path;
+			std::getline(std::cin, path);
+			int inputType = getInputType(path);
+			std::cout << std::endl;
+
+			if (inputType == -1) {
+				ui.printMessage("Error 02: That is not a valid path");
+			} else if (inputType == 0) {
+				Song song(path);
+				queue.pushItem(song);
+				ui.printMessage("Song added to queue!");
+			} else if ((inputType == 1) || (inputType == 2)) {
+				Playlist playlist;
+				playlist.loadSongs(path);
+				queue.pushItem(playlist);
+				ui.printMessage("Playlist added to queue!");
+
+				while (true) {
+					std::cout << playlist.popFront().getName() << std::endl;
+				}
+			}
+			ui.unpauseUIUpdater();
+		}
+		break;
 		case KEY_UP: {		//Volume up
 			playbackController.setVolume(playbackController.getVolume() + 1);
-		}
 		break;
 		case KEY_DOWN: {	//Volume down
 			playbackController.setVolume(playbackController.getVolume() - 1);
@@ -122,55 +131,4 @@ int main(int argc, const char* argv[]) {
 	curses::curs_set(1);				//Show cursor again
 	std::cout << "Curses ended with status code: " << curses::endwin() << std::endl;
 	return 0;
-	
-	// 	case 'l': {
-	// 		ui.pauseUIUpdater();
-	// 		std::cout << "Enter path: ";
-	// 		std::string path;
-	// 		std::getline(std::cin, path);
-	// 		int inputType = getInputType(path);
-	// 		std::cout << std::endl;
-
-	// 		if (inputType == -1) {
-	// 			std::cout << "Error 02: That is not a valid path" << std::endl;
-	// 		} else if (inputType == 0) {
-	// 			Song song(path);
-	// 			queue.pushItem(song);
-	// 			ui.printMessage("Song added to queue!");
-	// 		} else if ((inputType == 1) || (inputType == 2)) {
-	// 			Playlist playlist;
-	// 			playlist.loadSongs(path);
-	// 			std::cout << "Playlist added to queue!" << std::endl;
-	// 		}
-	// 		ui.unpauseUIUpdater();
-	// 	}
-	// 	break;
-		
-	// 	case 'r': {			//Rewind, douple-press => set on repeat
-	// 		// auto first_click = std::chrono::high_resolution_clock::now();
-
-	// 		// while (true) {
-	// 		// 	if (Console::kbhit()) {
-	// 		// 		char c = Console::getch();
-	// 		// 		if (c == 'r')
-	// 		// 		break;
-	// 		// 	}
-	// 		// 	auto second_click = std::chrono::high_resolution_clock::now();
-	// 		// 	if ((second_click - first_click).count() > 400000000) {
-	// 		// 		break;
-	// 		// 	}
-	// 		// }
-
-	// 		// auto second_click = std::chrono::high_resolution_clock::now();
-	// 		// auto duration = second_click - first_click;
-
-	// 		// if (duration.count() < 400000000) {
-	// 		// 	playbackController.switchRepeatMode();
-	// 		// } else {
-	// 		// 	playbackController.rewind();
-	// 		// }
-	// 	}
-	// 	break;
-	// 	}
-	// }
 }

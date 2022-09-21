@@ -13,12 +13,14 @@ void UserInterface::drawScreen() {
 	std::vector queueItems = playbackController->getQueue().getItemNames();
 
 	if (queueItems.size() > maxQueueDisplaySize) {
-		queueItems[maxQueueDisplaySize - 1] = "...";
-	}
-	else if (queueItems.size() < maxQueueDisplaySize) {
+		queueItems[maxQueueDisplaySize - 1] = "..." + concatString(" ", Console::getXSize() - 79);
+	} else if (queueItems.size() < maxQueueDisplaySize) {
 		for (size_t i = queueItems.size(); i < maxQueueDisplaySize; i++) {
-			queueItems.push_back("");
+			queueItems.push_back(concatString(" ", Console::getXSize() - 76));
 		}
+	}
+	for (size_t i = 0; i < queueItems.size(); i++) {
+		queueItems[i] = queueItems[i] + concatString(" ", Console::getXSize() - 76 - queueItems[i].length());
 	}
 
 	curses::printw("Volume +------------------------------ ATAP ------------------------------+ Queue\n");
@@ -36,16 +38,21 @@ void UserInterface::drawScreen() {
 	curses::printw("       | %s| \n", spacesLine2.c_str());
 	curses::printw("   %s  +------------------------------------------------------------------+\n\n", volumeNumber.c_str());
 
-	std::vector messagesCpy = messages;
 
 	//Print messages
+	auto now = std::chrono::high_resolution_clock::now();
+	for (size_t i = 0; i < messages.size(); i++) {
+		if (now > messages[i].getEnd()) {
+			messages.erase(messages.begin() + i);
+		}
+	}
+	std::vector messagesCpy = messages;
 	if (messagesCpy.size() > maxMessageQueueDisplaySize) {
 		messagesCpy.erase(messagesCpy.begin());
 		messages.erase(messages.begin());
-	}
-	else if (messagesCpy.size() < maxMessageQueueDisplaySize) {
+	} else if (messagesCpy.size() < maxMessageQueueDisplaySize) {
 		for (size_t i = messagesCpy.size(); i < maxQueueDisplaySize; i++) {
-			messagesCpy.push_back(Message("", 0));
+			messagesCpy.push_back(Message(concatString(" ", Console::getXSize() - 7), 0));
 		}
 	}
 

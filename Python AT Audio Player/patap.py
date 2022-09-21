@@ -1,6 +1,12 @@
 
-#Imports
+#Check if script is called as a module in another script or not
 import sys
+if __name__ != "__main__":
+	print("\nPython AT Audio Player should be called as a standalone script!")
+	sys.exit(0)
+
+
+#Imports
 import os
 import time
 import random
@@ -9,166 +15,34 @@ import keyboard
 import msvcrt
 import threading as thread
 
+from patapfuncs import *
+import patapvars
+from patapclasses import *
+
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import pygame
-
-#Variables
-welcome_message = "Welcome to Python AT Audio Player!"
-scriptDir = os.path.dirname(os.path.realpath(__file__))
-shouldRun = True
-loopSong = False
-loadingAnimation = False
-songLog = []
-standardOptions = {
-	"shuffle": False,
-	"shuffleIndefinitely": True,
-	"volume": 1,
-	"onStartSong": None
-}
-
-#Initalization
-pygame.init()
-SONG_END = pygame.USEREVENT + 1					#Song end event
-pygame.mixer_music.set_endevent(SONG_END)
-
-#Classes
-class PressedCharacter:
-	def __init__(self):
-		self.char = None
-		self.globalChar = keyboard.KeyboardEvent(None, None)
-pressedCharacter = PressedCharacter()
-class PlaylistData:
-	def __init__(self):
-		self.shuffleIndefinitely = False
-		self.files = []
-class NowPlaying:
-	def __init__(self, name, path, paused):
-		self.name = name
-		self.path = path
-		self.paused = paused
-		self.positionOffset = 0
-		self.playlist = None
-		self.logged = False
-		if self.path != None:
-			self.length = int(pygame.mixer.Sound(self.path).get_length())
-		else:
-			self.length = None
-
-nowPlaying = NowPlaying(None, None, None)		#Standard object for the current playing song
-
-#Functions
-def getChar():
-	while shouldRun:
-		pressedCharacter.char = msvcrt.getwch()
-def loading_animation(str):
-	array = ["/", "—", "\\", "|"]
-	n = 0
-	while loadingAnimation:
-		print("\r" + array[n] + " " + str, end="")
-		time.sleep(0.15)
-		if n == 3:
-			n = 0
-		else:
-			n += 1
-	sys.exit(0)
-def wait():
-	pressedCharacter.char = ""
-	time.sleep(0.2)
-def play(files):
-	if len(files) == 1:
-		type = "song"
-	elif len(files) > 1:
-		type = "playlist"
-	while shouldRun:
-		for event in pygame.event.get():
-			if event.type == SONG_END:
-				saveFiles() #Save files
-				if loopSong:
-					pygame.mixer_music.play()
-
-					#Add to log
-					songLog.append(nowPlaying.path)
-				else:
-					nowPlaying.paused = None
-		if (not pygame.mixer_music.get_busy()) and (nowPlaying.paused == None):
-			if files:
-				index = -1
-				if (type == "playlist"):
-					while True:
-						if options["shuffle"]:
-							index = random.randint(0, len(files)-1)
-						if nowPlaying.path != files[index].path: break
-						if not options["shuffle"]: break
-				pygame.mixer_music.load(files[index].path)
-
-				#Change nowPlaying object
-				nowPlaying.name = files[index].name
-				nowPlaying.path = files[index].path
-				nowPlaying.paused = False
-				nowPlaying.length = files[index].length
-				nowPlaying.positionOffset = files[index].positionOffset
-				nowPlaying.logged = False
-
-				#Add to log
-				songLog.append(files[index].path)
-
-				pygame.mixer_music.play()
-				if (not options["shuffle"]) or (options["shuffle"] and not options["shuffleIndefinitely"]):
-					files.pop(index)
-				if (type == "playlist"):
-					nowPlaying.playlist = PlaylistData()
-					if (options["shuffle"]) and (options["shuffleIndefinitely"]):
-						nowPlaying.playlist.files = []
-						nowPlaying.playlist.shuffleIndefinitely = True
-					else:
-						nowPlaying.playlist.files = files
-						nowPlaying.playlist.shuffleIndefinitely = False
-				else:
-					nowPlaying.playlist = None
-			else:
-				print("{} ended! Start a new song or playlist?".format(type.capitalize()))
-
-				#Change nowPlaying object
-				nowPlaying.name = None
-				nowPlaying.path = None
-				nowPlaying.paused = None
-				nowPlaying.length = None
-				nowPlaying.positionOffset = 0
-				nowPlaying.playlist = None
-				nowPlaying.logged = False
-				
-				sys.exit(0)		#Exit thread
+pygame.mixer_music.set_endevent(pygame.USEREVENT + 1)		#Song end event
 
 #Welcome the user
-print("\n" + welcome_message)
-for var in welcome_message:
+print("\n" + patapvars.welcome_message)
+for var in patapvars.welcome_message:
 	print("-", end="", flush=True)
 	time.sleep(0.02)
 print()
 
-#Load options
-if (os.path.exists(scriptDir + "/options.json")) and (os.path.isfile(scriptDir + "/options.json")):
-	with open(scriptDir + "/options.json","r") as file:
-		options = json.load(file)
-	print("Options loaded!")
-else:
-	options = standardOptions
-	print("Options file could not be found...")
-pygame.mixer_music.set_volume(options["volume"])
-
 #Prepare some things
-with open(scriptDir + "/play.log","a") as file:
+with open(patapvars.scriptDir + "/play.log","a") as file:
 	file.write(time.strftime("#time: %Y-%m-%d %H:%M:%S\n", time.localtime(time.time())))
 
 #Start standard song
-if options["onStartSong"] != None:
+if patapvars.options["onStartSong"] != None:
 	files = []
-	loadingAnimation = True
+	patapvars.loadingAnimation = True
 	thread._start_new_thread(loading_animation, ("Loading playlist!",))
-	for entry in os.scandir(options["onStartSong"]["path"]):
+	for entry in os.scandir(patapvars.options["onStartSong"]["path"]):
 		if entry.is_file() and entry.name.endswith(".mp3"):
 			files.append(NowPlaying(entry.name, entry.path, False))
-	loadingAnimation = False
+	patapvars.loadingAnimation = False
 	print("\r", end="")
 	if len(files) > 0:
 		thread._start_new_thread(play, (files,))
@@ -176,24 +50,26 @@ if options["onStartSong"] != None:
 	else:
 		print("Error")
 
-#Define saveFiles function
-def saveFiles():
-	#Save options
-	options["volume"] = pygame.mixer_music.get_volume()
-	with open(scriptDir + "/options.json","w") as file:
-		json.dump(options, file, indent=4)
-
-	#Append played songs to log
-	with open(scriptDir + "/play.log","a") as file:
-		if not nowPlaying.logged:
-			file.write(nowPlaying.path + "\n")
-			nowPlaying.logged = True
-
 thread._start_new_thread(getChar, ())
-def setGlobalChar(event):
-	pressedCharacter.globalChar = event
 keyboard.on_press(setGlobalChar)
-while shouldRun:
+while patapvars.shouldRun:
+
+	if (keyboard.is_pressed(73)) and (pressedCharacter.globalChar.is_keypad):
+		pygame.mixer_music.set_volume(pygame.mixer_music.get_volume()+0.01)
+		if (globals.lastCommandWasVolume):
+			print("\rVolume set to {} ".format(int(pygame.mixer_music.get_volume()*100)), end="")
+		else:
+			print("Volume set to {} ".format(int(pygame.mixer_music.get_volume()*100)), end="", flush=True)
+			globals.lastCommandWasVolume = True
+		wait(0.1)
+	elif (keyboard.is_pressed(81)) and (pressedCharacter.globalChar.is_keypad):
+		pygame.mixer_music.set_volume(pygame.mixer_music.get_volume()-0.01)
+		if (globals.lastCommandWasVolume):
+			print("\rVolume set to {} ".format(int(pygame.mixer_music.get_volume()*100)), end="")
+		else:
+			print("Volume set to {} ".format(int(pygame.mixer_music.get_volume()*100)), end="", flush=True)
+			globals.lastCommandWasVolume = True
+		wait(0.1)
 
 	p_event = (pressedCharacter.char == "p") or ((keyboard.is_pressed(76)) and (pressedCharacter.globalChar.is_keypad))		#Trigger on "p" inside console or "5" on numpad (globally)
 	s_event = (pressedCharacter.char == "s") or ((keyboard.is_pressed(77)) and (pressedCharacter.globalChar.is_keypad))		#Trigger on "s" inside console or "6" on numpad (globally)
@@ -201,10 +77,10 @@ while shouldRun:
 	i_event = pressedCharacter.char == "i"
 	u_event = pressedCharacter.char == "u"
 	r_event = (pressedCharacter.char == "r") or ((keyboard.is_pressed(75)) and (pressedCharacter.globalChar.is_keypad))		#Trigger on "r" inside console or "4" on numpad (globally)
-	t_event = pressedCharacter.char == "t"
+	t_event = (pressedCharacter.char == "t") or ((keyboard.is_pressed(71)) and (pressedCharacter.globalChar.is_keypad))		#Trigger on "t" inside console or "7" on numpad (globally)
 	g_event = pressedCharacter.char == "g"
 	j_event = pressedCharacter.char == "j"
-	n_event = pressedCharacter.char == "n"
+	n_event = (pressedCharacter.char == "n") or ((keyboard.is_pressed(72)) and (pressedCharacter.globalChar.is_keypad))		#Trigger on "n" inside console or "8" on numpad (globally)
 	h_event = pressedCharacter.char == "h"
 	c_event = pressedCharacter.char == "c"
 	o_event = pressedCharacter.char == "o"
@@ -212,30 +88,44 @@ while shouldRun:
 	q_event = pressedCharacter.char == "q"
 
 	if p_event and pygame.mixer_music.get_busy():
+		lineBreak()
 		pygame.mixer_music.pause()
 		nowPlaying.paused = True
 		print("Paused!")
 		wait()
 	elif p_event and not pygame.mixer_music.get_busy():
+		lineBreak()
 		pygame.mixer_music.unpause()
 		nowPlaying.paused = False
 		print("Unpaused!")
 		wait()
 
 	if s_event:
+		lineBreak()
+		loopSongTmp = patapvars.loopSong
+		patapvars.loopSong = False
 		pygame.mixer_music.stop()
 		pygame.mixer_music.unload()
 		nowPlaying.paused = None
+
+		globals.shouldRunB = False
+		while not globals.shouldRunB:
+			pass
+		if loopSongTmp:
+			patapvars.loopSong = True
+		globals.shouldRunB = True
+
 		print("Stopped/Next!")
 		wait()
 
 	if l_event:
+		lineBreak()
 		new_song = input("Type the new song here: ")
 		if os.path.exists(new_song):
-			loadingAnimation = True
+			patapvars.loadingAnimation = True
 			thread._start_new_thread(loading_animation, ("Loading song!",))
 			song = [NowPlaying(os.path.basename(new_song), os.path.abspath(new_song), False)]
-			loadingAnimation = False
+			patapvars.loadingAnimation = False
 			print("\r", end="")
 			thread._start_new_thread(play, (song,))
 			print("Song was loaded!")
@@ -244,6 +134,7 @@ while shouldRun:
 		wait()
 
 	if i_event:
+		lineBreak()
 		playlist = input("Type the playlist here: ")
 		if os.path.exists(playlist):
 			#if os.path.isfile(playlist):
@@ -255,12 +146,12 @@ while shouldRun:
 			#	pygame.mixer_music.play()
 			if os.path.isdir(playlist):
 				files = []
-				loadingAnimation = True
+				patapvars.loadingAnimation = True
 				thread._start_new_thread(loading_animation, ("Loading playlist!",))
 				for entry in os.scandir(playlist):
 					if entry.is_file() and entry.name.endswith(".mp3"):
 						files.append(NowPlaying(entry.name, entry.path, False))
-				loadingAnimation = False
+				patapvars.loadingAnimation = False
 				print("\r", end="")
 				if len(files) > 0:
 					thread._start_new_thread(play, (files,))
@@ -272,6 +163,7 @@ while shouldRun:
 		wait()
 
 	if u_event:
+		lineBreak()
 		print("\nREMAINING SONGS:")
 		if not nowPlaying.path:
 			print("No song is currently loaded!")
@@ -289,6 +181,7 @@ while shouldRun:
 		wait()
 
 	if r_event:
+		lineBreak()
 		pygame.mixer_music.play()
 		if nowPlaying.paused:
 			pygame.mixer_music.pause()
@@ -297,15 +190,17 @@ while shouldRun:
 		wait()
 
 	if t_event:
-		if loopSong:
+		lineBreak()
+		if patapvars.loopSong:
 			print("Stop looping current track.")
-			loopSong = False
+			patapvars.loopSong = False
 		else:
 			print("Looping current track!")
-			loopSong = True
+			patapvars.loopSong = True
 		wait()
 		
 	if g_event:
+		lineBreak()
 		print("\nGOTO POSITION:")
 		seconds = int(pygame.mixer_music.get_pos() / 1000) + nowPlaying.positionOffset
 		print("Position is currently: {}:{}{}. ".format(seconds // 60, (lambda int: "0" if int < 10 else "")(seconds % 60), seconds % 60), end="")
@@ -331,12 +226,14 @@ while shouldRun:
 		wait()
 
 	if j_event:
+		lineBreak()
 		print("\nJOURNAL:")
-		for song in songLog:
+		for song in patapvars.songLog:
 			print(song)
 		wait()
 
 	if n_event:
+		lineBreak()
 		print("\nNOW PLAYING:")
 		if not nowPlaying.path:
 			print("No song is currently loaded!")
@@ -344,13 +241,14 @@ while shouldRun:
 			print("Name: {}".format(nowPlaying.name))
 			print("Path: {}".format(nowPlaying.path))
 			print("Paused: {}".format(nowPlaying.paused))
-			print("Looping: {}".format(loopSong))
+			print("Looping: {}".format(patapvars.loopSong))
 			print("Length: {}:{}{}".format(nowPlaying.length // 60, (lambda int: "0" if int < 10 else "")(nowPlaying.length % 60), nowPlaying.length % 60))
 			seconds = int(pygame.mixer_music.get_pos() / 1000) + nowPlaying.positionOffset
 			print("Position: {}:{}{}".format(seconds // 60, (lambda int: "0" if int < 10 else "")(seconds % 60), seconds % 60))
 		wait()
 
 	if h_event:
+		lineBreak()
 		print("\nHELP:")
 		print("p - Pause/Unpause")
 		print("s - Stop")
@@ -367,6 +265,7 @@ while shouldRun:
 		wait()
 
 	if c_event:
+		lineBreak()
 		print("\nCREDITS:")
 		print("Author: Isak Brynielsson Neri")
 		print("Libs:")
@@ -375,6 +274,7 @@ while shouldRun:
 		wait()
 
 	if o_event:
+		lineBreak()
 		print("\nOPTIONS:")
 		print("v - Change volume!")
 		print("s - Change shuffle setting.")
@@ -400,7 +300,7 @@ while shouldRun:
 			pygame.mixer_music.set_volume(newVolume / 100)
 			print("New volume set to {}!\n".format(pygame.mixer_music.get_volume() * 100))
 		if char2 == "s":
-			print("Shuffle setting is currently set to {}. ".format(options["shuffle"]), end="")
+			print("Shuffle setting is currently set to {}. ".format(patapvars.options["shuffle"]), end="")
 			while True:
 				newShuffleStr = input("Type 'True' or 'False': ")
 				if newShuffleStr == "True":
@@ -408,15 +308,15 @@ while shouldRun:
 				elif newShuffleStr == "False":
 					newShuffle = False
 				elif newShuffleStr == "e":
-					newShuffle = options["shuffle"]
+					newShuffle = patapvars.options["shuffle"]
 				else:
 					print("Not convertible to bool. Try again!")
 					continue
 				break
-			options["shuffle"] = newShuffle
-			print("New shuffle settings: {}!\n".format(options["shuffle"]))
+			patapvars.options["shuffle"] = newShuffle
+			print("New shuffle settings: {}!\n".format(patapvars.options["shuffle"]))
 		if char2 == "i":
-			print("Shuffle indefinitely setting is currently set to {}. ".format(options["shuffleIndefinitely"]), end="")
+			print("Shuffle indefinitely setting is currently set to {}. ".format(patapvars.options["shuffleIndefinitely"]), end="")
 			while True:
 				newShuffleIndefinitelyStr = input("Type 'True' or 'False': ")
 				if newShuffleIndefinitelyStr == "True":
@@ -424,22 +324,24 @@ while shouldRun:
 				elif newShuffleIndefinitelyStr == "False":
 					newShuffleIndefinitely = False
 				elif newShuffleIndefinitelyStr == "e":
-					newShuffleIndefinitely = options["shuffleIndefinitely"]
+					newShuffleIndefinitely = patapvars.options["shuffleIndefinitely"]
 				else:
 					print("Not convertible to bool. Try again!")
 					continue
 				break
-			options["shuffleIndefinitely"] = newShuffleIndefinitely
-			print("New shuffle indefinitely settings: {}!\n".format(options["shuffleIndefinitely"]))
+			patapvars.options["shuffleIndefinitely"] = newShuffleIndefinitely
+			print("New shuffle indefinitely settings: {}!\n".format(patapvars.options["shuffleIndefinitely"]))
 		saveFiles()
 		wait()
 
 	if e_event:
+		lineBreak()
 		print("Bye!\n")
-		shouldRun = False
+		patapvars.shouldRun = False
 	if q_event:
+		lineBreak()
 		print("Goodbye!\n")
-		shouldRun = False
+		patapvars.shouldRun = False
 
 saveFiles()
 
