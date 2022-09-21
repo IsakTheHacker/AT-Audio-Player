@@ -1,19 +1,17 @@
 #pragma once
 
 #include <iostream>
-
-#include <ik_ISound.h>
-#include <ik_ISoundEngine.h>
+#include <soloud.h>
+namespace sl = SoLoud;
 
 #include "queue.h"
 #include "queueItem.h"
 #include "song.h"
 #include "playlist.h"
-#include "globalVars.h"
 
 class PlaybackController {
 private:
-	irrklang::ISound* sound = nullptr;
+	sl::handle sound = 0;
 
 	Queue* queue = nullptr;
 	QueueItem loadedItem;

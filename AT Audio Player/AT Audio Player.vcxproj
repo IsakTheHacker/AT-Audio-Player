@@ -169,7 +169,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\console.cpp" />
+    <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\handyFunctions.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\message.cpp" />
@@ -182,8 +182,7 @@
     <ClCompile Include="src\userInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\header\console.h" />
-    <ClInclude Include="src\header\globalVars.h" />
+    <ClInclude Include="src\header\application.h" />
     <ClInclude Include="src\header\handyFunctions.h" />
     <ClInclude Include="src\header\message.h" />
     <ClInclude Include="src\header\options.h" />
@@ -193,6 +192,14 @@
     <ClInclude Include="src\header\queueItem.h" />
     <ClInclude Include="src\header\song.h" />
     <ClInclude Include="src\header\userInterface.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="external\ConTerLib\ConTerLib.vcxproj">
+      <Project>{5433db93-b810-4afe-b6b6-572a2778b23b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="external\SoLoud\build\vs2022\SoloudStatic.vcxproj">
+      <Project>{83540317-6fb7-92bb-183d-cb71047f5e3e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

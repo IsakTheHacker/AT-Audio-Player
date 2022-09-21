@@ -4,7 +4,6 @@
 #include <queue>
 
 #include "song.h"
-#include "handyFunctions.h"
 
 class Playlist {
 private:

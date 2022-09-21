@@ -1,4 +1,6 @@
 #include "handyFunctions.h"
+#include <filesystem>
+namespace fs = std::filesystem;
 
 int getInputType(const std::string& pathStr) {
 	const fs::path path(pathStr);
@@ -15,14 +17,6 @@ int getInputType(const std::string& pathStr) {
 		else {
 			return 0;
 		}
-	}
-}
-
-void initEngine() {
-	engine = irrklang::createIrrKlangDevice();		//Start the engine
-	if (!engine) {
-		std::cout << "Error 01: Could not start engine" << std::endl;
-		exit(1);							//Stop program execution
 	}
 }
 

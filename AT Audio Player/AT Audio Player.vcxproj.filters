@@ -21,9 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\options.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
@@ -45,13 +42,16 @@
     <ClCompile Include="src\song.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="src\console.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
     <ClCompile Include="src\handyFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\message.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\application.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,17 +77,14 @@
     <ClInclude Include="src\header\queueItem.h">
       <Filter>Header Files\Classes</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\console.h">
-      <Filter>Header Files\Classes</Filter>
-    </ClInclude>
     <ClInclude Include="src\header\handyFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\message.h">
       <Filter>Header Files\Classes</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\globalVars.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\header\application.h">
+      <Filter>Header Files\Classes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

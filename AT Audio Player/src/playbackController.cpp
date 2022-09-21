@@ -1,17 +1,23 @@
 #include "playbackController.h"
+#include "application.h"
+#include <soloud_wav.h>
 
 //Private
 void PlaybackController::playLoadedItem() {
 	if (loadedItem.getContents() == 0) {			//Song
-		sound = engine->play2D(loadedItem.getSong().getSource(), false, false, true);
+		SoLoud::Wav song;
+		song.load(loadedItem.getSong().getPath().c_str());
+		sound = Application::engine->play(song);
 	}
 	else if (loadedItem.getContents() == 1) {		//Playlist
-		sound = engine->play2D(loadedItem.getPlaylist().popFront().getSource(), false, false, true);
+		SoLoud::Wav song;
+		song.load(loadedItem.getPlaylist().popFront().getPath().c_str());
+		sound = Application::engine->play(song);
 	}
-	sound->setVolume((irrklang::ik_f32)0.7);
+	//sound->setVolume((irrklang::ik_f32)0.7);
 }
-void PlaybackController::pause() { engine->setAllSoundsPaused(true); }
-void PlaybackController::unpause() { engine->setAllSoundsPaused(false); }
+void PlaybackController::pause() { Application::engine->setPauseAll(true); }
+void PlaybackController::unpause() { Application::engine->setPauseAll(false); }
 
 //Public
 void PlaybackController::set(QueueItem queueItem) {
@@ -27,7 +33,7 @@ void PlaybackController::setQueue(Queue& queue) { this->queue = &queue; }
 Queue PlaybackController::getQueue() { return *queue; }
 void PlaybackController::switchPauseMode() {
 	if (!sound) return;
-	if (sound->getIsPaused() == true) {		//Sound is paused, unpause
+	if (Application::engine->getPause(sound) == true) {		//Sound is paused, unpause
 		unpause();
 	}
 	else {
@@ -36,7 +42,7 @@ void PlaybackController::switchPauseMode() {
 }
 bool PlaybackController::isPlaying() {
 	if (!sound) return false;
-	if (engine->isCurrentlyPlaying(sound->getSoundSource())) {
+	if (Application::engine->getActiveVoiceCount() != 0) {
 		return true;
 	}
 	else {
@@ -45,31 +51,29 @@ bool PlaybackController::isPlaying() {
 }
 void PlaybackController::skip() {
 	if (!sound) return;
-	sound->stop();
+	Application::engine->stop(sound);
 }
 void PlaybackController::rewind() {
 	if (!sound) return;
-	sound->setPlayPosition(0);
+	Application::engine->seek(sound, 0);
 }
 void PlaybackController::switchRepeatMode() {
 	if (!sound) return;
-	if (sound->isLooped() == true) {
+	/*if (sound->isLooped() == true) {
 		sound->setIsLooped(false);
 		std::cout << "The song is no longer on repeat." << std::endl;
 	}
 	else {
 		sound->setIsLooped(true);
 		std::cout << "The song has been set on repeat!" << std::endl;
-	}
+	}*/
 }
 void PlaybackController::setVolume(float volume) {
-	if (!sound) return;
 	if (volume > 10 || volume < 0) return;
-	sound->setVolume(volume / 10);
+	Application::engine->setGlobalVolume(volume / 10);
 }
 float PlaybackController::getVolume() {
-	if (!sound) return 5;
-	return sound->getVolume() * 10;
+	return Application::engine->getGlobalVolume() * 10;
 }
 Song PlaybackController::getSong() {
 	if (!sound) {
@@ -83,7 +87,7 @@ Song PlaybackController::getSong() {
 	}
 }
 void PlaybackController::pullFromQueue(PlaybackController* playbackController, Queue* queue) {
-	while (shouldRun) {
+	while (Application::shouldRun) {
 		if (playbackController->isPlaying()) continue;						//Check if currently playing
 		if (playbackController->loadedItem.getContents() == 1) {			//Check if playlist is empty
 			if (!playbackController->loadedItem.getPlaylist().getEmpty()) {

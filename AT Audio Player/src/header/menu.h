@@ -2,10 +2,6 @@
 #include <string>
 #include <vector>
 
-namespace curses {
-	#include <ncurses.h>
-}
-
 #include "stdconfig.h"
 #include "handyFunctions.h"
 

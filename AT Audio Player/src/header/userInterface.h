@@ -4,15 +4,9 @@
 #include <string>
 #include <thread>
 
-//Thirdparty
-namespace curses {						//Include curses library in a namespace so it doesn't collide with other stuff
-	#include <ncurses.h>
-}
-
 #include "playbackController.h"
 #include "message.h"
 #include "handyFunctions.h"
-#include "globalVars.h"
 
 class UserInterface {
 private:

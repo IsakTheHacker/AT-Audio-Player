@@ -1,4 +1,7 @@
 #include "playlist.h"
+#include "handyFunctions.cpp"
+#include <filesystem>
+namespace fs = std::filesystem;
 
 void Playlist::loadSongs(std::vector<Song> songs) {
 	for (Song song : songs) {
