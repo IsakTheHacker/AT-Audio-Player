@@ -1,5 +1,5 @@
 #include "playlist.h"
-#include "handyFunctions.cpp"
+#include "handyFunctions.h"
 #include <filesystem>
 namespace fs = std::filesystem;
 

@@ -20,6 +20,3 @@ private:
 	std::thread pullFromQueue;
 	std::thread updateUI;
 };
-
-bool Application::shouldRun = true;
-sl::Soloud* Application::engine = new SoLoud::Soloud;

@@ -18,6 +18,7 @@ Application::Application() {
 
 	engine->init();
 	playbackController.setQueue(queue);
+	playbackController.setVolume(5);
 	ui.setPlaybackController(playbackController);
 }
 
@@ -107,3 +108,6 @@ void Application::run() {
 }
 
 }
+
+bool Application::shouldRun = true;
+sl::Soloud* Application::engine = new SoLoud::Soloud;
