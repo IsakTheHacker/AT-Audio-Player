@@ -1,4 +1,8 @@
 #pragma once
+#if defined(_WIN32) || defined(_WIN64)
+#include <Windows.h>
+#endif
+
 #include <soloud.h>
 namespace sl = SoLoud;
 
@@ -19,4 +23,7 @@ private:
 	Queue queue;
 	std::thread pullFromQueue;
 	std::thread updateUI;
+#if defined(_WIN32) || defined(_WIN64)
+	DWORD prevConsoleMode;
+#endif
 };

@@ -1,15 +1,15 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <conterlib.hpp>
 
 #include "stdconfig.h"
 #include "handyFunctions.h"
 
 class SelectionMenu1d {
 private:
-	int yMax, xMax;
 	int height, width, starty, startx;
-	curses::WINDOW* window;
+	TUI::Window window;
 	std::vector<std::string> choices;
 
 	unsigned short getHighestLength(const std::vector<std::string>& vec);
@@ -20,10 +20,9 @@ public:
 
 class InputMenu {
 private:
-	int yMax, xMax;
 	int height, width, starty, startx;
 	std::string stdText;
-	curses::WINDOW* window;
+	TUI::Window window;
 public:
 	InputMenu(const int& height, const int& width);
 	std::string waitForInput(const int& startAtY = 1, const int& startAtX = 1, const std::string& stdText = "", const bool& allowEscExit = true);

@@ -1,45 +1,44 @@
 #include "menu.h"
+#include <conterlib.hpp>
+#include <iostream>
 
 SelectionMenu1d::SelectionMenu1d(const std::vector<std::string>& choices) {
-	using namespace curses;
-	getmaxyx(stdscr, yMax, xMax);		//Get screen size
+	TUI::WindowSize screenSize = Console::getScreenSize();
 
 	//Calculate window size based on number of choices and text length
 	height = choices.size() + 2;
 	width = this->getHighestLength(choices) + 2;
 
-	starty = (yMax - height) / 2; 		//Calculating for a center placement
-	startx = (xMax - width) / 2;  		//of the window
-	window = newwin(height, width, starty, startx);
-	wborder(window, '|', '|', '-', '-', '+', '+', '+', '+');
+	starty = (screenSize.ySize - height) / 2; 		//Calculating for a center placement
+	startx = (screenSize.xSize - width) / 2;  		//of the window
+	window = TUI::Window(width, height, startx, starty);
 	this->choices = choices;
 }
 
 int SelectionMenu1d::waitForSelection(const int& startAt, const bool& allowEscExit) {
-	using namespace curses;
-	wrefresh(window);
-	keypad(window, true);
+	//wrefresh(window);
 
-	int choice;
+	Key choice;
 	int highlight = startAt;
 	int returnFlag = -1;
 
 	while (true) {
 		for (size_t i = 0; i < choices.size(); i++) {
 			if (i == highlight)
-				wattron(window, A_REVERSE);
-			mvwprintw(window, i+1, 1, choices[i].c_str());
-			wattroff(window, A_REVERSE);
+				int i = 0;
+				//wattron(window, A_REVERSE);
+			//mvwprintw(window, i+1, 1, choices[i].c_str());
+			//wattroff(window, A_REVERSE);
 		}
-		choice = wgetch(window);
+		choice = Console::readKey();
 
 		switch (choice) {
-		case KEY_UP:
+		case Key::ARROW_UP:
 			if (highlight > 0) {
 				highlight--;
 			}
 			break;
-		case KEY_DOWN:
+		case Key::ARROW_DOWN:
 			if (highlight < choices.size()-1) {
 				highlight++;
 			}
@@ -48,10 +47,10 @@ int SelectionMenu1d::waitForSelection(const int& startAt, const bool& allowEscEx
 			break;
 		}
 
-		if (choice == 10) {								//Select option on Enter
+		if (choice == Key::ENTER) {								//Select option on Enter
 			returnFlag = 0;
 			break;
-		} else if (choice == 27 && allowEscExit) {		//Close without selection on Escape
+		} else if (choice == Key::ESC && allowEscExit) {		//Close without selection on Escape
 			returnFlag = -1;
 			break;
 		}
@@ -83,86 +82,83 @@ unsigned short SelectionMenu1d::getHighestLength(const std::vector<std::string>&
 }
 
 InputMenu::InputMenu(const int& height, const int& width) {
-	using namespace curses;
-	getmaxyx(stdscr, yMax, xMax);		//Get screen size
+	TUI::WindowSize screenSize = Console::getScreenSize();
 
 	//Calculate window size based on number of choices and text length
 	this->height = height;
 	this->width = width;
 
-	starty = (yMax - height) / 2; 		//Calculating for a center placement
-	startx = (xMax - width) / 2;  		//of the window
-	window = newwin(height, width, starty, startx);
-	wborder(window, '|', '|', '-', '-', '+', '+', '+', '+');
+	starty = (screenSize.ySize - height) / 2; 		//Calculating for a center placement
+	startx = (screenSize.xSize - width) / 2;  		//of the window
+	window = TUI::Window(width, height, startx, starty);
 	this->stdText = stdText;
 }
 
 std::string InputMenu::waitForInput(const int& startAtY, const int& startAtX, const std::string& stdText, const bool& allowEscExit) {
-	using namespace curses;
-	curs_set(1);						//Show cursor
-	noecho();
-	keypad(window, true);
-	nodelay(window, false);				//Wait for characters to be pressed (blocking)
-	mvwprintw(window, startAtY, startAtX, stdText.c_str());
-	wmove(window, startAtY, startAtX);
-	wrefresh(window);
+	Console::showCursor(true);
+	Console::setCursorPos(startAtX, startAtY);
+	std::cout << stdText;
+	Console::setCursorPos(startAtX, startAtY);
+	//wrefresh(window);
 
-	int c;
+	Key c;
 	std::string input;
 	int returnFlag = -1;
-	int cursorY, cursorX;
+	TUI::Coord cursor;
 
 	while (true) {
-		c = wgetch(window);
+		c = Console::readKey();
 
-		if (c == 10 || c == '\n') {										//Return with input on Enter
+		if (c == Key::ENTER) {										//Return with input on Enter
 			returnFlag = 0;
 			break;
-		} else if (c == 27 && allowEscExit) {							//Close without input on Escape
+		} else if (c == Key::ESC && allowEscExit) {							//Close without input on Escape
 			returnFlag = -1;
 			break;
-		} else if (c == KEY_BACKSPACE || c == KEY_DC || c == 127) {		//Adds support for deleting typed chars
-			getyx(window, cursorY, cursorX);
-    		int cursorPos = cursorX-startAtX;
+		} else if (c == Key::BACKSPACE || c == Key::DEL) {		//Adds support for deleting typed chars
+			cursor = Console::getCursorPos();
+    		int cursorPos = cursor.x-startAtX;
 			if (!input.empty() && cursorPos > 0) {
 				input.erase(cursorPos-1, 1);
-				cursorX -= 1;
-				wmove(window, cursorY, cursorX);
+				cursor.x -= 1;
+				Console::setCursorPos(cursor);
 			}
-		} else if (c == KEY_LEFT) {
-			getyx(window, cursorY, cursorX);
-			if (cursorX > startAtX) {
-				cursorX -= 1;
-				wmove(window, cursorY, cursorX);
+		} else if (c == Key::ARROW_LEFT) {
+			cursor = Console::getCursorPos();
+			if (cursor.x > startAtX) {
+				cursor.x -= 1;
+				Console::setCursorPos(cursor);
 			}
-		} else if (c == KEY_RIGHT) {
-			getyx(window, cursorY, cursorX);
-			if (cursorX < input.size()+startAtX) {
-				cursorX += 1;
-				wmove(window, cursorY, cursorX);
+		} else if (c == Key::ARROW_RIGHT) {
+			cursor = Console::getCursorPos();
+			if (cursor.x < input.size()+startAtX) {
+				cursor.x += 1;
+				Console::setCursorPos(cursor);
 			}
 		} else {
-			getyx(window, cursorY, cursorX);
-			int cursorPos = cursorX-startAtX;
+			cursor = Console::getCursorPos();
+			int cursorPos = cursor.x-startAtX;
 			std::string preStr = input.substr(0, cursorPos);
 			std::string postStr = input.substr(cursorPos, input.length() - preStr.length());
 			input = preStr + (char)c + postStr;
-			cursorX += 1;
-			wmove(window, cursorY, cursorX);
+			cursor.x += 1;
+			Console::setCursorPos(cursor);
 		}
 
 		//Redraw typed chars
 		if (input.length() > 0) {
-			getyx(window, cursorY, cursorX);
-			mvwprintw(window, startAtY, startAtX, (input + concatString(" ", width - startAtX*2 - input.size())).c_str());
-			wmove(window, cursorY, cursorX);
+			cursor = Console::getCursorPos();
+			Console::setCursorPos(startAtX, startAtY);
+			std::cout << input + concatString(" ", width - startAtX * 2 - input.size());
+			Console::setCursorPos(cursor);
 		} else {
-			mvwprintw(window, startAtY, startAtX, stdText.c_str());
-			wmove(window, startAtY, startAtX);
+			Console::setCursorPos(startAtX, startAtY);
+			std::cout << stdText;
+			Console::setCursorPos(startAtX, startAtY);
 		}
-		wrefresh(window);
+		//wrefresh(window);
 	}
-	curs_set(0);						//Hide cursor again
+	Console::showCursor(false);
 	if (returnFlag == 0) {
 		return input;
 	} else {

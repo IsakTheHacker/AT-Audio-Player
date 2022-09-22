@@ -1,20 +1,26 @@
 #include "application.h"
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <Windows.h>
+#endif
+#include <scene.h>
+#include <menu.h>
+
 #include <thread>
 #include <conterlib.hpp>
 //#include "scene.h"
 
-#define KEY_UP 72
-#define KEY_DOWN 80
-#define KEY_LEFT 75
-#define KEY_RIGHT 77
-
-#define ESCAPE 27
-#define ENTER 13
-
 Application::Application() {
+#if defined(_WIN32) || defined(_WIN64)
+	SetConsoleOutputCP(1252);								//This makes it possible to write out characters such as едц to the command prompt
+	ShowScrollBar(GetConsoleWindow(), SB_VERT, false);		//Hide scrollbar
+	
+	//Disable user selection
+	GetConsoleMode(GetConsoleWindow(), &prevConsoleMode);
+	SetConsoleMode(GetConsoleWindow(), ENABLE_EXTENDED_FLAGS | (prevConsoleMode & ~ENABLE_QUICK_EDIT_MODE));
+#endif
 	Console::showCursor(false);
-	//Console::showScrollbar(false);
+	Console::setWindowTitle("AT Audio Player");
 
 	engine->init();
 	playbackController.setQueue(queue);
@@ -31,7 +37,10 @@ Application::~Application() {
 	delete engine;
 
 	Console::showCursor(true);
-	//Console::showScrollbar(true);
+#if defined(_WIN32) || defined(_WIN64)
+	ShowScrollBar(GetConsoleWindow(), SB_VERT, true);		//Show scrollbar again
+	SetConsoleMode(GetConsoleWindow(), prevConsoleMode);	//Restore console mode
+#endif
 }
 
 void Application::run() {
@@ -42,13 +51,16 @@ void Application::run() {
 	while (shouldRun) {
 
 		//Take input
-		int c = Console::getch();
+		Key c = Console::readKey();
 		switch (c) {
-		case 'q': {
+		case Key::q: {
+			shouldRun = false;
+		}
+		case Key::CTRL_C: {
 			shouldRun = false;
 		}
 		break;
-		case 'l': {
+		/*case Key::l: {
 			ui.pauseUIUpdater();
 			std::cout << "Enter path: ";
 			std::string path;
@@ -74,34 +86,38 @@ void Application::run() {
 			}
 			ui.unpauseUIUpdater();
 		}
-		break;
-		case KEY_UP: {		//Volume up
+		break;*/
+		case Key::ARROW_UP: {		//Volume up
 			playbackController.setVolume(playbackController.getVolume() + 1);
 		break;
-		case KEY_DOWN: {	//Volume down
+		case Key::ARROW_DOWN: {	//Volume down
 			playbackController.setVolume(playbackController.getVolume() - 1);
 		}
 		break;
-		case KEY_RIGHT: {	//Skip forwards
+		case Key::ARROW_RIGHT: {	//Skip forwards
 			
 		}
 		break;
-		case KEY_LEFT: {	//Skip backwards
+		case Key::ARROW_LEFT: {	//Skip backwards
 			
 		}
 		break;
-		case 'r': {			//Recording room
+		case Key::r: {			//Recording room
+			ui.pauseUIUpdater();
 			std::vector<std::string> choices = {"Apple", "Banana", "Pear"};
-			//SelectionMenu1d menu(choices);
-			//menu.waitForSelection();
+			SelectionMenu1d menu(choices);
+			menu.waitForSelection();
+			ui.unpauseUIUpdater();
 		}
 		break;
-		//case 'l': {			//Load song, playlist or folder
-		//	InputScene* scene = new InputScene();
-		//	//SceneMgr.switch(scene);
-		//	scene->run();
-		//}
-		//break;
+		case Key::l: {			//Load song, playlist or folder
+			ui.pauseUIUpdater();
+			InputScene* scene = new InputScene();
+			//SceneMgr.switch(scene);
+			scene->run();
+			ui.unpauseUIUpdater();
+		}
+		break;
 		}
 	}
 	//--- Main loop ENDS HERE ---
