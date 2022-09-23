@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <soloud.h>
+#include <soloud_wav.h>
 namespace sl = SoLoud;
 
 #include "queue.h"
@@ -20,6 +21,7 @@ private:
 	void pause();
 	void unpause();
 public:
+	sl::Wav* song = nullptr;
 	void set(QueueItem queueItem);
 	void set(Song song);
 	void set(Playlist playlist);
@@ -29,6 +31,8 @@ public:
 	bool isPlaying();
 	void skip();
 	void rewind();
+	void seek(double seconds);
+	double getPlaytime();
 	void switchRepeatMode();
 	void setVolume(float volume);
 	float getVolume();

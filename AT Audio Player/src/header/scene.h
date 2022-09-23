@@ -31,5 +31,5 @@ private:
 	InputMenu* menu = nullptr;
 public:
 	InputScene();
-	void run();
+	std::string run();
 };

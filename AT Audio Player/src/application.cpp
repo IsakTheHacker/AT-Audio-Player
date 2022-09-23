@@ -56,15 +56,43 @@ void Application::run() {
 		case Key::q: {
 			shouldRun = false;
 		}
+		break;
 		case Key::CTRL_C: {
 			shouldRun = false;
 		}
 		break;
-		/*case Key::l: {
+		case Key::ARROW_UP: {		//Volume up
+			playbackController.setVolume(playbackController.getVolume() + 1);
+		break;
+		case Key::ARROW_DOWN: {		//Volume down
+			playbackController.setVolume(playbackController.getVolume() - 1);
+		}
+		break;
+		case Key::d: {	//Skip forwards
+			playbackController.seek(playbackController.getPlaytime() + 10);
+		}
+		break;
+		case Key::a: {		//Skip backwards
+			playbackController.seek(playbackController.getPlaytime() - 10);
+		}
+		break;
+		case Key::SPACE: {
+			playbackController.switchPauseMode();
+		}
+		break;
+		case Key::r: {			//Recording room
 			ui.pauseUIUpdater();
-			std::cout << "Enter path: ";
-			std::string path;
-			std::getline(std::cin, path);
+			std::vector<std::string> choices = {"Apple", "Banana", "Pear"};
+			SelectionMenu1d menu(choices);
+			menu.waitForSelection();
+			ui.unpauseUIUpdater();
+		}
+		break;
+		case Key::l: {			//Load song, playlist or folder
+			ui.pauseUIUpdater();
+			InputScene* scene = new InputScene();
+			//SceneMgr.switch(scene);
+			std::string path = scene->run();
 			int inputType = getInputType(path);
 			std::cout << std::endl;
 
@@ -84,37 +112,6 @@ void Application::run() {
 					std::cout << playlist.popFront().getName() << std::endl;
 				}
 			}
-			ui.unpauseUIUpdater();
-		}
-		break;*/
-		case Key::ARROW_UP: {		//Volume up
-			playbackController.setVolume(playbackController.getVolume() + 1);
-		break;
-		case Key::ARROW_DOWN: {	//Volume down
-			playbackController.setVolume(playbackController.getVolume() - 1);
-		}
-		break;
-		case Key::ARROW_RIGHT: {	//Skip forwards
-			
-		}
-		break;
-		case Key::ARROW_LEFT: {	//Skip backwards
-			
-		}
-		break;
-		case Key::r: {			//Recording room
-			ui.pauseUIUpdater();
-			std::vector<std::string> choices = {"Apple", "Banana", "Pear"};
-			SelectionMenu1d menu(choices);
-			menu.waitForSelection();
-			ui.unpauseUIUpdater();
-		}
-		break;
-		case Key::l: {			//Load song, playlist or folder
-			ui.pauseUIUpdater();
-			InputScene* scene = new InputScene();
-			//SceneMgr.switch(scene);
-			scene->run();
 			ui.unpauseUIUpdater();
 		}
 		break;

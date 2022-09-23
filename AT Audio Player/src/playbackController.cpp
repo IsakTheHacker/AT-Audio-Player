@@ -5,16 +5,14 @@
 //Private
 void PlaybackController::playLoadedItem() {
 	if (loadedItem.getContents() == 0) {			//Song
-		SoLoud::Wav song;
-		song.load(loadedItem.getSong().getPath().c_str());
-		sound = Application::engine->play(song);
+		song = new sl::Wav;
+		song->load(loadedItem.getSong().getPath().c_str());
+		sound = Application::engine->play(*song);
+	} else if (loadedItem.getContents() == 1) {		//Playlist
+		song = new sl::Wav;
+		song->load(loadedItem.getPlaylist().popFront().getPath().c_str());
+		sound = Application::engine->playBackground(*song);
 	}
-	else if (loadedItem.getContents() == 1) {		//Playlist
-		SoLoud::Wav song;
-		song.load(loadedItem.getPlaylist().popFront().getPath().c_str());
-		sound = Application::engine->play(song);
-	}
-	//sound->setVolume((irrklang::ik_f32)0.7);
 }
 void PlaybackController::pause() { Application::engine->setPauseAll(true); }
 void PlaybackController::unpause() { Application::engine->setPauseAll(false); }
@@ -57,6 +55,17 @@ void PlaybackController::rewind() {
 	if (!sound) return;
 	Application::engine->seek(sound, 0);
 }
+void PlaybackController::seek(double seconds) {
+	if (!sound) return;
+	if (seconds < 0)
+		Application::engine->seek(sound, 0);
+	else
+		Application::engine->seek(sound, seconds);
+}
+double PlaybackController::getPlaytime() {
+	if (!sound) return 0;
+	return Application::engine->getStreamPosition(sound);
+}
 void PlaybackController::switchRepeatMode() {
 	if (!sound) return;
 	/*if (sound->isLooped() == true) {
@@ -89,14 +98,16 @@ Song PlaybackController::getSong() {
 void PlaybackController::pullFromQueue(PlaybackController* playbackController, Queue* queue) {
 	while (Application::shouldRun) {
 		if (playbackController->isPlaying()) continue;						//Check if currently playing
-		if (playbackController->loadedItem.getContents() == 1) {			//Check if playlist is empty
-			if (!playbackController->loadedItem.getPlaylist().getEmpty()) {
-				playbackController->playLoadedItem();
-				continue;
-			}
+		if (playbackController->loadedItem.getContents() == 1 &&			//Check if playlist is empty
+			!playbackController->loadedItem.getPlaylist().getEmpty()
+		) {
+			if (playbackController->song != nullptr) delete playbackController->song;
+			playbackController->playLoadedItem();
+			continue;
 		}
 		if (queue->getEmpty()) continue;									//Check if queue is empty
 
+		if (playbackController->song != nullptr) delete playbackController->song;
 		playbackController->set(queue->popFront());
 		playbackController->playLoadedItem();
 	}

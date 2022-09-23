@@ -16,8 +16,6 @@ SelectionMenu1d::SelectionMenu1d(const std::vector<std::string>& choices) {
 }
 
 int SelectionMenu1d::waitForSelection(const int& startAt, const bool& allowEscExit) {
-	//wrefresh(window);
-
 	Key choice;
 	int highlight = startAt;
 	int returnFlag = -1;
@@ -88,18 +86,17 @@ InputMenu::InputMenu(const int& height, const int& width) {
 	this->height = height;
 	this->width = width;
 
-	starty = (screenSize.ySize - height) / 2; 		//Calculating for a center placement
-	startx = (screenSize.xSize - width) / 2;  		//of the window
+	starty = screenSize.ySize / 2 - height / 2;		//Calculating for a center placement
+	startx = screenSize.xSize / 2 - width / 2;		//of the window
 	window = TUI::Window(width, height, startx, starty);
 	this->stdText = stdText;
 }
 
 std::string InputMenu::waitForInput(const int& startAtY, const int& startAtX, const std::string& stdText, const bool& allowEscExit) {
 	Console::showCursor(true);
-	Console::setCursorPos(startAtX, startAtY);
+	Console::setCursorPos(window.getStartPos().x + startAtX, window.getStartPos().y + startAtY);
 	std::cout << stdText;
-	Console::setCursorPos(startAtX, startAtY);
-	//wrefresh(window);
+	Console::setCursorPos(window.getStartPos().x + startAtX, window.getStartPos().y + startAtY);
 
 	Key c;
 	std::string input;
@@ -117,7 +114,7 @@ std::string InputMenu::waitForInput(const int& startAtY, const int& startAtX, co
 			break;
 		} else if (c == Key::BACKSPACE || c == Key::DEL) {		//Adds support for deleting typed chars
 			cursor = Console::getCursorPos();
-    		int cursorPos = cursor.x-startAtX;
+			int cursorPos = cursor.x - window.getStartPos().x - startAtX;
 			if (!input.empty() && cursorPos > 0) {
 				input.erase(cursorPos-1, 1);
 				cursor.x -= 1;
@@ -137,7 +134,7 @@ std::string InputMenu::waitForInput(const int& startAtY, const int& startAtX, co
 			}
 		} else {
 			cursor = Console::getCursorPos();
-			int cursorPos = cursor.x-startAtX;
+			int cursorPos = cursor.x - window.getStartPos().x - startAtX;
 			std::string preStr = input.substr(0, cursorPos);
 			std::string postStr = input.substr(cursorPos, input.length() - preStr.length());
 			input = preStr + (char)c + postStr;
@@ -148,15 +145,14 @@ std::string InputMenu::waitForInput(const int& startAtY, const int& startAtX, co
 		//Redraw typed chars
 		if (input.length() > 0) {
 			cursor = Console::getCursorPos();
-			Console::setCursorPos(startAtX, startAtY);
+			Console::setCursorPos(window.getStartPos().x + startAtX, window.getStartPos().y + startAtY);
 			std::cout << input + concatString(" ", width - startAtX * 2 - input.size());
 			Console::setCursorPos(cursor);
 		} else {
-			Console::setCursorPos(startAtX, startAtY);
+			Console::setCursorPos(window.getStartPos().x + startAtX, window.getStartPos().y + startAtY);
 			std::cout << stdText;
-			Console::setCursorPos(startAtX, startAtY);
+			Console::setCursorPos(window.getStartPos().x + startAtX, window.getStartPos().y + startAtY);
 		}
-		//wrefresh(window);
 	}
 	Console::showCursor(false);
 	if (returnFlag == 0) {

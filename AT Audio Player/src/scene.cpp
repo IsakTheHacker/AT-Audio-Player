@@ -17,6 +17,6 @@ InputScene::InputScene() {
 	menu = new InputMenu(5, 100);
 }
 
-void InputScene::run() {
-	menu->waitForInput(2, 3, "(Type path to song, playlist or folder here)");
+std::string InputScene::run() {
+	return menu->waitForInput(2, 3, "(Type path to song, playlist or folder here)");
 }
