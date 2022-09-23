@@ -107,19 +107,14 @@ void Application::run() {
 				playlist.loadSongs(path);
 				queue.pushItem(playlist);
 				ui.printMessage("Playlist added to queue!");
-
-				while (true) {
-					std::cout << playlist.popFront().getName() << std::endl;
-				}
 			}
 			ui.unpauseUIUpdater();
 		}
 		break;
 		}
-	}
+		}
 	//--- Main loop ENDS HERE ---
-}
-
+	}
 }
 
 bool Application::shouldRun = true;

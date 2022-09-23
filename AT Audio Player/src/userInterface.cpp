@@ -15,14 +15,14 @@ void UserInterface::drawScreen() {
 	std::vector queueItems = playbackController->getQueue().getItemNames();
 
 	if (queueItems.size() > maxQueueDisplaySize) {
-		queueItems[maxQueueDisplaySize - 1] = "..." + concatString(" ", Console::getColumns() - 79);
+		queueItems[maxQueueDisplaySize - 1] = "..." + concatString(" ", Console::getScreenSizeX() - 79);
 	} else if (queueItems.size() < maxQueueDisplaySize) {
 		for (size_t i = queueItems.size(); i < maxQueueDisplaySize; i++) {
-			queueItems.push_back(concatString(" ", Console::getColumns() - 76));
+			queueItems.push_back(concatString(" ", Console::getScreenSizeX() - 76));
 		}
 	}
 	for (size_t i = 0; i < queueItems.size(); i++) {
-		queueItems[i] = queueItems[i] + concatString(" ", Console::getColumns() - 76 - queueItems[i].length());
+		queueItems[i] = queueItems[i] + concatString(" ", Console::getScreenSizeX() - 76 - queueItems[i].length());
 	}
 
 	std::cout << "Volume +------------------------------ ATAP ------------------------------+ Queue\n";
@@ -54,7 +54,7 @@ void UserInterface::drawScreen() {
 		messages.erase(messages.begin());
 	} else if (messagesCpy.size() < maxMessageQueueDisplaySize) {
 		for (size_t i = messagesCpy.size(); i < maxQueueDisplaySize; i++) {
-			messagesCpy.push_back(Message(concatString(" ", Console::getColumns() - 7), 0));
+			messagesCpy.push_back(Message(concatString(" ", Console::getScreenSizeX() - 7), 0));
 		}
 	}
 
