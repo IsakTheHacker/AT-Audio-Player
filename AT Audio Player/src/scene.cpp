@@ -14,9 +14,9 @@ void WelcomeScene::run() {
 }
 
 InputScene::InputScene() {
-	menu = new InputMenu(5, 100);
+	menu = new TUI::TextInputMenu(TUI::WinSize(100, 5), TUI::Coord(3, 2), "(Type path to song, playlist or folder here)");
 }
 
 std::string InputScene::run() {
-	return menu->waitForInput(2, 3, "(Type path to song, playlist or folder here)");
+	return std::get<std::string>(menu->waitForInput());
 }

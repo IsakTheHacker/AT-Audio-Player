@@ -33,8 +33,7 @@ void PlaybackController::switchPauseMode() {
 	if (!sound) return;
 	if (Application::engine->getPause(sound) == true) {		//Sound is paused, unpause
 		unpause();
-	}
-	else {
+	} else {
 		pause();
 	}
 }
@@ -90,10 +89,10 @@ Song PlaybackController::getSong() {
 	}
 	if (loadedItem.getContents() == 0) {			//Song
 		return loadedItem.getSong();
-	}
-	else if (loadedItem.getContents() == 1) {		//Playlist
+	} else if (loadedItem.getContents() == 1) {		//Playlist
 		return loadedItem.getPlaylist().getFront();
 	}
+	return Song();
 }
 void PlaybackController::pullFromQueue(PlaybackController* playbackController, Queue* queue) {
 	while (Application::shouldRun) {

@@ -3,6 +3,7 @@
 /*A scene is a collection of windows that make up a view for the user,
   for example the load song/playlist view or the song explorer view*/
 
+#include "conterlib.hpp"
 #include "menu.h"
 
 class Scene {
@@ -28,7 +29,7 @@ public:
 
 class InputScene : public Scene {
 private:
-	InputMenu* menu = nullptr;
+	TUI::TextInputMenu* menu = nullptr;
 public:
 	InputScene();
 	std::string run();

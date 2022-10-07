@@ -6,18 +6,16 @@ int getInputType(const std::string& pathStr) {
 	const fs::path path(pathStr);
 	if (!fs::exists(path)) {
 		return -1;
-	}
-	else if (fs::is_directory(path)) {
+	} else if (fs::is_directory(path)) {
 		return 1;
-	}
-	else if (fs::is_regular_file(path)) {
+	} else if (fs::is_regular_file(path)) {
 		if (path.extension() == ".json") {
 			return 2;
-		}
-		else {
+		} else {
 			return 0;
 		}
 	}
+	return -1;
 }
 
 std::string concatString(std::string subStr, int times) {

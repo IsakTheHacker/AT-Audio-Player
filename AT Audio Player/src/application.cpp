@@ -12,7 +12,8 @@
 
 Application::Application() {
 #if defined(_WIN32) || defined(_WIN64)
-	SetConsoleOutputCP(1252);								//This makes it possible to write out characters such as едц to the command prompt
+	SetConsoleOutputCP(1252);							//This makes it possible to write Unicode characters (including пїЅпїЅпїЅ and block characters) to the console
+	SetConsoleCP(1252);									//Same as above but for characters typed to the console
 	ShowScrollBar(GetConsoleWindow(), SB_VERT, false);		//Hide scrollbar
 	
 	//Disable user selection
@@ -46,7 +47,6 @@ Application::~Application() {
 void Application::run() {
 	pullFromQueue = std::thread(PlaybackController::pullFromQueue, &playbackController, &queue);
 	updateUI = std::thread(UserInterface::updateUI, &ui);
-
 	//--- Main loop BEGINS HERE ---
 	while (shouldRun) {
 
@@ -61,19 +61,28 @@ void Application::run() {
 			shouldRun = false;
 		}
 		break;
+		case Key::ARROW_LEFT: {		//Seek backwards by 10 seconds
+			playbackController.seek(playbackController.getPlaytime() - 10);
+		}
+		break;
+		case Key::ARROW_RIGHT: {	//Seek forwards by 10 seconds
+			playbackController.seek(playbackController.getPlaytime() + 10);
+		}
+		break;
 		case Key::ARROW_UP: {		//Volume up
 			playbackController.setVolume(playbackController.getVolume() + 1);
+		}
 		break;
 		case Key::ARROW_DOWN: {		//Volume down
 			playbackController.setVolume(playbackController.getVolume() - 1);
 		}
 		break;
-		case Key::d: {	//Skip forwards
-			playbackController.seek(playbackController.getPlaytime() + 10);
+		case Key::PLUS: {			//Volume up
+			playbackController.setVolume(playbackController.getVolume() + 1);
 		}
 		break;
-		case Key::a: {		//Skip backwards
-			playbackController.seek(playbackController.getPlaytime() - 10);
+		case Key::MINUS: {			//Volume down
+			playbackController.setVolume(playbackController.getVolume() - 1);
 		}
 		break;
 		case Key::SPACE: {
@@ -111,7 +120,6 @@ void Application::run() {
 			ui.unpauseUIUpdater();
 		}
 		break;
-		}
 		}
 	//--- Main loop ENDS HERE ---
 	}

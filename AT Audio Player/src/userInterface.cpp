@@ -1,10 +1,10 @@
-#include "userInterface.h"
+﻿#include "userInterface.h"
 #include "application.h"
 #include <conterlib.hpp>
 
 void UserInterface::drawScreen() {
-	std::string spacesLine1 = concatString(" ", 59 - playbackController->getSong().getName().length());
-	std::string spacesLine2 = concatString(" ", 65);
+	ShowScrollBar(GetConsoleWindow(), SB_VERT, false);		//Hide scrollbar
+	Console::showCursor(false);
 
 	std::string volumeString = concatString("*", playbackController->getVolume()) + concatString("o", 10 - playbackController->getVolume());
 	std::string volumeNumber = std::to_string((int)playbackController->getVolume());
@@ -25,23 +25,22 @@ void UserInterface::drawScreen() {
 		queueItems[i] = queueItems[i] + concatString(" ", Console::getScreenSizeX() - 76 - queueItems[i].length());
 	}
 
-	std::cout << "Volume +------------------------------ ATAP ------------------------------+ Queue\n";
-	std::cout << "       | Song: " << playbackController->getSong().getName() << spacesLine1 << "| " << "\n";
-	std::cout << "  " << concatString(volumeString[9], 3) << "  | " << spacesLine2 << "| " << queueItems[0] << "\n";
-	std::cout << "  " << concatString(volumeString[8], 3) << "  | " << spacesLine2 << "| " << queueItems[1] << "\n";
-	std::cout << "  " << concatString(volumeString[7], 3) << "  | " << spacesLine2 << "| " << queueItems[2] << "\n";
-	std::cout << "  " << concatString(volumeString[6], 3) << "  | " << spacesLine2 << "| " << queueItems[3] << "\n";
-	std::cout << "  " << concatString(volumeString[5], 3) << "  | " << spacesLine2 << "| " << queueItems[4] << "\n";
-	std::cout << "  " << concatString(volumeString[4], 3) << "  | " << spacesLine2 << "| " << queueItems[5] << "\n";
-	std::cout << "  " << concatString(volumeString[3], 3) << "  | " << spacesLine2 << "| " << queueItems[6] << "\n";
-	std::cout << "  " << concatString(volumeString[2], 3) << "  | " << spacesLine2 << "| " << queueItems[7] << "\n";
-	std::cout << "  " << concatString(volumeString[1], 3) << "  | " << spacesLine2 << "| " << queueItems[8] << "\n";
-	std::cout << "  " << concatString(volumeString[0], 3) << "  | " << spacesLine2 << "| " << queueItems[9] << "\n";
-	std::cout << "       | " << spacesLine2 << "| " << "\n";
-	std::cout << "   " << volumeNumber << "  +------------------------------------------------------------------+" << "\n\n";
+	TUI::Window volume = TUI::Window(6, 15, 0, 0, "Volume", TUI::WindowOptions::getNoBorderPreset());
+	int y = 1;
+	for (int i = 9; i >= 0; i--) {
+		volume.write(1, y, concatString(volumeString[i], 3));
+		y++;
+	}
+	volume.write(2, 12, volumeNumber);
 
+	TUI::Window player = TUI::Window((Console::getScreenSizeX() - 6) / 2, 14, 7, 0, "Player");
+	player.write(1, 0, "Song: " + playbackController->getSong().getName());
+	player.write(1, 1, "Path: " + playbackController->getSong().getPath());
 
+	TUI::Window queue = TUI::Window((Console::getScreenSizeX() - 6) / 2 - 2, 14, (Console::getScreenSizeX() - 6) / 2 + 8, 0, "Queue");
+	
 	//Print messages
+	TUI::Window console = TUI::Window((Console::getScreenSizeX() - 6) / 2 + 7, Console::getScreenSizeY() - 14, 0, 14, "Console");
 	auto now = std::chrono::high_resolution_clock::now();
 	for (size_t i = 0; i < messages.size(); i++) {
 		if (now > messages[i].getEnd()) {
@@ -49,25 +48,16 @@ void UserInterface::drawScreen() {
 		}
 	}
 	std::vector messagesCpy = messages;
-	if (messagesCpy.size() > maxMessageQueueDisplaySize) {
-		messagesCpy.erase(messagesCpy.begin());
-		messages.erase(messages.begin());
-	} else if (messagesCpy.size() < maxMessageQueueDisplaySize) {
-		for (size_t i = messagesCpy.size(); i < maxQueueDisplaySize; i++) {
-			messagesCpy.push_back(Message(concatString(" ", Console::getScreenSizeX() - 7), 0));
-		}
+	for (int i = 0; i < messagesCpy.size(); i++) {
+		if (i > console.getSize().ySize - 2) break;
+		console.write(1, i, messagesCpy[i].getMessage());
 	}
 
-	std::cout << "       " << messagesCpy[0].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[1].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[2].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[3].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[4].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[5].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[6].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[7].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[8].getMessage() << "\n";
-	std::cout << "       " << messagesCpy[9].getMessage() << "\n";
+	//Console::clear();
+	volume.restore();
+	player.restore();
+	queue.restore();
+	console.restore();
 }
 
 void UserInterface::printMessage(std::string message, unsigned int secondsOnScreen) {
@@ -81,6 +71,7 @@ void UserInterface::pauseUIUpdater() {
 	}
 }
 void UserInterface::unpauseUIUpdater() {
+	Console::clear();
 	paused = false;
 }
 void UserInterface::setPlaybackController(PlaybackController& playbackController) {

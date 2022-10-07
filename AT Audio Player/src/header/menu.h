@@ -18,16 +18,6 @@ public:
 	int waitForSelection(const int& startAt = 0, const bool& allowEscExit = true);
 };
 
-class InputMenu {
-private:
-	int height, width, starty, startx;
-	std::string stdText;
-	TUI::Window window;
-public:
-	InputMenu(const int& height, const int& width);
-	std::string waitForInput(const int& startAtY = 1, const int& startAtX = 1, const std::string& stdText = "", const bool& allowEscExit = true);
-};
-
 // class SelectionMenu2d {
 // private:
 // 	int yMax, xMax;
