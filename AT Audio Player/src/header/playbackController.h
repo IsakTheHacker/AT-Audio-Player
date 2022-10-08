@@ -33,6 +33,8 @@ public:
 	void rewind();
 	void seek(double seconds);
 	double getPlaytime();
+	double getPlayedPercentage();
+	double getSongLength();
 	void switchRepeatMode();
 	void setVolume(float volume);
 	float getVolume();

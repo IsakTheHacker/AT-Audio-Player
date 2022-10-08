@@ -2,30 +2,20 @@
 #include "application.h"
 #include <conterlib.hpp>
 
+#define VOLUME_FILLED '*'
+#define VOLUME_EMPTY 'o'
+
 void UserInterface::drawScreen() {
 	ShowScrollBar(GetConsoleWindow(), SB_VERT, false);		//Hide scrollbar
 	Console::showCursor(false);
 
-	std::string volumeString = concatString("*", playbackController->getVolume()) + concatString("o", 10 - playbackController->getVolume());
+	//Volume
+	TUI::Window volume = TUI::Window(6, 15, 0, 0, "Volume", TUI::WindowOptions::getNoBorderPreset());
+	std::string volumeString = concatString(VOLUME_FILLED, playbackController->getVolume()) + concatString(VOLUME_EMPTY, 10 - playbackController->getVolume());
 	std::string volumeNumber = std::to_string((int)playbackController->getVolume());
 	if (volumeNumber.length() < 2) {
 		volumeNumber = " " + volumeNumber;
 	}
-
-	std::vector queueItems = playbackController->getQueue().getItemNames();
-
-	if (queueItems.size() > maxQueueDisplaySize) {
-		queueItems[maxQueueDisplaySize - 1] = "..." + concatString(" ", Console::getScreenSizeX() - 79);
-	} else if (queueItems.size() < maxQueueDisplaySize) {
-		for (size_t i = queueItems.size(); i < maxQueueDisplaySize; i++) {
-			queueItems.push_back(concatString(" ", Console::getScreenSizeX() - 76));
-		}
-	}
-	for (size_t i = 0; i < queueItems.size(); i++) {
-		queueItems[i] = queueItems[i] + concatString(" ", Console::getScreenSizeX() - 76 - queueItems[i].length());
-	}
-
-	TUI::Window volume = TUI::Window(6, 15, 0, 0, "Volume", TUI::WindowOptions::getNoBorderPreset());
 	int y = 1;
 	for (int i = 9; i >= 0; i--) {
 		volume.write(1, y, concatString(volumeString[i], 3));
@@ -33,14 +23,20 @@ void UserInterface::drawScreen() {
 	}
 	volume.write(2, 12, volumeNumber);
 
+	//Player window
 	TUI::Window player = TUI::Window((Console::getScreenSizeX() - 6) / 2, 14, 7, 0, "Player");
 	player.write(1, 0, "Song: " + playbackController->getSong().getName());
 	player.write(1, 1, "Path: " + playbackController->getSong().getPath());
 
+	//Queue
 	TUI::Window queue = TUI::Window((Console::getScreenSizeX() - 6) / 2 - 2, 14, (Console::getScreenSizeX() - 6) / 2 + 8, 0, "Queue");
+	std::vector queueItems = playbackController->getQueue().getItemNames();
+	for (size_t i = 0; i < queueItems.size(); i++) {
+		queue.write(1, i, queueItems[i]);
+	}
 	
-	//Print messages
-	TUI::Window console = TUI::Window((Console::getScreenSizeX() - 6) / 2 + 7, Console::getScreenSizeY() - 14, 0, 14, "Console");
+	//Console (error messages and other info)
+	TUI::Window console = TUI::Window((Console::getScreenSizeX() - 6) / 2 + 7, Console::getScreenSizeY() - 14 - 3, 0, 14, "Console");
 	auto now = std::chrono::high_resolution_clock::now();
 	for (size_t i = 0; i < messages.size(); i++) {
 		if (now > messages[i].getEnd()) {
@@ -53,11 +49,17 @@ void UserInterface::drawScreen() {
 		console.write(1, i, messagesCpy[i].getMessage());
 	}
 
+	//Seeker
+	TUI::Window seeker = TUI::Window(Console::getScreenSizeX(), 3, 0, Console::getScreenSizeY() - 3, "", TUI::WindowOptions::getNoBorderPreset());
+	double playedPercentage = playbackController->getPlayedPercentage();
+	seeker.write(0, 0, concatString('-', seeker.getSize().xSize * playedPercentage));
+
 	//Console::clear();
 	volume.restore();
 	player.restore();
 	queue.restore();
 	console.restore();
+	seeker.restore();
 }
 
 void UserInterface::printMessage(std::string message, unsigned int secondsOnScreen) {

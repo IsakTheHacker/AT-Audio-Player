@@ -105,7 +105,7 @@ void Application::run() {
 			int inputType = getInputType(path);
 			std::cout << std::endl;
 
-			if (inputType == -1) {
+			if (inputType == -1 && path != "") {
 				ui.printMessage("Error 02: That is not a valid path");
 			} else if (inputType == 0) {
 				Song song(path);

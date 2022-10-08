@@ -11,11 +11,11 @@ void PlaybackController::playLoadedItem() {
 	} else if (loadedItem.getContents() == 1) {		//Playlist
 		song = new sl::Wav;
 		song->load(loadedItem.getPlaylist().popFront().getPath().c_str());
-		sound = Application::engine->playBackground(*song);
+		sound = Application::engine->play(*song);
 	}
 }
-void PlaybackController::pause() { Application::engine->setPauseAll(true); }
-void PlaybackController::unpause() { Application::engine->setPauseAll(false); }
+void PlaybackController::pause() { Application::engine->setPause(sound, true); }
+void PlaybackController::unpause() { Application::engine->setPause(sound, false); }
 
 //Public
 void PlaybackController::set(QueueItem queueItem) {
@@ -39,10 +39,9 @@ void PlaybackController::switchPauseMode() {
 }
 bool PlaybackController::isPlaying() {
 	if (!sound) return false;
-	if (Application::engine->getActiveVoiceCount() != 0) {
+	if (Application::engine->getVoiceCount() != 0) {
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 }
@@ -64,6 +63,14 @@ void PlaybackController::seek(double seconds) {
 double PlaybackController::getPlaytime() {
 	if (!sound) return 0;
 	return Application::engine->getStreamPosition(sound);
+}
+double PlaybackController::getPlayedPercentage() {
+	if (!sound) return 0;
+	return getPlaytime() / getSongLength();
+}
+double PlaybackController::getSongLength() {
+	if (!sound) return 0;
+	return song->getLength();
 }
 void PlaybackController::switchRepeatMode() {
 	if (!sound) return;
